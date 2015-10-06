@@ -16,6 +16,7 @@ function Search(queryInput, resultsContainer, options){
 
   this.clear = function(){
     model.setQuery('')
+    queryInput.val('')
   }
 
   // BEHAVIOUR
