@@ -1,13 +1,21 @@
 <html>
 <body>
 
+<span id="pane_trigger">Toggle</span>
+
 <input type="search" id='search'/>
 <div id="results"></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="javascript/search.js"></script>
+<script src="javascript/pane.js"></script>
 <script src="javascript/jquery.super-select.js"></script>
+
 <script type="text/javascript">
   var search = new Search('#search', '#results', { model: {data:['dog', 'cat', 'frog', 'monkey']}})
+  var pane = new Pane({anchor: 'body', trigger:'#pane_trigger'})
+  pane.addContent('search', $('#search'))
+  pane.addContent('results', $('#results'))
 </script>
 </body>
 </html>
