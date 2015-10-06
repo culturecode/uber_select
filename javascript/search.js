@@ -83,7 +83,7 @@ function Search(queryInput, resultsContainer, options){
     }
 
     this.isBlankQuery = function(processedQuery){
-      return $.trim(processedQuery) === ''
+      return processedQuery === ''
     }
 
     // Can be overridden to select a subset of data for matching
@@ -98,9 +98,9 @@ function Search(queryInput, resultsContainer, options){
     }
 
     // Can be overridden to mutate the query being used to match before matching
-    // Defaults to the identity function
+    // Defaults to whitespace trim
     this.queryPreprocessor = function(query){
-      return query
+      return $.trim(query)
     }
 
     // Can be overridden to mutate the data the moment before it is matched
