@@ -30,9 +30,8 @@ function Pane(options){
 
     // Hide the pane when clicked out
     $(document).on('click', function(event){
-      if ($(event.target).closest(options.trigger).length == 0) {
-        context.hide()
-      }
+      if ($(event.target).closest(options.trigger).length || $(event.target).closest(view).length ) { return }
+      context.hide()
     })
   }
 

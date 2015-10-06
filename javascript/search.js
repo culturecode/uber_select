@@ -1,4 +1,5 @@
 function Search(queryInput, resultsContainer, options){
+  var context = this
   var model = this.model = new SearchModel(options.model)
   var view = this.view = new SearchView(resultsContainer, options.view)
 
@@ -6,8 +7,16 @@ function Search(queryInput, resultsContainer, options){
   // HELPER FUNCTIONS
   this.renderResults = function(){
     view.renderResults(model.getResults())
+    $(this).trigger('renderedResults')
   }
 
+  this.getResults = function(){
+    return view.getResults()
+  }
+
+  this.clear = function(){
+    model.setQuery('')
+  }
 
   // BEHAVIOUR
 
@@ -15,7 +24,9 @@ function Search(queryInput, resultsContainer, options){
     model.setQuery(this.value)
   })
 
-  $(model).on('resultsUpdated', this.renderResults)
+  $(model).on('resultsUpdated', function(){
+    context.renderResults()
+  })
 
 
   // INITIALIZATION
@@ -93,6 +104,11 @@ function Search(queryInput, resultsContainer, options){
 
   function SearchView(resultsContainer, options){
     var context = this
+    var resultClass = 'result'
+
+    this.getResults = function(){
+      return $(resultsContainer).find('.' + resultClass)
+    }
 
     this.renderResults = function(data){
       var list = $('<ul class="results">')
@@ -104,7 +120,7 @@ function Search(queryInput, resultsContainer, options){
 
     // Can be overridden to format how results are built
     this.buildResult = function(datum){
-      return $('<li class="result">').text(datum)
+      return $('<li>').text(datum).addClass(resultClass)
     }
 
     // INITIALIZATION
