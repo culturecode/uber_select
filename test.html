@@ -1,0 +1,13 @@
+<html>
+<body>
+
+<input type="search" id='search'/>
+<div id="results"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="javascript/jquery.super-select.js"></script>
+<script type="text/javascript">
+  var search = new Search('#search', '#results', { model: {data:['dog', 'cat', 'frog', 'monkey']}})
+</script>
+</body>
+</html>
