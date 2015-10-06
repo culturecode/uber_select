@@ -69,12 +69,13 @@ function Search(queryInput, resultsContainer, options){
     }
 
     this.updateResults = function(){
-      if (this.isBlankQuery(this.queryPreprocessor(query))){
-        results = $(data).map(function(){ return this })
+      var processedQuery = context.queryPreprocessor(query)
+      if (this.isBlankQuery(processedQuery)){
+        results = $.each(this.dataForMatching(processedQuery, data), function(){ return this })
       } else {
         results = []
-        $(this.dataForMatching(query, data)).each(function(index, datum){
-          if (context.match(context.queryPreprocessor(query), context.datumPreprocessor(datum), index)){
+        $.each(this.dataForMatching(processedQuery, data), function(index, datum){
+          if (context.match(processedQuery, context.datumPreprocessor(datum), index)){
             results.push(datum)
           }
         })
