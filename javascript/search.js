@@ -52,6 +52,7 @@ function Search(queryInput, resultsContainer, options){
   function SearchModel(options){
     var data, query, results;
     var context = this
+    var results
 
     this.setQuery = function(value){
       query = value
