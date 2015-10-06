@@ -9,8 +9,14 @@
       var uberText     = $('<span class="selected_text">').appendTo(uberElement)
       var searchInput  = $('<input type="search" class="search_input">')
       var searchOutput = $('<div class="results_container">')
-      var search       = new Search(searchInput, searchOutput, { model:{ data:data } })
-      var pane         = new Pane({anchor: 'body', trigger: uberElement})
+
+      var search = new Search(searchInput, searchOutput, {
+        model: {
+          data: data,
+          dataForMatching: dataForMatching
+        }
+      })
+      var pane = new Pane({anchor: 'body', trigger: uberElement})
 
       pane.addContent('search', searchInput)
       pane.addContent('results', searchOutput)
@@ -46,6 +52,30 @@
 
       // HELPER FUNCTIONS
 
+      // Given a select element
+      // Returns an array of data to match against
+      function dataFromSelect(select){
+        return $(select).find('option').map(function(){
+          var visibility = $(this).data('visibility')
+          var value = $(this).data('match-value')
+          if (value === undefined || value === null){
+            value = $(this).val()
+          }
+          return {value:value, visibility:visibility}
+        })
+      }
+
+      // Converts the dataFromSelect into a datum list for matching
+      function dataForMatching(processedQuery, data){
+        // If a query is present, include only select options that should be used when searching
+        // Else, include only options that should be visible when not searching
+        if (processedQuery) {
+          return $.map(data, function(datum){ if (datum.visibility != 'no-query') return datum.value })
+        } else {
+          return $.map(data, function(datum){ if (datum.visibility != 'query') return datum.value })
+        }
+      }
+
       // Returns the selected result based on the select's value
       function getSelectedResult(){
         return selectedResultFromValue($(select).val(), search.getResults())
@@ -60,18 +90,6 @@
         var results = search.getResults()
         $(results).filter('.selected').removeClass('selected')
         $(selectedResult).addClass('selected')
-      }
-
-      // Given a select element
-      // Returns an array of data to match against
-      function dataFromSelect(select){
-        return $(select).find('option').map(function(){
-          var value = $(this).data('match-value')
-          if (value === undefined || value === null){
-            value = $(this).val()
-          }
-          return value
-        })
       }
 
       function updateSelectValue(select, value){
