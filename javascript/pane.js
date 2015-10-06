@@ -39,9 +39,11 @@ function Pane(options){
 
   this.show = function(){
     view.show()
+    $(this).trigger('shown')
   }
   this.hide = function(){
     view.hide()
+    $(this).trigger('hidden')
   }
 
   // INITIALIZATION

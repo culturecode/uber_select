@@ -30,7 +30,14 @@
         markSelected(getSelectedResult())
       })
 
+      // Focus the searchInput when the pane is opened
+      $(pane).on('shown', function(){
+        $(searchInput).focus()
+      })
+
+
       // INITIALIZATION
+
       $(select).hide()
       markSelected(getSelectedResult())
       pane.hide()
