@@ -5,8 +5,8 @@
       options          = $.extend({}, options)
       var select       = this
       var data         = dataFromSelect(this)
-      var uberElement  = $('<label>')
-      var uberText     = $('<span>').appendTo(uberElement)
+      var uberElement  = $('<span class="uber_select">')
+      var uberText     = $('<span class="selected_text">').appendTo(uberElement)
       var searchInput  = $('<input type="search" class="search_input">')
       var searchOutput = $('<div class="results_container">')
       var search       = new Search(searchInput, searchOutput, { model:{ data:data } })
@@ -27,11 +27,22 @@
 
       // Highlight the selected option in the list of results
       $(search).on('renderedResults', function(){
-        var selectedResult = selectedResultFromValue($(select).val(), search.getResults())
-        markSelected(selectedResult)
+        markSelected(getSelectedResult())
       })
 
+      // INITIALIZATION
+      $(select).hide()
+      markSelected(getSelectedResult())
+      pane.hide()
+      search.clear()
+      updateUberElement()
+
       // HELPER FUNCTIONS
+
+      // Returns the selected result based on the select's value
+      function getSelectedResult(){
+        return selectedResultFromValue($(select).val(), search.getResults())
+      }
 
       // Updates the enhanced select with the text of the selected result
       function updateUberElement(){
