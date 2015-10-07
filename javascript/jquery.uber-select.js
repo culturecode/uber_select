@@ -16,7 +16,7 @@
           dataForMatching: dataForMatching
         }
       })
-      var pane = new Pane({anchor: 'body', trigger: uberElement})
+      var pane = new Pane({anchor: uberElement, trigger: uberElement})
 
       pane.addContent('search', searchInput)
       pane.addContent('results', searchOutput)
