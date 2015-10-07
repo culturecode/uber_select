@@ -120,6 +120,7 @@ function Search(queryInput, resultsContainer, options){
   function SearchView(resultsContainer, options){
     var context = this
     var resultClass = 'result'
+    this.resultsContainer = resultsContainer
 
     this.getResults = function(){
       return $(resultsContainer).find('.' + resultClass)
