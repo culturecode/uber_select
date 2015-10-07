@@ -8,7 +8,7 @@ function Pane(options){
 
   var context = this
   var model = this.model = {}
-  var view = this.view = $('<div class="super-select-pane">')
+  var view = this.view = $('<div class="super_select_pane">')
 
   this.addContent = function(name, content){
     model[name] = content
