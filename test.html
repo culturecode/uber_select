@@ -38,6 +38,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .uber_select .selected_text.empty{
+    color: #aaa;
+  }
 
   .uber_select .pane{
     position: absolute;
@@ -125,9 +128,10 @@
 
 <div class="example">
   <label for="select">
-  Select with search
+  Select with search and placeholder
   </label>
-  <select>
+  <select placeholder="Choose a gender">
+    <option></option>
     <option>male</option>
     <option>female</option>
   </select>

@@ -4,6 +4,7 @@
     this.each(function(){
       var options           = $.extend({search:true, clearSearchButton:true}, opts, $(this).data('uber-options'))
       var select            = this
+      var placeholder       = $(select).attr('placeholder') || $(select).attr('data-placeholder')
       var data              = dataFromSelect(this)
       var uberElement       = $('<span class="uber_select">')
       var uberText          = $('<span class="selected_text">').appendTo(uberElement)
@@ -142,7 +143,12 @@
 
       // Updates the enhanced select with the text of the selected result
       function updateUberElement(){
-        uberText.text($(select).find('option:selected').text())
+        var text = $(select).find('option:selected').text()
+        if (text) {
+          uberText.text(text).removeClass('empty')
+        } else {
+          uberText.text(placeholder).addClass('empty')
+        }
       }
 
       function markSelected(selectedResult){
