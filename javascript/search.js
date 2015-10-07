@@ -95,7 +95,7 @@ function Search(queryInput, resultsContainer, options){
 
     // Can be overridden to provide more sophisticated matching behaviour
     this.match = function(processedQuery, processedDatum, index){
-      return processedDatum.indexOf(processedQuery) > -1
+      return processedDatum.toLowerCase().indexOf(processedQuery.toLowerCase()) > -1
     }
 
     // Can be overridden to mutate the query being used to match before matching
