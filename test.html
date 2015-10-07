@@ -1,7 +1,80 @@
 <html>
 <body>
+<style>
+  body {
+    padding: 30px;
+  }
+  label {
+    font-family: sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    display: block;
+  }
 
-<select>
+  .uber_select{
+    width: 200px;
+    display: inline-block;
+    border: 1px solid #E0E0E0;
+    border-radius: 2px;
+    margin: 5px 0;
+    cursor: pointer;
+  }
+  .uber_select .selected_text{
+    padding: 1px 3px;
+    font-size: 20px;
+    white-space: nowrap;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .uber_select .super_select_pane{
+    position: absolute;
+    border: 1px solid #E0E0E0;
+    margin: -2px 0 0 -20px;
+    background-color: white;
+    box-shadow: 0 3px 3px rgba(0,0,0,.1);
+  }
+
+  .uber_select .results{
+    font-family: sans-serif;
+    font-size: 14px;
+    list-style: none;
+    margin: 5px 0;
+    padding: 0;
+    line-height: 1.5em;
+  }
+  .uber_select .result{
+    padding: 1px 20px;
+  }
+  .uber_select .result:hover{
+    background-color: #C4E4FF;
+  }
+  .uber_select .result.selected{
+    background-color: #71BDFF;
+    color: white;
+  }
+
+  .uber_select.open .selected_text{
+    display: none;
+  }
+
+  .uber_select .search_input{
+    font-size: 20px;
+    width: 100%;
+    border-width: 0 0 1px 0;
+    padding: 20px 20px 15px;
+    outline: none;
+    -webkit-appearance: textfield;
+  }
+</style>
+
+<label for="select">
+Some input
+</label>
+<select id="select">
   <option>cat</option>
   <option>dog</option>
   <option>frog</option>
