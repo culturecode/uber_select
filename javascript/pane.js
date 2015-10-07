@@ -35,6 +35,13 @@ function Pane(options){
     })
   }
 
+  // Close the pane when the user presses escape
+  $(view).on('keyup', function(event){
+    if (event.which == 27)
+      context.hide()
+  })
+
+
   // HELPER FUNCTIONS
 
   this.show = function(){
