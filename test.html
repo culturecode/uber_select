@@ -10,17 +10,20 @@
     text-transform: uppercase;
     font-size: 0.8em;
     display: block;
+    position: relative;
+    z-index: 1; /* Place above super_select_pane */
+    color: #444;
   }
 
   .uber_select{
     width: 200px;
     display: inline-block;
     border: 1px solid #E0E0E0;
-    border-radius: 2px;
     margin: 5px 0;
     cursor: pointer;
   }
   .uber_select .selected_text{
+    font-family: sans-serif;
     padding: 1px 3px;
     font-size: 20px;
     white-space: nowrap;
@@ -33,18 +36,22 @@
   .uber_select .super_select_pane{
     position: absolute;
     border: 1px solid #E0E0E0;
-    margin: -2px 0 0 -20px;
     background-color: white;
     box-shadow: 0 3px 3px rgba(0,0,0,.1);
+    margin: -40px 0 0 -20px;
+    padding-top: 20px; /* Make room for input label */
   }
 
   .uber_select .results{
     font-family: sans-serif;
     font-size: 14px;
     list-style: none;
-    margin: 5px 0;
+    margin: 0;
     padding: 0;
     line-height: 1.5em;
+    overflow: auto;
+    max-height: 310px;
+    padding: 5px 0;
   }
   .uber_select .result{
     padding: 1px 20px;
@@ -62,17 +69,17 @@
   }
 
   .uber_select .search_input{
+    font-family: sans-serif;
     font-size: 20px;
     width: 100%;
     border-width: 0 0 1px 0;
     padding: 20px 20px 15px;
     outline: none;
-    -webkit-appearance: textfield;
   }
 </style>
 
 <label for="select">
-Some input
+Animal
 </label>
 <select id="select">
   <option>cat</option>
@@ -81,6 +88,19 @@ Some input
   <option>monkey</option>
   <option data-visibility="no-query">this option is not visible when querying</option>
   <option data-visibility="query">this option is only visible when querying</option>
+  <option>goose</option>
+  <option>rabbit</option>
+  <option>rhino</option>
+  <option>elephant</option>
+  <option>bear</option>
+  <option>tiger</option>
+  <option>giraffe</option>
+  <option>goat</option>
+  <option>cow</option>
+  <option>pig</option>
+  <option>gorilla</option>
+  <option>orangutan</option>
+  <option>lemur</option>
 </select>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
