@@ -2,15 +2,16 @@
 (function( $ ) {
   $.fn.uberSelect = function(opts) {
     this.each(function(){
-      var select       = this
-      var data         = dataFromSelect(this)
-      var uberElement  = $('<span class="uber_select">')
-      var uberText     = $('<span class="selected_text">').appendTo(uberElement)
-      var searchInput  = $('<input type="text" class="search_input" placeholder="Type to search">')
-      var searchOutput = $('<div class="results_container">')
-      var clearSearchButton  = $('<span class="clear_search_button">')
+      var options           = $.extend({search:true, clearSearchButton:true}, opts, $(this).data('uber-options'))
+      var select            = this
+      var data              = dataFromSelect(this)
+      var uberElement       = $('<span class="uber_select">')
+      var uberText          = $('<span class="selected_text">').appendTo(uberElement)
+      var searchInput       = $('<input type="text" class="search_input" placeholder="Type to search">')
+      var searchOutput      = $('<div class="results_container">')
+      var clearSearchButton = $('<span class="clear_search_button">').html('&#x2715;')
 
-      var options           = $.extend({clearSearchButton:true}, opts)
+      var pane   = new Pane({anchor: uberElement, trigger: uberElement})
       var search = new Search(searchInput, searchOutput, {
         model: {
           data: data,
@@ -21,21 +22,23 @@
           renderResults: renderResultsWithGroupSupport
         }
       })
-      var pane = new Pane({anchor: uberElement, trigger: uberElement})
 
-      pane.addContent('search', searchInput)
-      pane.addContent('results', searchOutput)
+      if (options.search){
+        pane.addContent('search', searchInput)
 
-      // Add a clear search button
-      if (options.clearSearchButton){
-        clearSearchButton.html('&#x2715;')
-        pane.addContent('clearSearchButton', clearSearchButton)
-        updateClearSearchButtonVisiblity()
-        clearSearchButton.on('click', search.clear)
-        $(search).on('queryChanged', updateClearSearchButtonVisiblity)
+        // Add a clear search button
+        if (options.clearSearchButton){
+          updateClearSearchButtonVisiblity()
+          pane.addContent('clearSearchButton', clearSearchButton)
+        }
       }
 
+      pane.addContent('results', searchOutput)
+
       uberElement.insertBefore(select).append(select)
+
+
+      // BEHAVIOUR
 
       // Update the select element when a value is chosen
       searchOutput.on('click', '.result', function(){
@@ -58,6 +61,10 @@
       $(pane).on('hidden', function(){
         uberElement.removeClass('open')
       })
+
+      // Clear search button behaviour
+      clearSearchButton.on('click', search.clear)
+      $(search).on('queryChanged', updateClearSearchButtonVisiblity)
 
 
       // INITIALIZATION

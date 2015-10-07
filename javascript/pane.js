@@ -6,11 +6,12 @@ function Pane(options){
 
   var context = this
   var model = this.model = {}
-  var view = this.view = $('<div class="super_select_pane">')
+  var view = this.view = $('<div class="pane"></div>')
+  var innerPane = $('<div class="pane_inner"></div>').appendTo(view)
 
   this.addContent = function(name, content){
     model[name] = content
-    view.append(content)
+    innerPane.append(content)
   }
 
   this.removeContent = function(name){
