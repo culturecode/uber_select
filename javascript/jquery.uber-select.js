@@ -1,8 +1,7 @@
 
 (function( $ ) {
-  $.fn.uberSelect = function(options) {
+  $.fn.uberSelect = function(opts) {
     this.each(function(){
-      options          = $.extend({clearSearchButton:true}, options)
       var select       = this
       var data         = dataFromSelect(this)
       var uberElement  = $('<span class="uber_select">')
@@ -11,6 +10,7 @@
       var searchOutput = $('<div class="results_container">')
       var clearSearchButton  = $('<span class="clear_search_button">')
 
+      var options           = $.extend({clearSearchButton:true}, opts)
       var search = new Search(searchInput, searchOutput, {
         model: {
           data: data,
