@@ -13,7 +13,11 @@
       var search = new Search(searchInput, searchOutput, {
         model: {
           data: data,
-          dataForMatching: dataForMatching
+          dataForMatching: dataForMatching,
+          datumPreprocessor: datumPreprocessor
+        },
+        view: {
+          renderResults: renderResultsWithGroupSupport
         }
       })
       var pane = new Pane({anchor: uberElement, trigger: uberElement})
@@ -60,12 +64,14 @@
       // Returns an array of data to match against
       function dataFromSelect(select){
         return $(select).find('option').map(function(){
+          var group = $(this).closest('optgroup').attr('label')
           var visibility = $(this).data('visibility')
           var value = $(this).data('match-value')
+
           if (value === undefined || value === null){
             value = $(this).val()
           }
-          return {value:value, visibility:visibility}
+          return {value:value, visibility:visibility, group:group}
         })
       }
 
@@ -74,10 +80,39 @@
         // If a query is present, include only select options that should be used when searching
         // Else, include only options that should be visible when not searching
         if (processedQuery) {
-          return $.map(data, function(datum){ if (datum.visibility != 'no-query') return datum.value })
+          return $.map(data, function(datum){ if (datum.visibility != 'no-query') return datum })
         } else {
-          return $.map(data, function(datum){ if (datum.visibility != 'query') return datum.value })
+          return $.map(data, function(datum){ if (datum.visibility != 'query') return datum })
         }
+      }
+
+      // Just match the datum value
+      function datumPreprocessor(datum){
+        return datum.value
+      }
+
+      function renderResultsWithGroupSupport(data){
+        var list = $('<ul class="results">')
+        var dummyNode = $('<div>')
+        context = this
+        $.each(data, function(_, datum){
+          dummyNode.append(context.buildResult(datum.value).attr('data-group', datum.group))
+        })
+
+        // Arrange ungrouped list items
+        dummyNode.find('li:not([data-group])').appendTo(list)
+
+        // Arrange list items into sub lists
+        while (dummyNode.find('li').length) {
+          var group = dummyNode.find('li[data-group]').attr('data-group')
+          var sublist = $('<ul class="sublist">').attr('data-group', group)
+          dummyNode.find('li[data-group="' + group + '"]').appendTo(sublist)
+          $('<li>')
+            .append('<span class="sublist_name">' + group + '</span>')
+            .append(sublist).appendTo(list)
+        }
+
+        $(this.resultsContainer).html(list)
       }
 
       // Returns the selected result based on the select's value

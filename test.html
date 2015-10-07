@@ -82,25 +82,33 @@
 Animal
 </label>
 <select id="select">
-  <option>cat</option>
-  <option>dog</option>
-  <option>frog</option>
-  <option>monkey</option>
-  <option data-visibility="no-query">this option is not visible when querying</option>
-  <option data-visibility="query">this option is only visible when querying</option>
-  <option>goose</option>
-  <option>rabbit</option>
-  <option>rhino</option>
-  <option>elephant</option>
-  <option>bear</option>
-  <option>tiger</option>
-  <option>giraffe</option>
-  <option>goat</option>
-  <option>cow</option>
-  <option>pig</option>
-  <option>gorilla</option>
-  <option>orangutan</option>
-  <option>lemur</option>
+  <optgroup label="Common">
+    <option data-visibility="no-query">cat</option>
+    <option data-visibility="no-query">dog</option>
+  </optgroup>
+  <option>No group animal 1</option>
+  <option>No group animal 2</option>
+  <optgroup label="All">
+    <option>cat</option>
+    <option>dog</option>
+    <option>frog</option>
+    <option>monkey</option>
+    <option data-visibility="no-query">this option is not visible when querying</option>
+    <option data-visibility="query">this option is only visible when querying</option>
+    <option>goose</option>
+    <option>rabbit</option>
+    <option>rhino</option>
+    <option>elephant</option>
+    <option>bear</option>
+    <option>tiger</option>
+    <option>giraffe</option>
+    <option>goat</option>
+    <option>cow</option>
+    <option>pig</option>
+    <option>gorilla</option>
+    <option>orangutan</option>
+    <option>lemur</option>
+  </optgroup>
 </select>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
