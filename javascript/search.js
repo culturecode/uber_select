@@ -142,7 +142,7 @@ function Search(queryInput, resultsContainer, options){
 
     // Can be overridden to format how results are built
     this.buildResult = function(datum){
-      return $('<li>').text(datum).addClass(resultClass)
+      return $('<li>').html(datum).addClass(resultClass)
     }
 
     // INITIALIZATION

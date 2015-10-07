@@ -83,12 +83,11 @@
         return $(select).find('option').map(function(){
           var group = $(this).closest('optgroup').attr('label')
           var visibility = $(this).data('visibility')
-          var value = $(this).data('match-value')
+          var text = $(this).text() || "&nbsp;"
+          var matchValue = $(this).data('match-value') || text
+          var value = $(this).attr('value') || text
 
-          if (value === undefined || value === null){
-            value = $(this).val()
-          }
-          return {value:value, visibility:visibility, group:group}
+          return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group}
         })
       }
 
@@ -103,9 +102,9 @@
         }
       }
 
-      // Just match the datum value
+      // Match against the datum.matchValue
       function datumPreprocessor(datum){
-        return datum.value
+        return datum.matchValue
       }
 
       function renderResultsWithGroupSupport(data){
@@ -113,7 +112,11 @@
         var dummyNode = $('<div>')
         context = this
         $.each(data, function(_, datum){
-          dummyNode.append(context.buildResult(datum.value).attr('data-group', datum.group))
+          dummyNode.append(
+            context.buildResult(datum.text)
+            .attr('data-group', datum.group) // Add the group name so we can group items
+            .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
+          )
         })
 
         // Arrange ungrouped list items
@@ -165,7 +168,7 @@
       }
 
       function valueFromResult(result){
-        return $(result).text()
+        return $(result).attr('data-value')
       }
 
       function updateClearSearchButtonVisiblity(){
