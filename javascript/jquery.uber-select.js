@@ -2,13 +2,14 @@
 (function( $ ) {
   $.fn.uberSelect = function(options) {
     this.each(function(){
-      options          = $.extend({}, options)
+      options          = $.extend({clearSearchButton:true}, options)
       var select       = this
       var data         = dataFromSelect(this)
       var uberElement  = $('<span class="uber_select">')
       var uberText     = $('<span class="selected_text">').appendTo(uberElement)
       var searchInput  = $('<input type="text" class="search_input" placeholder="Type to search">')
       var searchOutput = $('<div class="results_container">')
+      var clearSearchButton  = $('<span class="clear_search_button">')
 
       var search = new Search(searchInput, searchOutput, {
         model: {
@@ -24,6 +25,15 @@
 
       pane.addContent('search', searchInput)
       pane.addContent('results', searchOutput)
+
+      // Add a clear search button
+      if (options.clearSearchButton){
+        clearSearchButton.html('&#x2715;')
+        pane.addContent('clearSearchButton', clearSearchButton)
+        updateClearSearchButtonVisiblity()
+        clearSearchButton.on('click', search.clear)
+        $(search).on('queryChanged', updateClearSearchButtonVisiblity)
+      }
 
       uberElement.insertBefore(select).append(select)
 
@@ -149,6 +159,10 @@
 
       function valueFromResult(result){
         return $(result).text()
+      }
+
+      function updateClearSearchButtonVisiblity(){
+        clearSearchButton.toggle(!!searchInput.val())
       }
     })
 

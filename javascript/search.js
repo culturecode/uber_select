@@ -15,8 +15,8 @@ function Search(queryInput, resultsContainer, options){
   }
 
   this.clear = function(){
-    model.setQuery('')
     queryInput.val('')
+    model.setQuery('')
   }
 
   // BEHAVIOUR
@@ -41,6 +41,11 @@ function Search(queryInput, resultsContainer, options){
     context.renderResults()
   })
 
+  // Forward query change
+  $(model).on('queryChanged', function(){
+    $(context).trigger('queryChanged')
+  })
+
 
   // INITIALIZATION
 
@@ -57,6 +62,7 @@ function Search(queryInput, resultsContainer, options){
     this.setQuery = function(value){
       query = value
       this.updateResults()
+      $(this).trigger('queryChanged')
     }
 
     this.setData = function(value){

@@ -1,5 +1,3 @@
-
-
 function Pane(options){
   options = $.extend({
     anchor: null,
