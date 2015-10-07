@@ -7,7 +7,7 @@
       var data         = dataFromSelect(this)
       var uberElement  = $('<span class="uber_select">')
       var uberText     = $('<span class="selected_text">').appendTo(uberElement)
-      var searchInput  = $('<input type="search" class="search_input">')
+      var searchInput  = $('<input type="text" class="search_input" placeholder="Type to search">')
       var searchOutput = $('<div class="results_container">')
 
       var search = new Search(searchInput, searchOutput, {
