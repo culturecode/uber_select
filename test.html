@@ -10,7 +10,9 @@
   .example {
     display: inline-block;
     margin-right: 5em;
+    margin-bottom: 5em;
     max-width: 300px;
+    vertical-align: top;
   }
 
   label {
@@ -141,7 +143,7 @@
 
 <div class="example">
   <label for="select">
-  Select with search and placeholder
+  search and placeholder
   </label>
   <select placeholder="Choose a gender">
     <option></option>
@@ -150,9 +152,8 @@
   </select>
 </div>
 
+
 <div class="example">
-  <p>This example prepopulates the search with the value from the select, and
-  clears the select when the search is cleared.</p>
   <label for="select">
   Prepopulate Search and Clear Select
   </label>
@@ -161,11 +162,26 @@
     <option selected="selected">male</option>
     <option>female</option>
   </select>
+  <p>This example prepopulates the search with the value from the select, and
+  clears the select when the search is cleared.</p>
 </div>
 
 <div class="example">
   <label for="select">
-  Grouped Select with search
+  blank options hidden
+  </label>
+  <select placeholder="Choose a gender" data-uber-options='{"hideBlankOption":true, "prepopulateSearchOnOpen":true, "clearSearchClearsSelect":true}'>
+    <option></option>
+    <option selected="selected">male</option>
+    <option>female</option>
+  </select>
+  <p>This prepopulated example hides blank options, but still allows the search to be cleared</p>
+</div>
+
+
+<div class="example">
+  <label for="select">
+  Grouped search
   </label>
   <select>
     <optgroup label="Common">

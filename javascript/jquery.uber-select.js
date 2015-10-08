@@ -7,7 +7,8 @@
         clearSearchButton:'&#x2715;',         // Text content of clear search button
         selectCaret: '&#x2304;',              // Text content of select caret
         prepopulateSearchOnOpen: false,       // Should the search input start with the selected value in it when the pane is opened?
-        clearSearchClearsSelect: false        // Should the select value be cleared When the search is cleared?
+        clearSearchClearsSelect: false,       // Should the select value be cleared When the search is cleared?
+        hideBlankOption: false                // Should blank options be hidden automatically?
       }, opts, $(this).data('uber-options'))
 
       var select            = this
@@ -28,7 +29,7 @@
           datumPreprocessor: datumPreprocessor
         },
         view: {
-          renderResults: renderResultsWithGroupSupport
+          renderResults: renderResults
         }
       })
 
@@ -108,9 +109,9 @@
         return $(select).find('option').map(function(){
           var group = $(this).closest('optgroup').attr('label')
           var visibility = $(this).data('visibility')
-          var text = $(this).text() || "&nbsp;"
-          var matchValue = $(this).data('match-value') || $(this).text()
-          var value = $(this).attr('value') || $(this).text()
+          var text = $(this).text()
+          var matchValue = $(this).data('match-value') || text
+          var value = $(this).attr('value') || text
 
           return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group}
         })
@@ -132,16 +133,21 @@
         return datum.matchValue
       }
 
-      function renderResultsWithGroupSupport(data){
+      // Adds group support and blank option hiding
+      function renderResults(data){
         var list = $('<ul class="results">')
         var dummyNode = $('<div>')
         context = this
         $.each(data, function(_, datum){
-          dummyNode.append(
-            context.buildResult(datum.text)
-            .attr('data-group', datum.group) // Add the group name so we can group items
-            .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
-          )
+          var result = context.buildResult(datum.text || "&nbsp;")
+                                .attr('data-group', datum.group) // Add the group name so we can group items
+                                .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
+
+          if (options.hideBlankOption && !datum.text){
+            result.hide()
+          }
+
+          dummyNode.append(result)
         })
 
         // Arrange ungrouped list items
