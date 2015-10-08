@@ -6,7 +6,8 @@ function Pane(options){
 
   var context = this
   var model = this.model = {}
-  var view = this.view = $('<div class="pane"></div>')
+  var isOpen = false
+  var view = this.view = $('<div class="pane"></div>').toggle(isOpen)
   var innerPane = $('<div class="pane_inner"></div>').appendTo(view)
 
   this.addContent = function(name, content){
@@ -44,10 +45,14 @@ function Pane(options){
   // HELPER FUNCTIONS
 
   this.show = function(){
+    if (isOpen) { return }
+    isOpen = true
     view.show()
     $(this).trigger('shown')
   }
   this.hide = function(){
+    if (!isOpen) { return }
+    isOpen = false
     view.hide()
     $(this).trigger('hidden')
   }
