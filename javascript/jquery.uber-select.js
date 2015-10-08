@@ -158,7 +158,7 @@
       }
 
       function updateSelectValue(select, value){
-        $(select).val(value)
+        $(select).val(value).change()
       }
 
       // Returns the result with the given option value
