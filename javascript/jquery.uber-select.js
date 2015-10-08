@@ -40,18 +40,21 @@
 
       // BEHAVIOUR
 
+      // When the select value changes, update the selected text
+      $(select).on('change', updateSelectedText)
+
+      // When the select value changes, mark the selected result
+      $(select).on('change', markSelected)
+
       // Update the select element when a value is chosen
       searchOutput.on('click', '.result', function(){
-        updateSelectValue(select, valueFromResult(this))
         pane.hide()
         search.clear()
-        updateUberElement()
+        updateSelectValue(select, valueFromResult(this))
       })
 
-      // Highlight the selected option in the list of results
-      $(search).on('renderedResults', function(){
-        markSelected(getSelectedResult())
-      })
+      // When the search results are rendered, mark the currently selected option
+      $(search).on('renderedResults', markSelected)
 
       $(pane).on('shown', function(){
         $(searchInput).focus() // Focus the searchInput when the pane is opened
@@ -70,10 +73,10 @@
       // INITIALIZATION
 
       $(select).hide()
-      markSelected(getSelectedResult())
+      markSelected()
       pane.hide()
       search.clear()
-      updateUberElement()
+      updateSelectedText()
 
       // HELPER FUNCTIONS
 
@@ -141,7 +144,7 @@
       }
 
       // Updates the enhanced select with the text of the selected result
-      function updateUberElement(){
+      function updateSelectedText(){
         var text = $(select).find('option:selected').text()
         if (text) {
           uberText.text(text).removeClass('empty')
@@ -150,7 +153,8 @@
         }
       }
 
-      function markSelected(selectedResult){
+      function markSelected(){
+        var selectedResult = getSelectedResult()
         var results = search.getResults()
         $(results).filter('.selected').removeClass('selected')
         $(selectedResult).addClass('selected')
