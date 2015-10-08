@@ -149,7 +149,7 @@
         if (text) {
           uberText.text(text).removeClass('empty')
         } else {
-          uberText.text(placeholder).addClass('empty')
+          uberText.html(placeholder || "&nbsp;").addClass('empty')
         }
       }
 
