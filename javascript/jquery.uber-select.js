@@ -57,7 +57,7 @@
       $(search).on('renderedResults', markSelected)
 
       $(pane).on('shown', function(){
-        $(searchInput).focus() // Focus the searchInput when the pane is opened
+        $(searchInput).focus()
         uberElement.addClass('open')
       })
 
