@@ -15,8 +15,11 @@
       var placeholder       = $(select).attr('placeholder') || $(select).attr('data-placeholder')
       var data              = dataFromSelect(this)
       var uberElement       = $('<span class="uber_select">')
-      var uberText          = $('<span class="selected_text">').appendTo(uberElement)
-      var selectCaret       = $('<span class="select_caret">').appendTo(uberElement).html(options.selectCaret)
+
+      var selectedContainer = $('<span class="selected_text_container">').appendTo(uberElement)
+      var selectedText      = $('<span class="selected_text">').appendTo(selectedContainer)
+      var selectCaret       = $('<span class="select_caret">').appendTo(selectedContainer).html(options.selectCaret)
+
       var searchInput       = $('<input type="text" class="search_input" placeholder="Type to search">')
       var searchOutput      = $('<div class="results_container">')
       var clearSearchButton = $('<span class="clear_search_button">').html(options.clearSearchButton)
@@ -173,9 +176,9 @@
       function updateSelectedText(){
         var text = $(select).find('option:selected').text()
         if (text) {
-          uberText.text(text).removeClass('empty')
+          selectedText.text(text).removeClass('empty')
         } else {
-          uberText.html(placeholder || "&nbsp;").addClass('empty')
+          selectedText.html(placeholder || "&nbsp;").addClass('empty')
         }
       }
 

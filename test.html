@@ -27,19 +27,19 @@
   }
 
   .uber_select{
-    min-width: 100%; /* ensure select is as long as label */
+    min-width: 100%; /* ensure select is at least as long as label */
+    max-width: 300px;
     display: inline-block;
     border: 1px solid #E0E0E0;
     margin: 5px 0;
     cursor: pointer;
     position: relative; /* Contain pane */
   }
-  .uber_select .selected_text{
+  .uber_select .selected_text_container{
     font-family: sans-serif;
-    padding: 1px 30px 0 3px;
+    padding: 1px 30px 1px 3px;
     font-size: 20px;
     white-space: nowrap;
-    width: 100%;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -49,12 +49,14 @@
   }
 
   .uber_select .select_caret{
-    position: absolute;
-    top: 0;
-    right: 5px;
     font-size: 12px;
     font-family: 'FontAwesome';
     line-height: 24px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0 10px;
+    background-color: white;
   }
 
   .uber_select .pane{
