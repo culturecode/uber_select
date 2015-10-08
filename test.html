@@ -1,4 +1,7 @@
 <html>
+<head>
+  <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+</head>
 <body>
 <style>
   body {
@@ -30,7 +33,7 @@
   }
   .uber_select .selected_text{
     font-family: sans-serif;
-    padding: 1px 3px;
+    padding: 1px 30px 0 3px;
     font-size: 20px;
     white-space: nowrap;
     width: 100%;
@@ -40,6 +43,15 @@
   }
   .uber_select .selected_text.empty{
     color: #aaa;
+  }
+
+  .uber_select .select_caret{
+    position: absolute;
+    top: 0;
+    right: 5px;
+    font-size: 12px;
+    font-family: 'FontAwesome';
+    line-height: 24px;
   }
 
   .uber_select .pane{
@@ -179,7 +191,7 @@
 <script src="javascript/jquery.uber-select.js"></script>
 
 <script type="text/javascript">
-$('select').uberSelect()
+$('select').uberSelect({selectCaret: '&#xF078;'})
 </script>
 </body>
 </html>
