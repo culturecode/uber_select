@@ -89,8 +89,6 @@
 
         if (options.clearSearchClearsSelect){
           clearSelect()
-          updateSelectedText()
-          markSelected()
         }
       })
 
@@ -220,7 +218,7 @@
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
       function clearSelect(){
-        $(select).val('')
+        $(select).val('').change()
         if (!$(select).find('option:selected').length){
           $(select).val($(select).find('option').prop('value'))
         }
