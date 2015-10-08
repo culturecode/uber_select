@@ -85,8 +85,8 @@
           var group = $(this).closest('optgroup').attr('label')
           var visibility = $(this).data('visibility')
           var text = $(this).text() || "&nbsp;"
-          var matchValue = $(this).data('match-value') || text
-          var value = $(this).attr('value') || text
+          var matchValue = $(this).data('match-value') || $(this).text()
+          var value = $(this).attr('value') || $(this).text()
 
           return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group}
         })
