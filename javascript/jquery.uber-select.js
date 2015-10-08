@@ -8,7 +8,8 @@
         selectCaret: '&#x2304;',              // Text content of select caret
         prepopulateSearchOnOpen: false,       // Should the search input start with the selected value in it when the pane is opened?
         clearSearchClearsSelect: false,       // Should the select value be cleared When the search is cleared?
-        hideBlankOption: false                // Should blank options be hidden automatically?
+        hideBlankOption: false,               // Should blank options be hidden automatically?
+        treatBlankOptionAsPlaceholder: false  // Should blank options use the placeholder as text?
       }, opts, $(this).data('uber-options'))
 
       var select            = this
@@ -140,7 +141,8 @@
         var dummyNode = $('<div>')
         context = this
         $.each(data, function(_, datum){
-          var result = context.buildResult(datum.text || "&nbsp;")
+          var text =  (options.treatBlankOptionAsPlaceholder ? datum.text || placeholder : datum.text) || "&nbsp;"
+          var result = context.buildResult(text)
                                 .attr('data-group', datum.group) // Add the group name so we can group items
                                 .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
 
