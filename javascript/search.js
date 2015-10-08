@@ -21,7 +21,7 @@ function Search(queryInput, resultsContainer, options){
 
   // BEHAVIOUR
 
-  $(queryInput).on('input', function(){
+  $(queryInput).on('input change', function(){
     model.setQuery(this.value)
   })
 
