@@ -2,7 +2,14 @@
 (function( $ ) {
   $.fn.uberSelect = function(opts) {
     this.each(function(){
-      var options           = $.extend({search:true, clearSearchButton:'&#x2715;', selectCaret: '&#x2304;'}, opts, $(this).data('uber-options'))
+      var options = $.extend({
+        search:true,                          // Show the search input
+        clearSearchButton:'&#x2715;',         // Text content of clear search button
+        selectCaret: '&#x2304;',              // Text content of select caret
+        prepopulateSearchOnOpen: false,       // Should the search input start with the selected value in it when the pane is opened?
+        clearSearchClearsSelect: false        // Should the select value be cleared When the search is cleared?
+      }, opts, $(this).data('uber-options'))
+
       var select            = this
       var placeholder       = $(select).attr('placeholder') || $(select).attr('data-placeholder')
       var data              = dataFromSelect(this)
@@ -40,42 +47,57 @@
 
       // BEHAVIOUR
 
-      // When the select value changes, update the selected text
-      $(select).on('change', updateSelectedText)
+      // When the select value changes
+      $(select).on('change', function(){
+        updateSelectedText()
+        markSelected()
+      })
 
-      // When the select value changes, mark the selected result
-      $(select).on('change', markSelected)
+      // When the pane is opened
+      $(pane).on('shown', function(){
+        search.clear()
+        $(searchInput).focus()
+        uberElement.addClass('open')
 
-      // Update the select element when a value is chosen
+        if (options.prepopulateSearchOnOpen){
+          updateSearchValueFromSelect()
+        }
+      })
+
+      // When the query is changed
+      $(search).on('queryChanged', updateClearSearchButtonVisiblity)
+
+      // When the search results are rendered
+      $(search).on('renderedResults', markSelected)
+
+      // When a search result is chosen
       searchOutput.on('click', '.result', function(){
         pane.hide()
-        search.clear()
         updateSelectValue(select, valueFromResult(this))
       })
 
-      // When the search results are rendered, mark the currently selected option
-      $(search).on('renderedResults', markSelected)
-
-      $(pane).on('shown', function(){
-        $(searchInput).focus()
-        uberElement.addClass('open')
-      })
-
+       // When the pane is hidden
       $(pane).on('hidden', function(){
         uberElement.removeClass('open')
       })
 
-      // Clear search button behaviour
-      clearSearchButton.on('click', search.clear)
-      $(search).on('queryChanged', updateClearSearchButtonVisiblity)
+      // When the clear search button is clicked
+      clearSearchButton.on('click', function(){
+        search.clear()
+        $(searchInput).focus()
+
+        if (options.clearSearchClearsSelect){
+          clearSelect()
+          updateSelectedText()
+          markSelected()
+        }
+      })
 
 
       // INITIALIZATION
 
       $(select).hide()
       markSelected()
-      pane.hide()
-      search.clear()
       updateSelectedText()
 
       // HELPER FUNCTIONS
@@ -180,8 +202,22 @@
         return $(result).attr('data-value')
       }
 
+      // Copies the value of the select into the search input
+      function updateSearchValueFromSelect(){
+        searchInput.val($(select).find('option:selected').text())
+        updateClearSearchButtonVisiblity()
+      }
+
       function updateClearSearchButtonVisiblity(){
         clearSearchButton.toggle(!!searchInput.val())
+      }
+
+      // Selects the option with an emptystring value, or the first option if there is no blank option
+      function clearSelect(){
+        $(select).val('')
+        if (!$(select).find('option:selected').length){
+          $(select).val($(select).find('option').prop('value'))
+        }
       }
     })
 
