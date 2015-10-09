@@ -10,11 +10,13 @@
         clearSearchClearsSelect: false,       // Should the select value be cleared When the search is cleared?
         hideBlankOption: false,               // Should blank options be hidden automatically?
         treatBlankOptionAsPlaceholder: false, // Should blank options use the placeholder as text?
-        minQueryLength: 0                     // Number of characters to type before results are displayed
+        minQueryLength: 0,                    // Number of characters to type before results are displayed
+        placeholder: null,                    // Placeholder to show in the selected text area
+        searchPlaceholder: 'Type to search'   // Placeholder to show in the search input
       }, opts, $(this).data('uber-options'))
 
       var select            = this
-      var placeholder       = $(select).attr('placeholder') || $(select).attr('data-placeholder')
+      var placeholder       = $(select).attr('placeholder') || $(select).attr('data-placeholder') || options.placeholder
       var data              = dataFromSelect(this)
       var uberElement       = $('<span class="uber_select">')
 
@@ -22,7 +24,7 @@
       var selectedText      = $('<span class="selected_text">').appendTo(selectedContainer)
       var selectCaret       = $('<span class="select_caret">').appendTo(selectedContainer).html(options.selectCaret)
 
-      var searchInput       = $('<input type="text" class="search_input" placeholder="Type to search">')
+      var searchInput       = $('<input type="text" class="search_input">').attr('placeholder', options.searchPlaceholder)
       var searchOutput      = $('<div class="results_container">')
       var clearSearchButton = $('<span class="clear_search_button">').html(options.clearSearchButton)
 
