@@ -109,8 +109,9 @@
       // Returns an array of data to match against
       function dataFromSelect(select){
         return $(select).find('option').map(function(){
-          var group = $(this).closest('optgroup').attr('label')
-          var visibility = $(this).data('visibility')
+          var optgroup = $(this).closest('optgroup')
+          var group = optgroup.attr('label')
+          var visibility = $(this).data('visibility') || optgroup.data('visibility')
           var text = $(this).text()
           var matchValue = $(this).data('match-value') || text
           var value = $(this).attr('value') || text

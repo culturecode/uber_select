@@ -186,12 +186,12 @@
 
 <div class="example">
   <label for="select">
-  Grouped search
+  Grouped search with visibility
   </label>
   <select>
-    <optgroup label="Common">
-      <option data-visibility="no-query">cat</option>
-      <option data-visibility="no-query">dog</option>
+    <optgroup label="Common" data-visibility="no-query">
+      <option>cat</option>
+      <option>dog</option>
     </optgroup>
     <option>No group animal 1</option>
     <option>No group animal 2</option>
@@ -217,6 +217,13 @@
       <option>lemur</option>
     </optgroup>
   </select>
+  <p>This example uses optgroups to separate option types. Options and optgroups
+    may have a <code>data-visibility</code> attribute that determines when the option is available
+    for matching. A value of <code>no-query</code> means the option is only visible when the
+    user isn't performing a search. A value of <code>query</code> means the option
+    is only visible during a search. If an option doesn't specify this value, it
+    will inherit it from its optgroup.
+  </p>
 </div>
 
 
