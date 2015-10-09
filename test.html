@@ -30,12 +30,12 @@
     min-width: 100%; /* ensure select is at least as long as label */
     max-width: 300px;
     display: inline-block;
-    border: 1px solid #E0E0E0;
     margin: 5px 0;
-    cursor: pointer;
     position: relative; /* Contain pane */
   }
   .uber_select .selected_text_container{
+    border: 1px solid #E0E0E0;
+    cursor: pointer;
     font-family: sans-serif;
     padding: 1px 30px 1px 3px;
     font-size: 20px;
@@ -43,6 +43,7 @@
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
+    position: relative; /* Contain caret */
   }
   .uber_select .selected_text.empty{
     color: #aaa;
@@ -99,6 +100,7 @@
     font-weight: bold;
   }
   .uber_select .result{
+    cursor: pointer;
     padding: 1px 20px;
   }
   .uber_select .result:hover{
@@ -123,6 +125,7 @@
   }
 
   .uber_select .clear_search_button{
+    cursor: pointer;
     position: absolute;
     top: 35px;
     height: 23px;
