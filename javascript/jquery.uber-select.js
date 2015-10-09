@@ -9,7 +9,8 @@
         prepopulateSearchOnOpen: false,       // Should the search input start with the selected value in it when the pane is opened?
         clearSearchClearsSelect: false,       // Should the select value be cleared When the search is cleared?
         hideBlankOption: false,               // Should blank options be hidden automatically?
-        treatBlankOptionAsPlaceholder: false  // Should blank options use the placeholder as text?
+        treatBlankOptionAsPlaceholder: false, // Should blank options use the placeholder as text?
+        minQueryLength: 0                     // Number of characters to type before results are displayed
       }, opts, $(this).data('uber-options'))
 
       var select            = this
@@ -30,7 +31,8 @@
         model: {
           data: data,
           dataForMatching: dataForMatching,
-          datumPreprocessor: datumPreprocessor
+          datumPreprocessor: datumPreprocessor,
+          minQueryLength: options.minQueryLength
         },
         view: {
           renderResults: renderResults

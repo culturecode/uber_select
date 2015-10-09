@@ -2,10 +2,12 @@ function Search(queryInput, resultsContainer, options){
   var context = this
   var model = this.model = new SearchModel(options.model)
   var view = this.view = new SearchView(resultsContainer, options.view)
-
+  var noResultsText;
 
   // HELPER FUNCTIONS
+
   this.renderResults = function(){
+    context.updateNoResultsText()
     view.renderResults(model.getResults())
     $(this).trigger('renderedResults')
   }
@@ -17,6 +19,16 @@ function Search(queryInput, resultsContainer, options){
   this.clear = function(){
     queryInput.val('')
     model.setQuery('')
+  }
+
+  this.updateNoResultsText = function(){
+    var minQueryLength = options.model.minQueryLength
+
+    if (model.getQuery().length < minQueryLength){
+      noResultsText = "Type at least " + minQueryLength + (minQueryLength == 1 ? ' character' : ' characters') + ' to search'
+    } else {
+      noResultsText = 'No matches found'
+    }
   }
 
   // BEHAVIOUR
@@ -56,13 +68,17 @@ function Search(queryInput, resultsContainer, options){
   function SearchModel(options){
     var data, query, results;
     var context = this
-    var results
+    options = $.extend({minQueryLength: 0}, options)
 
     this.setQuery = function(value){
       if (query == value) { return }
       query = value
       this.updateResults()
       $(this).trigger('queryChanged')
+    }
+
+    this.getQuery = function(){
+      return query || ''
     }
 
     this.setData = function(value){
@@ -76,7 +92,9 @@ function Search(queryInput, resultsContainer, options){
 
     this.updateResults = function(){
       var processedQuery = context.queryPreprocessor(query)
-      if (this.isBlankQuery(processedQuery)){
+      if (options.minQueryLength > processedQuery.length) {
+        results = []
+      } else if (this.isBlankQuery(processedQuery)){
         results = $.each(this.dataForMatching(processedQuery, data), function(){ return this })
       } else {
         results = []
@@ -153,7 +171,7 @@ function Search(queryInput, resultsContainer, options){
     }
 
     this.buildNoResult = function(){
-      return $('<li>').html('No matches found').addClass(noResultClass)
+      return $('<li>').html(noResultsText).addClass(noResultClass)
     }
 
     // INITIALIZATION
