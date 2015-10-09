@@ -125,7 +125,8 @@ function Search(queryInput, resultsContainer, options){
 
   function SearchView(resultsContainer, options){
     var context = this
-    var resultClass = 'result'
+    var resultClass = this.resultClass = 'result'
+    var noResultClass = this.noResultClass = 'no_result'
     this.resultsContainer = resultsContainer
 
     this.getResults = function(){
@@ -137,12 +138,21 @@ function Search(queryInput, resultsContainer, options){
       $.each(data, function(_, datum){
         list.append(context.buildResult(datum))
       })
+
+      if (data.length == 0) {
+        list.append(context.buildNoResult())
+      }
+
       $(resultsContainer).html(list)
     }
 
     // Can be overridden to format how results are built
     this.buildResult = function(datum){
       return $('<li>').html(datum).addClass(resultClass)
+    }
+
+    this.buildNoResult = function(){
+      return $('<li>').html('No matches found').addClass(noResultClass)
     }
 
     // INITIALIZATION

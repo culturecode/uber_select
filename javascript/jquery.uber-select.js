@@ -167,6 +167,10 @@
             .append(sublist).appendTo(list)
         }
 
+        if (data.length == 0) {
+          list.append(context.buildNoResult())
+        }
+
         $(this.resultsContainer).html(list)
       }
 
