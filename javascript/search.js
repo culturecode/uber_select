@@ -142,6 +142,7 @@ function Search(queryInput, resultsContainer, options){
 
       if (data.length == 0) {
         list.append(context.buildNoResult())
+            .addClass('empty')
       }
 
       $(resultsContainer).html(list)

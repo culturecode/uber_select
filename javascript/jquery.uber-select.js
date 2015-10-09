@@ -169,6 +169,7 @@
 
         if (data.length == 0) {
           list.append(context.buildNoResult())
+              .addClass('empty')
         }
 
         $(this.resultsContainer).html(list)
