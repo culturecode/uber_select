@@ -60,6 +60,7 @@ function Search(queryInput, resultsContainer, options){
     var results
 
     this.setQuery = function(value){
+      if (query == value) { return }
       query = value
       this.updateResults()
       $(this).trigger('queryChanged')
