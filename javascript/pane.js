@@ -25,6 +25,7 @@ function Pane(options){
   if (options.trigger){
     // Show the pane when the select element is clicked
     $(options.trigger).on('click', function(){
+      if ($(event.target).closest(view).length ) { return }
       context.show()
     })
 
