@@ -31,7 +31,6 @@ function Search(queryInput, resultsContainer, options){
       var results = context.getResults()
       if (results.length == 1){
         results.first().click()
-      } else {
         return false
       }
     }
