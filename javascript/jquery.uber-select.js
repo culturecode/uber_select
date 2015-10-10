@@ -13,7 +13,7 @@
         minQueryLength: 0,                               // Number of characters to type before results are displayed
         placeholder: null,                               // Placeholder to show in the selected text area
         searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
-        noResultsText: true,                             // The message shown when there are no results. true: default message, false: no message, or pass a string for a custom message
+        noResultsText: 'No Matches Found',               // The message shown when there are no results
         resultPostprocessor: function(result, datum) { } // A function that is run after a result is built and can be used to decorate it
       }, opts, $(this).data('uber-options'))
 
@@ -29,6 +29,7 @@
       var searchInput       = $('<input type="text" class="search_input">').attr('placeholder', options.searchPlaceholder)
       var searchOutput      = $('<div class="results_container">')
       var clearSearchButton = $('<span class="clear_search_button">').html(options.clearSearchButton)
+      var messages          = $('<div class="messages">')
 
       var pane   = new Pane({anchor: uberElement, trigger: uberElement})
       var search = new Search(searchInput, searchOutput, {
@@ -40,8 +41,7 @@
         },
         view: {
           renderResults: renderResults,
-          buildResult: buildResult,
-          noResultsText: options.noResultsText
+          buildResult: buildResult
         }
       })
 
@@ -51,6 +51,7 @@
         // Add a clear search button
         updateClearSearchButtonVisiblity()
         pane.addContent('clearSearchButton', clearSearchButton)
+        pane.addContent('messages', messages)
       }
 
       pane.addContent('results', searchOutput)
@@ -78,10 +79,16 @@
       })
 
       // When the query is changed
-      $(search).on('queryChanged', updateClearSearchButtonVisiblity)
+      $(search).on('queryChanged', function(){
+        updateClearSearchButtonVisiblity()
+        updateMessages()
+      })
 
       // When the search results are rendered
-      $(search).on('renderedResults', markSelected)
+      $(search).on('renderedResults', function(){
+        markSelected()
+        updateMessages()
+      })
 
       // When a search result is chosen
       searchOutput.on('click', '.result', function(){
@@ -173,9 +180,8 @@
             .append(sublist).appendTo(list)
         }
 
-        if (data.length == 0 && this.options.noResultsText) {
-          list.append(context.buildNoResult())
-              .addClass('empty')
+        if (data.length == 0) {
+          list.addClass('empty')
         }
 
         $(this.resultsContainer).html(list)
@@ -240,7 +246,26 @@
       }
 
       function updateClearSearchButtonVisiblity(){
-        clearSearchButton.toggle(!!searchInput.val())
+        clearSearchButton.toggle(!!queryLength())
+      }
+
+      function updateMessages(){
+        messages.show()
+        if (options.minQueryLength && queryLength() < options.minQueryLength){
+          messages.html('Type at least ' + options.minQueryLength + (options.minQueryLength == 1 ? ' character' : ' characters') + ' to search')
+        } else if (!queryLength()){
+          messages.html(options.noResultsText)
+        } else {
+          messages.empty().hide()
+        }
+      }
+
+      function queryLength(){
+        return searchInput.val().length
+      }
+
+      function resultsCount(){
+        return searchOutput.find('li').length
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option

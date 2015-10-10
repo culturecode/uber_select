@@ -6,7 +6,6 @@ function Search(queryInput, resultsContainer, options){
   // HELPER FUNCTIONS
 
   this.renderResults = function(){
-    context.updateNoResultsText()
     view.renderResults(model.getResults())
     $(this).trigger('renderedResults')
   }
@@ -18,19 +17,6 @@ function Search(queryInput, resultsContainer, options){
   this.clear = function(){
     queryInput.val('')
     model.setQuery('')
-  }
-
-  this.updateNoResultsText = function(){
-    if (!view.options.noResultsText) { return }
-
-    var minQueryLength = options.model.minQueryLength
-    view.options.originalNoResultsText = view.options.originalNoResultsText || view.options.noResultsText
-
-    if (model.getQuery().length < minQueryLength){
-      view.options.noResultsText = "Type at least " + minQueryLength + (minQueryLength == 1 ? ' character' : ' characters') + ' to search'
-    } else {
-      view.options.noResultsText = view.options.originalNoResultsText
-    }
   }
 
   // BEHAVIOUR
@@ -148,9 +134,7 @@ function Search(queryInput, resultsContainer, options){
 
     this.resultsContainer = resultsContainer
     this.options = options = $.extend({
-      resultClass: 'result',
-      noResultsText: 'No matches found',
-      noResultClass: 'no_result'
+      resultClass: 'result'
     }, options)
 
     this.getResults = function(){
@@ -163,9 +147,8 @@ function Search(queryInput, resultsContainer, options){
         list.append(context.buildResult(datum))
       })
 
-      if (data.length == 0 && options.noResultsText) {
-        list.append(context.buildNoResult())
-            .addClass('empty')
+      if (data.length == 0) {
+        list.addClass('empty')
       }
 
       $(resultsContainer).html(list)
@@ -174,10 +157,6 @@ function Search(queryInput, resultsContainer, options){
     // Can be overridden to format how results are built
     this.buildResult = function(datum){
       return $('<li>').html(datum).addClass(options.resultClass)
-    }
-
-    this.buildNoResult = function(){
-      return $('<li>').html(options.noResultsText).addClass(options.noResultClass)
     }
 
     // INITIALIZATION

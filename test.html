@@ -87,7 +87,11 @@
   .uber_select .results_container .results{
     overflow: auto;
     max-height: 310px;
-    padding: 5px 0;
+    margin: 5px 0;
+  }
+
+  .uber_select .results_container .results.empty{
+    display: none;
   }
 
   .uber_select .sublist_name{
@@ -112,9 +116,13 @@
     background-color: #71BDFF;
     color: white;
   }
-  .uber_select .no_result{
+  .uber_select .messages{
     padding: 1px 20px;
     color: #AAA;
+    margin: 5px 0;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .uber_select.open .selected_text{
