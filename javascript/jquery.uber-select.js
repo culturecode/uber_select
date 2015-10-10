@@ -142,9 +142,9 @@
 
       // Adds group support and blank option hiding
       function renderResults(data){
+        var context = this
         var list = $('<ul class="results">')
         var dummyNode = $('<div>')
-        context = this
         $.each(data, function(_, datum){
           var text =  (options.treatBlankOptionAsPlaceholder ? datum.text || placeholder : datum.text) || "&nbsp;"
           var result = context.buildResult(text)
