@@ -121,7 +121,7 @@
           var matchValue = $(this).data('match-value') || text
           var value = $(this).attr('value') || text
 
-          return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group}
+          return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group, element:this}
         })
       }
 
