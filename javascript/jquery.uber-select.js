@@ -3,16 +3,17 @@
   $.fn.uberSelect = function(opts) {
     this.each(function(){
       var options = $.extend({
-        search:true,                          // Show the search input
-        clearSearchButton:'&#x2715;',         // Text content of clear search button
-        selectCaret: '&#x2304;',              // Text content of select caret
-        prepopulateSearchOnOpen: false,       // Should the search input start with the selected value in it when the pane is opened?
-        clearSearchClearsSelect: false,       // Should the select value be cleared When the search is cleared?
-        hideBlankOption: false,               // Should blank options be hidden automatically?
-        treatBlankOptionAsPlaceholder: false, // Should blank options use the placeholder as text?
-        minQueryLength: 0,                    // Number of characters to type before results are displayed
-        placeholder: null,                    // Placeholder to show in the selected text area
-        searchPlaceholder: 'Type to search'   // Placeholder to show in the search input
+        search:true,                                     // Show the search input
+        clearSearchButton:'&#x2715;',                    // Text content of clear search button
+        selectCaret: '&#x2304;',                         // Text content of select caret
+        prepopulateSearchOnOpen: false,                  // Should the search input start with the selected value in it when the pane is opened?
+        clearSearchClearsSelect: false,                  // Should the select value be cleared When the search is cleared?
+        hideBlankOption: false,                          // Should blank options be hidden automatically?
+        treatBlankOptionAsPlaceholder: false,            // Should blank options use the placeholder as text?
+        minQueryLength: 0,                               // Number of characters to type before results are displayed
+        placeholder: null,                               // Placeholder to show in the selected text area
+        searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
+        resultPostprocessor: function(result, datum) { } // A function that is run after a result is built and can be used to decorate it
       }, opts, $(this).data('uber-options'))
 
       var select            = this
@@ -182,6 +183,8 @@
         var result = $('<li>')
           .html((options.treatBlankOptionAsPlaceholder ? datum.text || placeholder : datum.text) || "&nbsp;")
           .addClass(this.resultClass)
+
+        options.resultPostprocessor(result, datum)
 
         return result
       }
