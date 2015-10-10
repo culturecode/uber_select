@@ -11,6 +11,7 @@
         hideBlankOption: false,                          // Should blank options be hidden automatically?
         treatBlankOptionAsPlaceholder: false,            // Should blank options use the placeholder as text?
         minQueryLength: 0,                               // Number of characters to type before results are displayed
+        minQueryMessage: true,                           // Message to show when the query doesn't exceed the minimum length. True for default, false for none, or custom message.
         placeholder: null,                               // Placeholder to show in the selected text area
         searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
         noResultsText: 'No Matches Found',               // The message shown when there are no results
@@ -251,8 +252,8 @@
 
       function updateMessages(){
         messages.show()
-        if (options.minQueryLength && queryLength() < options.minQueryLength){
-          messages.html('Type at least ' + options.minQueryLength + (options.minQueryLength == 1 ? ' character' : ' characters') + ' to search')
+        if (options.minQueryLength && options.minQueryMessage && queryLength() < options.minQueryLength){
+          messages.html(options.minQueryMessage === true ? 'Type at least ' + options.minQueryLength + (options.minQueryLength == 1 ? ' character' : ' characters') + ' to search' : options.minQueryMessage)
         } else if (options.noResultsText && !resultsCount()){
           messages.html(options.noResultsText)
         } else {
