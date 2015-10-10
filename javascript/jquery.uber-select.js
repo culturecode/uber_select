@@ -37,7 +37,8 @@
           minQueryLength: options.minQueryLength
         },
         view: {
-          renderResults: renderResults
+          renderResults: renderResults,
+          buildResult: buildResult
         }
       })
 
@@ -146,16 +147,14 @@
         var list = $('<ul class="results">')
         var dummyNode = $('<div>')
         $.each(data, function(_, datum){
-          var text =  (options.treatBlankOptionAsPlaceholder ? datum.text || placeholder : datum.text) || "&nbsp;"
-          var result = context.buildResult(text)
-                                .attr('data-group', datum.group) // Add the group name so we can group items
-                                .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
+          var result = context.buildResult(datum)
+            .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
+            .attr('data-group', datum.group) // Add the group name so we can group items
+            .appendTo(dummyNode)
 
           if (options.hideBlankOption && !datum.text){
             result.hide()
           }
-
-          dummyNode.append(result)
         })
 
         // Arrange ungrouped list items
@@ -177,6 +176,14 @@
         }
 
         $(this.resultsContainer).html(list)
+      }
+
+      function buildResult(datum){
+        var result = $('<li>')
+          .html((options.treatBlankOptionAsPlaceholder ? datum.text || placeholder : datum.text) || "&nbsp;")
+          .addClass(this.resultClass)
+
+        return result
       }
 
       // Returns the selected result based on the select's value
