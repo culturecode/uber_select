@@ -21,12 +21,15 @@ function Search(queryInput, resultsContainer, options){
   }
 
   this.updateNoResultsText = function(){
+    if (!view.options.noResultsText) { return }
+
     var minQueryLength = options.model.minQueryLength
+    view.options.originalNoResultsText = view.options.originalNoResultsText || view.options.noResultsText
 
     if (model.getQuery().length < minQueryLength){
       view.options.noResultsText = "Type at least " + minQueryLength + (minQueryLength == 1 ? ' character' : ' characters') + ' to search'
     } else {
-      view.options.noResultsText = 'No matches found'
+      view.options.noResultsText = view.options.originalNoResultsText
     }
   }
 
@@ -160,7 +163,7 @@ function Search(queryInput, resultsContainer, options){
         list.append(context.buildResult(datum))
       })
 
-      if (data.length == 0) {
+      if (data.length == 0 && options.noResultsText) {
         list.append(context.buildNoResult())
             .addClass('empty')
       }

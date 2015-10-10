@@ -13,6 +13,7 @@
         minQueryLength: 0,                               // Number of characters to type before results are displayed
         placeholder: null,                               // Placeholder to show in the selected text area
         searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
+        noResultsText: true,                             // The message shown when there are no results. true: default message, false: no message, or pass a string for a custom message
         resultPostprocessor: function(result, datum) { } // A function that is run after a result is built and can be used to decorate it
       }, opts, $(this).data('uber-options'))
 
@@ -39,7 +40,8 @@
         },
         view: {
           renderResults: renderResults,
-          buildResult: buildResult
+          buildResult: buildResult,
+          noResultsText: options.noResultsText
         }
       })
 
@@ -171,7 +173,7 @@
             .append(sublist).appendTo(list)
         }
 
-        if (data.length == 0) {
+        if (data.length == 0 && this.options.noResultsText) {
           list.append(context.buildNoResult())
               .addClass('empty')
         }
