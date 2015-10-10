@@ -2,7 +2,6 @@ function Search(queryInput, resultsContainer, options){
   var context = this
   var model = this.model = new SearchModel(options.model)
   var view = this.view = new SearchView(resultsContainer, options.view)
-  var noResultsText;
 
   // HELPER FUNCTIONS
 
@@ -25,9 +24,9 @@ function Search(queryInput, resultsContainer, options){
     var minQueryLength = options.model.minQueryLength
 
     if (model.getQuery().length < minQueryLength){
-      noResultsText = "Type at least " + minQueryLength + (minQueryLength == 1 ? ' character' : ' characters') + ' to search'
+      view.options.noResultsText = "Type at least " + minQueryLength + (minQueryLength == 1 ? ' character' : ' characters') + ' to search'
     } else {
-      noResultsText = 'No matches found'
+      view.options.noResultsText = 'No matches found'
     }
   }
 
@@ -143,12 +142,16 @@ function Search(queryInput, resultsContainer, options){
 
   function SearchView(resultsContainer, options){
     var context = this
-    var resultClass = this.resultClass = 'result'
-    var noResultClass = this.noResultClass = 'no_result'
+
     this.resultsContainer = resultsContainer
+    this.options = options = $.extend({
+      resultClass: 'result',
+      noResultsText: 'No matches found',
+      noResultClass: 'no_result'
+    }, options)
 
     this.getResults = function(){
-      return $(resultsContainer).find('.' + resultClass)
+      return $(resultsContainer).find('.' + options.resultClass)
     }
 
     this.renderResults = function(data){
@@ -167,11 +170,11 @@ function Search(queryInput, resultsContainer, options){
 
     // Can be overridden to format how results are built
     this.buildResult = function(datum){
-      return $('<li>').html(datum).addClass(resultClass)
+      return $('<li>').html(datum).addClass(options.resultClass)
     }
 
     this.buildNoResult = function(){
-      return $('<li>').html(noResultsText).addClass(noResultClass)
+      return $('<li>').html(options.noResultsText).addClass(options.noResultClass)
     }
 
     // INITIALIZATION
