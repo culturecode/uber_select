@@ -253,7 +253,7 @@
         messages.show()
         if (options.minQueryLength && queryLength() < options.minQueryLength){
           messages.html('Type at least ' + options.minQueryLength + (options.minQueryLength == 1 ? ' character' : ' characters') + ' to search')
-        } else if (!queryLength()){
+        } else if (options.noResultsText && !resultsCount()){
           messages.html(options.noResultsText)
         } else {
           messages.empty().hide()
