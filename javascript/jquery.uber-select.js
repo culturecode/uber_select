@@ -38,7 +38,8 @@
           data: data,
           dataForMatching: dataForMatching,
           datumPreprocessor: datumPreprocessor,
-          minQueryLength: options.minQueryLength
+          minQueryLength: options.minQueryLength,
+          patternForMatching: options.patternForMatching || Search.prototype.patternForMatching
         },
         view: {
           renderResults: renderResults,

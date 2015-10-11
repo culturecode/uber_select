@@ -86,8 +86,9 @@ function Search(queryInput, resultsContainer, options){
         results = $.each(this.dataForMatching(processedQuery, data), function(){ return this })
       } else {
         results = []
+        var pattern = this.patternForMatching(processedQuery)
         $.each(this.dataForMatching(processedQuery, data), function(index, datum){
-          if (context.match(processedQuery, context.datumPreprocessor(datum), index)){
+          if (context.match(pattern, context.datumPreprocessor(datum), processedQuery)){
             results.push(datum)
           }
         })
@@ -105,9 +106,15 @@ function Search(queryInput, resultsContainer, options){
       return data
     }
 
+    // Provides a regexp for matching the processedDatum from the processedQuery
     // Can be overridden to provide more sophisticated matching behaviour
-    this.match = function(processedQuery, processedDatum, index){
-      return processedDatum.toLowerCase().indexOf(processedQuery.toLowerCase()) > -1
+    this.patternForMatching = function(processedQuery){
+      return new RegExp(processedQuery.escapeForRegExp(), 'i')
+    }
+
+    // Can be overridden to provide more sophisticated matching behaviour
+    this.match = function(pattern, processedDatum, processedQuery){
+      return pattern.test(processedDatum)
     }
 
     // Can be overridden to mutate the query being used to match before matching
