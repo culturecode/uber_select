@@ -34,6 +34,11 @@ function Pane(options){
       if ($(event.target).closest(options.trigger).length || $(event.target).closest(view).length ) { return }
       context.hide()
     })
+
+    // Make it possible to have elements in the pane that close it
+    view.on('click', '[data-behaviour~=close-pane]', function(event){
+      context.hide()
+    })
   }
 
   // Close the pane when the user presses escape
