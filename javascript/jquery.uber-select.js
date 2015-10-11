@@ -73,6 +73,7 @@
       // When the pane is opened
       $(pane).on('shown', function(){
         search.clear()
+        unhighlightResults()
         $(searchInput).focus()
         uberElement.addClass('open')
 
@@ -91,6 +92,21 @@
       $(search).on('renderedResults', function(){
         markSelected()
         updateMessages()
+      })
+
+      // Handle up and down arrow key presses
+      $(searchInput).on('keydown', function(event){
+        switch (event.which) {
+          case 38: // Up Arrow
+            stepHighlight(-1, true)
+            break
+          case 40: // Down Arrow
+            stepHighlight(1)
+            break
+          case 13: // Enter
+            highlightedResult().click()
+            break
+        }
       })
 
       // When a search result is chosen
@@ -270,7 +286,7 @@
       }
 
       function resultsCount(){
-        return searchOutput.find('li').length
+        return results().length
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
@@ -278,6 +294,57 @@
         $(select).val('').change()
         if (!$(select).find('option:selected').length){
           $(select).val($(select).find('option').prop('value'))
+        }
+      }
+
+      function stepHighlight(amount, allowUnhighlight){
+        var index = visibleResults().index(highlightedResult())
+        var result = visibleResults()[index + amount]
+
+        if (result || allowUnhighlight){
+          unhighlightResults()
+          highlightResult(result)
+        }
+      }
+
+      function highlightResult(result){
+        result = $(result)
+        if (!result.length) { return }
+
+        result.addClass('highlighted')
+        scrollResultIntoView(result)
+      }
+
+      function unhighlightResults(){
+        highlightedResult().removeClass('highlighted')
+      }
+
+      function highlightedResult(){
+        return results().filter('.highlighted')
+      }
+
+      function visibleResults(){
+        return results().filter(':visible')
+      }
+
+      function results(){
+        return searchOutput.find('.result')
+      }
+
+      function scrollResultIntoView(result){
+        result = $(result)
+        var container = result.closest('.results').css('position', 'relative') // Ensure the results container is positioned so offset is calculated correctly
+        var containerHeight = container.height()
+        var containerTop = container.get(0).scrollTop
+        var containerBottom = containerTop + containerHeight
+        var resultHeight = result.height()
+        var resultTop = result.get(0).offsetTop
+        var resultBottom = resultTop + resultHeight
+
+        if (containerBottom < resultBottom){
+          container.scrollTop(resultBottom - containerHeight)
+        } else if (containerTop > resultTop){
+          container.scrollTop(resultTop)
         }
       }
     })
