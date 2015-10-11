@@ -15,7 +15,8 @@
         placeholder: null,                               // Placeholder to show in the selected text area
         searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
         noResultsText: 'No Matches Found',               // The message shown when there are no results
-        resultPostprocessor: function(result, datum) { } // A function that is run after a result is built and can be used to decorate it
+        resultPostprocessor: function(result, datum){},  // A function that is run after a result is built and can be used to decorate it
+        onSelect: function(value, result){}              // A function to run after a result is selected
       }, opts, $(this).data('uber-options'))
 
       var select            = this
@@ -95,7 +96,9 @@
       // When a search result is chosen
       searchOutput.on('click', '.result', function(){
         pane.hide()
-        updateSelectValue(select, valueFromResult(this))
+        var value = valueFromResult(this)
+        updateSelectValue(select, value)
+        options.onSelect(value, this)
       })
 
        // When the pane is hidden
