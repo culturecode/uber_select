@@ -109,12 +109,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .uber_select .result:hover{
-    background-color: #C4E4FF;
-  }
   .uber_select .result.selected{
     background-color: #71BDFF;
     color: white;
+  }
+  .uber_select .result:hover, .uber_select .result.highlighted{
+    background-color: #C4E4FF;
+    color: inherit;
   }
   .uber_select .messages{
     padding: 1px 20px;
