@@ -26,13 +26,13 @@ function Search(queryInput, resultsContainer, options){
   })
 
   // If there's only one option and the user presses enter, click that option
-  $(queryInput).on('keyup', function(event){
+  $(queryInput).on('keydown', function(event){
     if (event.which == 13){
       var results = context.getResults()
       if (results.length == 1){
         results.first().click()
-        return false
       }
+      return false
     }
   })
 
