@@ -24,9 +24,18 @@ function Pane(options){
 
   if (options.trigger){
     // Show the pane when the select element is clicked
-    $(options.trigger).on('click', function(){
-      if ($(event.target).closest(view).length ) { return }
-      context.show()
+    $(options.trigger).on('click', function(event){
+      if (!isEventOutsidePane(event)) {
+        context.show()
+      }
+    })
+
+    // Show the pane if the user was tabbed onto the trigger and pressed enter or space
+    $(options.trigger).on('keyup', function(event){
+      if (event.which == 13 || event.which == 32){
+        context.show()
+        return false
+      }
     })
 
     // Hide the pane when clicked out
@@ -61,6 +70,11 @@ function Pane(options){
     isOpen = false
     view.hide()
     $(this).trigger('hidden')
+  }
+
+  // returns true if the event originated outside the pane
+  function isEventOutsidePane(event){
+    return $(event.target).closest(view).length
   }
 
   // INITIALIZATION

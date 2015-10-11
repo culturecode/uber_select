@@ -24,7 +24,7 @@
       var data              = dataFromSelect(this)
       var uberElement       = $('<span class="uber_select">')
 
-      var selectedContainer = $('<span class="selected_text_container">').appendTo(uberElement)
+      var selectedContainer = $('<span class="selected_text_container" tabindex=0 role="button">').appendTo(uberElement)
       var selectedText      = $('<span class="selected_text">').appendTo(selectedContainer)
       var selectCaret       = $('<span class="select_caret">').appendTo(selectedContainer).html(options.selectCaret)
 
@@ -33,7 +33,7 @@
       var clearSearchButton = $('<span class="clear_search_button">').html(options.clearSearchButton)
       var messages          = $('<div class="messages">')
 
-      var pane   = new Pane({anchor: uberElement, trigger: uberElement})
+      var pane   = new Pane({anchor: uberElement, trigger: selectedContainer})
       var search = new Search(searchInput, searchOutput, {
         model: {
           data: data,
