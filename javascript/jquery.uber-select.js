@@ -125,6 +125,7 @@
       // When the clear search button is clicked
       clearSearchButton.on('click', function(){
         search.clear()
+        updateClearSearchButtonVisiblity()
         $(searchInput).focus()
 
         if (options.clearSearchClearsSelect){
