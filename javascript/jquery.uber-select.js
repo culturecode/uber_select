@@ -28,13 +28,12 @@
       var selectedText      = $('<span class="selected_text">').appendTo(selectedContainer)
       var selectCaret       = $('<span class="select_caret">').appendTo(selectedContainer).html(options.selectCaret)
 
-      var searchInput       = $('<input type="text" class="search_input">').attr('placeholder', options.searchPlaceholder)
+      var searchField       = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
       var searchOutput      = $('<div class="results_container">')
-      var clearSearchButton = $('<span class="clear_search_button">').html(options.clearSearchButton)
       var messages          = $('<div class="messages">')
 
       var pane   = new Pane({anchor: uberElement, trigger: selectedContainer})
-      var search = new Search(searchInput, searchOutput, {
+      var search = new Search(searchField.input, searchOutput, {
         model: {
           data: data,
           dataForMatching: dataForMatching,
@@ -49,11 +48,7 @@
       })
 
       if (options.search){
-        pane.addContent('search', searchInput)
-
-        // Add a clear search button
-        updateClearSearchButtonVisiblity()
-        pane.addContent('clearSearchButton', clearSearchButton)
+        pane.addContent('search', searchField.view)
         pane.addContent('messages', messages)
       }
 
@@ -74,7 +69,7 @@
       $(pane).on('shown', function(){
         search.clear()
         unhighlightResults()
-        $(searchInput).focus()
+        $(searchField.input).focus()
         uberElement.addClass('open')
 
         if (options.prepopulateSearchOnOpen){
@@ -84,7 +79,6 @@
 
       // When the query is changed
       $(search).on('queryChanged', function(){
-        updateClearSearchButtonVisiblity()
         updateMessages()
       })
 
@@ -95,7 +89,7 @@
       })
 
       // Handle up and down arrow key presses
-      $(searchInput).on('keydown', function(event){
+      $(searchField.input).on('keydown', function(event){
         switch (event.which) {
           case 38: // Up Arrow
             stepHighlight(-1, true)
@@ -123,10 +117,8 @@
       })
 
       // When the clear search button is clicked
-      clearSearchButton.on('click', function(){
+      $(searchField).on('clear', function(){
         search.clear()
-        updateClearSearchButtonVisiblity()
-        $(searchInput).focus()
 
         if (options.clearSearchClearsSelect){
           clearSelect()
@@ -263,12 +255,8 @@
 
       // Copies the value of the select into the search input
       function updateSearchValueFromSelect(){
-        searchInput.val($(select).find('option:selected').text())
-        updateClearSearchButtonVisiblity()
-      }
-
-      function updateClearSearchButtonVisiblity(){
-        clearSearchButton.toggle(!!queryLength())
+        searchField.input.val($(select).find('option:selected').text())
+        searchField.refresh()
       }
 
       function updateMessages(){
@@ -283,7 +271,7 @@
       }
 
       function queryLength(){
-        return searchInput.val().length
+        return searchField.input.val().length
       }
 
       function resultsCount(){
