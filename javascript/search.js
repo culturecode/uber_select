@@ -15,7 +15,9 @@ function Search(queryInput, resultsContainer, options){
   }
 
   this.clear = function(){
-    queryInput.val('').change()
+    if (queryInput.val() !== ''){
+      queryInput.val('').change()
+    }
   }
 
   // BEHAVIOUR
