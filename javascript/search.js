@@ -15,8 +15,7 @@ function Search(queryInput, resultsContainer, options){
   }
 
   this.clear = function(){
-    queryInput.val('')
-    model.setQuery('')
+    queryInput.val('').change()
   }
 
   // BEHAVIOUR
