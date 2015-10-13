@@ -131,6 +131,7 @@
       $(select).hide()
       markSelected()
       updateSelectedText()
+      updateMessages()
 
       // HELPER FUNCTIONS
 
