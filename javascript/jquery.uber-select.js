@@ -118,8 +118,6 @@
 
       // When the clear search button is clicked
       $(searchField).on('clear', function(){
-        search.clear()
-
         if (options.clearSearchClearsSelect){
           clearSelect()
         }

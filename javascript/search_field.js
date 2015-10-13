@@ -18,6 +18,7 @@ function SearchField(options){
     updateClearButtonVisiblity()
     input.focus()
     triggerEvent('clear')
+    triggerEvent('change')
   })
 
   // When the enter button is pressed
