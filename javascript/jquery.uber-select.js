@@ -32,8 +32,8 @@
       $(select).on('change', updateSelectedValue)
 
       // When a result is selected
-      $(uberSearch).on('select', function(_, value){
-        updateSelectValue(value)
+      $(uberSearch).on('select', function(_, datum){
+        updateSelectValue(datum.value)
       })
 
 

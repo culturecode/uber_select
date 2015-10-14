@@ -88,9 +88,9 @@ var UberSearch = function(data, options){
   // When a search result is chosen
   searchOutput.on('click', '.result', function(){
     pane.hide()
-    var value = valueFromResult(this)
-    options.onSelect(value, this)
-    $(context).trigger('select', [value, this])
+    var datum = $(this).data()
+    options.onSelect(datum, this)
+    $(context).trigger('select', [datum, this])
   })
 
    // When the pane is hidden
@@ -151,7 +151,6 @@ var UberSearch = function(data, options){
     var dummyNode = $('<div>')
     $.each(data, function(_, datum){
       var result = context.buildResult(datum)
-        .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
         .attr('data-group', datum.group) // Add the group name so we can group items
         .appendTo(dummyNode)
 
@@ -184,6 +183,7 @@ var UberSearch = function(data, options){
     var result = $('<li>')
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
       .addClass(this.resultClass)
+      .data(datum) // Store the datum so we can get know what the value of the selected item is
 
     options.resultPostprocessor(result, datum)
 
@@ -224,7 +224,7 @@ var UberSearch = function(data, options){
   }
 
   function valueFromResult(result){
-    return $(result).attr('data-value')
+    return $(result).data('value')
   }
 
   function updateMessages(){
