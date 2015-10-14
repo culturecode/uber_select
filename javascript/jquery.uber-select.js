@@ -1,135 +1,48 @@
-
 (function( $ ) {
   $.fn.uberSelect = function(opts) {
     this.each(function(){
+      var select = this
+
       var options = $.extend({
-        search:true,                                     // Show the search input
-        clearSearchButton:'&#x2715;',                    // Text content of clear search button
-        selectCaret: '&#x2304;',                         // Text content of select caret
-        prepopulateSearchOnOpen: false,                  // Should the search input start with the selected value in it when the pane is opened?
-        clearSearchClearsSelect: false,                  // Should the select value be cleared When the search is cleared?
-        hideBlankOption: false,                          // Should blank options be hidden automatically?
-        treatBlankOptionAsPlaceholder: false,            // Should blank options use the placeholder as text?
-        minQueryLength: 0,                               // Number of characters to type before results are displayed
-        minQueryMessage: true,                           // Message to show when the query doesn't exceed the minimum length. True for default, false for none, or custom message.
-        placeholder: null,                               // Placeholder to show in the selected text area
-        searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
-        noResultsText: 'No Matches Found',               // The message shown when there are no results
-        resultPostprocessor: function(result, datum){},  // A function that is run after a result is built and can be used to decorate it
-        onSelect: function(value, result){}              // A function to run after a result is selected
-      }, opts, $(this).data('uber-options'))
+        prepopulateSearchOnOpen: false,                                                   // Should the search input start with the selected value in it when the pane is opened?
+        clearSearchClearsSelect: false,                                                   // Should the select value be cleared When the search is cleared?
+        placeholder: $(select).attr('placeholder') || $(select).attr('data-placeholder')  // Placeholder to show in the selected text area
+      }, opts, $(select).data('uber-options'))
 
-      var select            = this
-      var placeholder       = $(select).attr('placeholder') || $(select).attr('data-placeholder') || options.placeholder
-      var data              = dataFromSelect(this)
-      var uberElement       = $('<span class="uber_select">')
-
-      var selectedContainer = $('<span class="selected_text_container" tabindex=0 role="button">').appendTo(uberElement)
-      var selectedText      = $('<span class="selected_text">').appendTo(selectedContainer)
-      var selectCaret       = $('<span class="select_caret">').appendTo(selectedContainer).html(options.selectCaret)
-
-      var searchField       = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
-      var searchOutput      = $('<div class="results_container">')
-      var messages          = $('<div class="messages">')
-
-      var pane   = new Pane({anchor: uberElement, trigger: selectedContainer})
-      var search = new Search(searchField.input, searchOutput, {
-        model: {
-          data: data,
-          dataForMatching: dataForMatching,
-          datumPreprocessor: datumPreprocessor,
-          minQueryLength: options.minQueryLength,
-          patternForMatching: options.patternForMatching || Search.prototype.patternForMatching
-        },
-        view: {
-          renderResults: renderResults,
-          buildResult: buildResult
-        }
-      })
-
-      if (options.search){
-        pane.addContent('search', searchField.view)
-        pane.addContent('messages', messages)
-      }
-
-      pane.addContent('results', searchOutput)
-
-      uberElement.insertBefore(select).append(select)
+      var uberSearch = new UberSearch(dataFromSelect(select), options)
 
 
       // BEHAVIOUR
 
-      // When the select value changes
-      $(select).on('change', function(){
-        updateSelectedText()
-        markSelected()
-      })
-
-      // When the pane is opened
-      $(pane).on('shown', function(){
-        search.clear()
-        unhighlightResults()
-        $(searchField.input).focus()
-        uberElement.addClass('open')
-
+      // When the UberSearch pane is opened
+      $(uberSearch).on('shown', function(){
         if (options.prepopulateSearchOnOpen){
           updateSearchValueFromSelect()
         }
       })
 
-      // When the query is changed
-      $(search).on('queryChanged', function(){
-        updateMessages()
-      })
-
-      // When the search results are rendered
-      $(search).on('renderedResults', function(){
-        markSelected()
-        updateMessages()
-      })
-
-      // Handle up and down arrow key presses
-      $(searchField.input).on('keydown', function(event){
-        switch (event.which) {
-          case 38: // Up Arrow
-            stepHighlight(-1, true)
-            break
-          case 40: // Down Arrow
-            stepHighlight(1)
-            break
-          case 13: // Enter
-            highlightedResult().click()
-            break
-        }
-      })
-
-      // When a search result is chosen
-      searchOutput.on('click', '.result', function(){
-        pane.hide()
-        var value = valueFromResult(this)
-        updateSelectValue(select, value)
-        options.onSelect(value, this)
-      })
-
-       // When the pane is hidden
-      $(pane).on('hidden', function(){
-        uberElement.removeClass('open')
-      })
-
       // When the clear search button is clicked
-      $(searchField).on('clear', function(){
+      $(uberSearch).on('clear', function(){
         if (options.clearSearchClearsSelect){
           clearSelect()
         }
       })
 
+      // When the select value changes
+      $(select).on('change', updateSelectedValue)
+
+      // When a result is selected
+      $(uberSearch).on('select', function(_, value){
+        updateSelectValue(value)
+      })
+
 
       // INITIALIZATION
 
+      uberSearch.view.insertBefore(select).append(select)
       $(select).hide()
-      markSelected()
-      updateSelectedText()
-      updateMessages()
+      updateSelectedValue()
+
 
       // HELPER FUNCTIONS
 
@@ -148,133 +61,19 @@
         })
       }
 
-      // Converts the dataFromSelect into a datum list for matching
-      function dataForMatching(processedQuery, data){
-        // If a query is present, include only select options that should be used when searching
-        // Else, include only options that should be visible when not searching
-        if (processedQuery) {
-          return $.map(data, function(datum){ if (datum.visibility != 'no-query') return datum })
-        } else {
-          return $.map(data, function(datum){ if (datum.visibility != 'query') return datum })
-        }
-      }
-
-      // Match against the datum.matchValue
-      function datumPreprocessor(datum){
-        return datum.matchValue
-      }
-
-      // Adds group support and blank option hiding
-      function renderResults(data){
-        var context = this
-        var list = $('<ul class="results">')
-        var dummyNode = $('<div>')
-        $.each(data, function(_, datum){
-          var result = context.buildResult(datum)
-            .attr('data-value', datum.value) // Store the value so we can get know what the value of the selected item is
-            .attr('data-group', datum.group) // Add the group name so we can group items
-            .appendTo(dummyNode)
-
-          if (options.hideBlankOption && !datum.text){
-            result.hide()
-          }
-        })
-
-        // Arrange ungrouped list items
-        dummyNode.find('li:not([data-group])').appendTo(list)
-
-        // Arrange list items into sub lists
-        while (dummyNode.find('li').length) {
-          var group = dummyNode.find('li[data-group]').attr('data-group')
-          var sublist = $('<ul class="sublist">').attr('data-group', group)
-          dummyNode.find('li[data-group="' + group + '"]').appendTo(sublist)
-          $('<li>')
-            .append('<span class="sublist_name">' + group + '</span>')
-            .append(sublist).appendTo(list)
-        }
-
-        if (data.length == 0) {
-          list.addClass('empty')
-        }
-
-        $(this.resultsContainer).html(list)
-      }
-
-      function buildResult(datum){
-        var result = $('<li>')
-          .html((options.treatBlankOptionAsPlaceholder ? datum.text || placeholder : datum.text) || "&nbsp;")
-          .addClass(this.resultClass)
-
-        options.resultPostprocessor(result, datum)
-
-        return result
-      }
-
-      // Returns the selected result based on the select's value
-      function getSelectedResult(){
-        return selectedResultFromValue($(select).val(), search.getResults())
-      }
-
-      // Updates the enhanced select with the text of the selected result
-      function updateSelectedText(){
-        var text = $(select).find('option:selected').text()
-        if (text) {
-          selectedText.text(text).removeClass('empty')
-        } else {
-          selectedText.html(placeholder || "&nbsp;").addClass('empty')
-        }
-      }
-
-      function markSelected(){
-        var selectedResult = getSelectedResult()
-        var results = search.getResults()
-        $(results).filter('.selected').removeClass('selected')
-        $(selectedResult).addClass('selected')
-      }
-
-      function updateSelectValue(select, value){
-        $(select).val(value).change()
-      }
-
-      // Returns the result with the given option value
-      function selectedResultFromValue(value, results){
-        var selected;
-        $.each(results, function(_, result){
-          if (value == valueFromResult(result)){
-            selected = result
-            return false
-          }
-        })
-        return selected
-      }
-
-      function valueFromResult(result){
-        return $(result).attr('data-value')
-      }
-
       // Copies the value of the select into the search input
       function updateSearchValueFromSelect(){
-        searchField.input.val($(select).find('option:selected').text())
-        searchField.refresh()
+        uberSearch.searchField.input.val($(select).find('option:selected').text())
+        uberSearch.searchField.refresh()
       }
 
-      function updateMessages(){
-        messages.show()
-        if (options.minQueryLength && options.minQueryMessage && queryLength() < options.minQueryLength){
-          messages.html(options.minQueryMessage === true ? 'Type at least ' + options.minQueryLength + (options.minQueryLength == 1 ? ' character' : ' characters') + ' to search' : options.minQueryMessage)
-        } else if (options.noResultsText && !resultsCount()){
-          messages.html(options.noResultsText)
-        } else {
-          messages.empty().hide()
-        }
+      // Updates the UberSearch's selected value from the select element's value
+      function updateSelectedValue(){
+        uberSearch.setValue($(select).find('option:selected').text())
       }
 
-      function queryLength(){
-        return searchField.input.val().length
-      }
-
-      function resultsCount(){
-        return results().length
+      function updateSelectValue(value){
+        $(select).val(value).change()
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
@@ -282,57 +81,6 @@
         $(select).val('').change()
         if (!$(select).find('option:selected').length){
           $(select).val($(select).find('option').prop('value'))
-        }
-      }
-
-      function stepHighlight(amount, allowUnhighlight){
-        var index = visibleResults().index(highlightedResult())
-        var result = visibleResults()[index + amount]
-
-        if (result || allowUnhighlight){
-          unhighlightResults()
-          highlightResult(result)
-        }
-      }
-
-      function highlightResult(result){
-        result = $(result)
-        if (!result.length) { return }
-
-        result.addClass('highlighted')
-        scrollResultIntoView(result)
-      }
-
-      function unhighlightResults(){
-        highlightedResult().removeClass('highlighted')
-      }
-
-      function highlightedResult(){
-        return results().filter('.highlighted')
-      }
-
-      function visibleResults(){
-        return results().filter(':visible')
-      }
-
-      function results(){
-        return searchOutput.find('.result')
-      }
-
-      function scrollResultIntoView(result){
-        result = $(result)
-        var container = result.closest('.results').css('position', 'relative') // Ensure the results container is positioned so offset is calculated correctly
-        var containerHeight = container.height()
-        var containerTop = container.get(0).scrollTop
-        var containerBottom = containerTop + containerHeight
-        var resultHeight = result.height()
-        var resultTop = result.get(0).offsetTop
-        var resultBottom = resultTop + resultHeight
-
-        if (containerBottom < resultBottom){
-          container.scrollTop(resultBottom - containerHeight)
-        } else if (containerTop > resultTop){
-          container.scrollTop(resultTop)
         }
       }
     })
