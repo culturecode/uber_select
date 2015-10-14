@@ -54,8 +54,8 @@
           var group = optgroup.attr('label')
           var visibility = $(this).data('visibility') || optgroup.data('visibility')
           var text = $(this).text()
-          var matchValue = $(this).data('match-value') || text
-          var value = $(this).attr('value') || text
+          var matchValue = $(this).data('match-value')
+          var value = $(this).attr('value')
 
           return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group, element:this}
         })

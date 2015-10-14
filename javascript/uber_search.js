@@ -29,7 +29,7 @@ var UberSearch = function(data, options){
   var pane   = new Pane({anchor: view, trigger: selectedContainer})
   var search = new Search(searchField.input, searchOutput, {
     model: {
-      data: data,
+      data: setDataDefaults(data),
       dataForMatching: dataForMatching,
       datumPreprocessor: datumPreprocessor,
       minQueryLength: options.minQueryLength,
@@ -117,6 +117,15 @@ var UberSearch = function(data, options){
     selectedValue = value
     setSelectedText(value)
     markSelected()
+  }
+
+  // Inherit values for matchValue and value from text
+  function setDataDefaults(data){
+    $.each(data, function(){
+      this.matchValue = this.matchValue || this.text
+      this.value = this.value || this.text
+    })
+    return data
   }
 
   // Converts the dataFromSelect into a datum list for matching
