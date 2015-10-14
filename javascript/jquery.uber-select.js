@@ -78,10 +78,24 @@
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
       function clearSelect(){
+        var selectValue = $(select).val()
+
+        // If the select is already cleared, avoid firing a change event
+        if (!selectValue) { return }
+
+        // Clear the value
         $(select).val('').change()
-        if (!$(select).find('option:selected').length){
-          $(select).val($(select).find('option').prop('value'))
-        }
+
+        // If that cleared it then we're done, otherwise, select the first option
+        if ($(select).find('option:selected').length){ return }
+
+        var fistOptionValue = $(select).find('option').prop('value')
+
+        // If the first option is already set then we're done, otherwise, select the first option
+        if (fistOptionValue == selectValue) { return }
+
+        // Select the first option
+        $(select).val(fistOptionValue).change()
       }
     })
 
