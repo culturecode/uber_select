@@ -107,6 +107,7 @@ var UberSearch = function(data, options){
   }
   pane.addContent('results', searchOutput)
   updateMessages()
+  setSelectedText()
 
 
   // HELPER FUNCTIONS
