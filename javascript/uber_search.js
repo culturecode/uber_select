@@ -15,16 +15,16 @@ var UberSearch = function(data, options){
   }, options)
 
   var context           = this
-  var view              = $('<span class="uber_select">')
+  var view              = $('<span class="uber_select"></span>')
   var selectedValue     // Internally selected value
 
-  var selectedContainer = $('<span class="selected_text_container" tabindex=0 role="button">').appendTo(view)
-  var selectedText      = $('<span class="selected_text">').appendTo(selectedContainer)
-  var selectCaret       = $('<span class="select_caret">').appendTo(selectedContainer).html(options.selectCaret)
+  var selectedContainer = $('<span class="selected_text_container" tabindex=0 role="button"></span>').appendTo(view)
+  var selectedText      = $('<span class="selected_text"></span>').appendTo(selectedContainer)
+  var selectCaret       = $('<span class="select_caret"></span>').appendTo(selectedContainer).html(options.selectCaret)
 
   var searchField       = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
-  var searchOutput      = $('<div class="results_container">')
-  var messages          = $('<div class="messages">')
+  var searchOutput      = $('<div class="results_container"></div>')
+  var messages          = $('<div class="messages"></div>')
 
   var pane   = new Pane({anchor: view, trigger: selectedContainer})
   var search = new Search(searchField.input, searchOutput, {
@@ -147,8 +147,8 @@ var UberSearch = function(data, options){
   // Adds group support and blank option hiding
   function renderResults(data){
     var context = this
-    var list = $('<ul class="results">')
-    var dummyNode = $('<div>')
+    var list = $('<ul class="results"></ul>')
+    var dummyNode = $('<div></div>')
     $.each(data, function(_, datum){
       var result = context.buildResult(datum)
         .attr('data-group', datum.group) // Add the group name so we can group items
@@ -165,9 +165,9 @@ var UberSearch = function(data, options){
     // Arrange list items into sub lists
     while (dummyNode.find('li').length) {
       var group = dummyNode.find('li[data-group]').attr('data-group')
-      var sublist = $('<ul class="sublist">').attr('data-group', group)
+      var sublist = $('<ul class="sublist"></ul>').attr('data-group', group)
       dummyNode.find('li[data-group="' + group + '"]').appendTo(sublist)
-      $('<li>')
+      $('<li></li>')
         .append('<span class="sublist_name">' + group + '</span>')
         .append(sublist).appendTo(list)
     }
@@ -180,7 +180,7 @@ var UberSearch = function(data, options){
   }
 
   function buildResult(datum){
-    var result = $('<li>')
+    var result = $('<li></li>')
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
       .addClass(this.resultClass)
       .data(datum) // Store the datum so we can get know what the value of the selected item is

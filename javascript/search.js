@@ -150,7 +150,7 @@ function Search(queryInput, resultsContainer, options){
     }
 
     this.renderResults = function(data){
-      var list = $('<ul class="results">')
+      var list = $('<ul class="results"></ul>')
       $.each(data, function(_, datum){
         list.append(context.buildResult(datum))
       })
@@ -164,7 +164,7 @@ function Search(queryInput, resultsContainer, options){
 
     // Can be overridden to format how results are built
     this.buildResult = function(datum){
-      return $('<li>').html(datum).addClass(options.resultClass)
+      return $('<li></li>').html(datum).addClass(options.resultClass)
     }
 
     // INITIALIZATION
