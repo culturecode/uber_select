@@ -2,6 +2,7 @@ function Search(queryInput, resultsContainer, options){
   var context = this
   var model = this.model = new SearchModel(options.model)
   var view = this.view = new SearchView(resultsContainer, options.view)
+  var eventNames  = EventHelpers.isOnInputSupported() ? 'input change' : 'keyup change'
 
   // HELPER FUNCTIONS
 
@@ -22,7 +23,7 @@ function Search(queryInput, resultsContainer, options){
 
   // BEHAVIOUR
 
-  $(queryInput).on('input change', function(){
+  $(queryInput).on(eventNames, function(){
     model.setQuery(this.value)
   })
 
