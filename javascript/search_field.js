@@ -4,7 +4,7 @@ function SearchField(options){
   }, options)
 
   var context     = this
-  var input       = this.input       = $('<input type="text" class="search_input">').attr('placeholder', options.placeholder)
+  var input       = this.input       = $('<input type="search" class="search_input">').attr('placeholder', options.placeholder)
   var clearButton = this.clearButton = $('<span class="clear_search_button"></span>').html(options.clearButton)
   var view        = this.view        = $('<span class="search_field_container"></span>').append(input).append(clearButton)
   var eventNames  = EventHelpers.isOnInputSupported() ? 'input change' : 'keyup change'
