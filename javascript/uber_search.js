@@ -31,8 +31,9 @@ var UberSearch = function(data, options){
     model: {
       data: setDataDefaults(data),
       dataForMatching: dataForMatching,
-      datumPreprocessor: datumPreprocessor,
       minQueryLength: options.minQueryLength,
+      queryPreprocessor: options.queryPreprocessor || Search.prototype.queryPreprocessor,
+      datumPreprocessor: options.datumPreprocessor || datumPreprocessor,
       patternForMatching: options.patternForMatching || Search.prototype.patternForMatching
     },
     view: {
@@ -239,7 +240,7 @@ var UberSearch = function(data, options){
   }
 
   function queryLength(){
-    return searchField.input.val().length
+    return search.getQuery().length
   }
 
   function resultsCount(){

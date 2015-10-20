@@ -11,6 +11,10 @@ function Search(queryInput, resultsContainer, options){
     $(this).trigger('renderedResults')
   }
 
+  this.getQuery = function(){
+    return model.getQuery()
+  }
+
   this.getResults = function(){
     return view.getResults()
   }
@@ -56,19 +60,22 @@ function Search(queryInput, resultsContainer, options){
   // PROTOTYPES
 
   function SearchModel(options){
-    var data, query, results;
+    var data, results
+    var processedQuery = ''
     var context = this
     options = $.extend({minQueryLength: 0}, options)
 
     this.setQuery = function(value){
-      if (query == value) { return }
-      query = value
+      value = context.queryPreprocessor(value)
+
+      if (processedQuery == value) { return }
+      processedQuery = value || ''
       this.updateResults()
       $(this).trigger('queryChanged')
     }
 
     this.getQuery = function(){
-      return query || ''
+      return processedQuery || ''
     }
 
     this.setData = function(value){
@@ -81,10 +88,9 @@ function Search(queryInput, resultsContainer, options){
     }
 
     this.updateResults = function(){
-      var processedQuery = context.queryPreprocessor(query)
       if (options.minQueryLength > processedQuery.length) {
         results = []
-      } else if (this.isBlankQuery(processedQuery)){
+      } else if (this.isBlankQuery()){
         results = $.each(this.dataForMatching(processedQuery, data), function(){ return this })
       } else {
         results = []
@@ -98,13 +104,13 @@ function Search(queryInput, resultsContainer, options){
       $(this).trigger('resultsUpdated')
     }
 
-    this.isBlankQuery = function(processedQuery){
+    this.isBlankQuery = function(){
       return processedQuery === ''
     }
 
     // Can be overridden to select a subset of data for matching
     // Defaults to the identity function
-    this.dataForMatching = function(query, data){
+    this.dataForMatching = function(processedQuery, data){
       return data
     }
 
