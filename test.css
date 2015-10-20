@@ -104,8 +104,7 @@ label {
   text-overflow: ellipsis;
 }
 .uber_select .result.selected{
-  background-color: #71BDFF;
-  color: white;
+  font-weight: bold;
 }
 .uber_select .result:hover, .uber_select .result.highlighted{
   background-color: #C4E4FF;

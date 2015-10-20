@@ -49,7 +49,7 @@ var UberSearch = function(data, options){
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    search.highlightFirstResult()
+    markSelected()
     $(searchField.input).focus()
     view.addClass('open')
 
@@ -64,7 +64,6 @@ var UberSearch = function(data, options){
   // When the search results are rendered
   $(search).on('renderedResults', function(){
     markSelected()
-    search.highlightFirstResult()
     updateMessages()
   })
 
@@ -106,7 +105,7 @@ var UberSearch = function(data, options){
   function setValue(value){
     if (selectedValue == value) { return }
     selectedValue = value
-    setSelectedText(textFromResult(getSelectedResult()))
+    setSelectedText(textFromResult(getSelection().element))
     markSelected()
   }
 
@@ -189,27 +188,25 @@ var UberSearch = function(data, options){
   }
 
   function markSelected(){
-    var selectedResult = getSelectedResult()
+    var selected = getSelection()
     var results = search.getResults()
-    $(results).filter('.selected').removeClass('selected')
-    $(selectedResult).addClass('selected')
+    search.highlightResult(selected.index)
+    $(results).filter('.selected').not(selected.element).removeClass('selected')
+    $(selected.element).addClass('selected')
   }
 
-  // Returns the selected result based on the selectedValue
-  function getSelectedResult(){
-    return selectedResultFromValue(selectedValue, search.getResults())
-  }
-
-  // Returns the result with the given option value
-  function selectedResultFromValue(value, results){
-    var selected;
-    $.each(results, function(_, result){
-      if (value == valueFromResult(result)){
+  // Returns the selected elemetn and its index
+  function getSelection(){
+    var results = search.getResults()
+    var selected, index
+    $.each(results, function(i, result){
+      if (selectedValue == valueFromResult(result)){
         selected = result
+        index = i
         return false
       }
     })
-    return selected
+    return {element:selected, index:index}
   }
 
   function valueFromResult(result){
