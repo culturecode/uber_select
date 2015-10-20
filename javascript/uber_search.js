@@ -116,7 +116,7 @@ var UberSearch = function(data, options){
   // Selects the result corresponding to the given value
   function setValue(value){
     selectedValue = value
-    setSelectedText(value)
+    setSelectedText(textFromResult(getSelectedResult()))
     markSelected()
   }
 
@@ -226,6 +226,10 @@ var UberSearch = function(data, options){
 
   function valueFromResult(result){
     return $(result).data('value')
+  }
+
+  function textFromResult(result){
+    return $(result).data('text')
   }
 
   function updateMessages(){

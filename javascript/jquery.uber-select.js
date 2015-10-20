@@ -69,7 +69,7 @@
 
       // Updates the UberSearch's selected value from the select element's value
       function updateSelectedValue(){
-        uberSearch.setValue($(select).find('option:selected').text())
+        uberSearch.setValue($(select).val())
       }
 
       function updateSelectValue(value){
