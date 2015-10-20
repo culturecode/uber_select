@@ -132,7 +132,11 @@ label {
   border-bottom: 1px solid #E0E0E0;
   padding: 0px 20px 15px;
   outline: none;
-  box-sizing: border-box; // IE8
+  box-sizing: border-box; /* IE8 */
+}
+
+.uber_select .search_input::-webkit-search-cancel-button{
+  -webkit-appearance: none;
 }
 
 .uber_select .clear_search_button{
