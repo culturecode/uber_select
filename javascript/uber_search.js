@@ -38,7 +38,8 @@ var UberSearch = function(data, options){
     },
     view: {
       renderResults: renderResults,
-      buildResult: buildResult
+      buildResult: buildResult,
+      keypressInput: searchField.input
     }
   })
 
@@ -48,7 +49,7 @@ var UberSearch = function(data, options){
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    unhighlightResults()
+    search.highlightFirstResult()
     $(searchField.input).focus()
     view.addClass('open')
 
@@ -63,27 +64,13 @@ var UberSearch = function(data, options){
   // When the search results are rendered
   $(search).on('renderedResults', function(){
     markSelected()
+    search.highlightFirstResult()
     updateMessages()
   })
 
   // When the search field is cleared
   $(searchField).on('clear', function(){
     $(context).trigger('clear')
-  })
-
-  // Handle up and down arrow key presses
-  $(searchField.input).on('keydown', function(event){
-    switch (event.which) {
-      case 38: // Up Arrow
-        stepHighlight(-1, true)
-        break
-      case 40: // Down Arrow
-        stepHighlight(1)
-        break
-      case 13: // Enter
-        highlightedResult().click()
-        break
-    }
   })
 
   // When a search result is chosen
@@ -109,6 +96,7 @@ var UberSearch = function(data, options){
   pane.addContent('results', searchOutput)
   updateMessages()
   setSelectedText()
+  search.renderResults()
 
 
   // HELPER FUNCTIONS
@@ -148,12 +136,13 @@ var UberSearch = function(data, options){
   // Adds group support and blank option hiding
   function renderResults(data){
     var context = this
-    var list = $('<ul class="results"></ul>')
-    var dummyNode = $('<div></div>')
+    var sourceNode = $('<div></div>')
+    var destNode = $('<div></div>')
+
     $.each(data, function(_, datum){
       var result = context.buildResult(datum)
         .attr('data-group', datum.group) // Add the group name so we can group items
-        .appendTo(dummyNode)
+        .appendTo(sourceNode)
 
       if (options.hideBlankOption && !datum.text){
         result.hide()
@@ -161,39 +150,31 @@ var UberSearch = function(data, options){
     })
 
     // Arrange ungrouped list items
-    dummyNode.find('li:not([data-group])').appendTo(list)
+    sourceNode.find('li:not([data-group])').appendTo(destNode)
 
     // Arrange list items into sub lists
-    while (dummyNode.find('li').length) {
-      var group = dummyNode.find('li[data-group]').attr('data-group')
+    while (sourceNode.find('li').length) {
+      var group = sourceNode.find('li[data-group]').attr('data-group')
       var sublist = $('<ul class="sublist"></ul>').attr('data-group', group)
-      dummyNode.find('li[data-group="' + group + '"]').appendTo(sublist)
+      sourceNode.find('li[data-group="' + group + '"]').appendTo(sublist)
       $('<li></li>')
         .append('<span class="sublist_name">' + group + '</span>')
-        .append(sublist).appendTo(list)
+        .append(sublist).appendTo(destNode)
     }
 
-    if (data.length == 0) {
-      list.addClass('empty')
-    }
+    this.view.toggleClass('empty', !data.length)
 
-    $(this.resultsContainer).html(list)
+    this.view.html(destNode.children())
   }
 
   function buildResult(datum){
-    var result = $('<li></li>')
+    var result = $('<li class="result"></li>')
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
-      .addClass(this.resultClass)
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
     options.resultPostprocessor(result, datum)
 
     return result
-  }
-
-  // Returns the selected result based on the selectedValue
-  function getSelectedResult(){
-    return selectedResultFromValue(selectedValue, search.getResults())
   }
 
   // Updates the enhanced select with the text of the selected result
@@ -210,6 +191,11 @@ var UberSearch = function(data, options){
     var results = search.getResults()
     $(results).filter('.selected').removeClass('selected')
     $(selectedResult).addClass('selected')
+  }
+
+  // Returns the selected result based on the selectedValue
+  function getSelectedResult(){
+    return selectedResultFromValue(selectedValue, search.getResults())
   }
 
   // Returns the result with the given option value
@@ -244,58 +230,7 @@ var UberSearch = function(data, options){
   }
 
   function resultsCount(){
-    return results().length
-  }
-
-  function stepHighlight(amount, allowUnhighlight){
-    var index = visibleResults().index(highlightedResult())
-    var result = visibleResults()[index + amount]
-
-    if (result || allowUnhighlight){
-      unhighlightResults()
-      highlightResult(result)
-    }
-  }
-
-  function highlightResult(result){
-    result = $(result)
-    if (!result.length) { return }
-
-    result.addClass('highlighted')
-    scrollResultIntoView(result)
-  }
-
-  function unhighlightResults(){
-    highlightedResult().removeClass('highlighted')
-  }
-
-  function highlightedResult(){
-    return results().filter('.highlighted')
-  }
-
-  function visibleResults(){
-    return results().filter(':visible')
-  }
-
-  function results(){
-    return searchOutput.find('.result')
-  }
-
-  function scrollResultIntoView(result){
-    result = $(result)
-    var container = result.closest('.results').css('position', 'relative') // Ensure the results container is positioned so offset is calculated correctly
-    var containerHeight = container.height()
-    var containerTop = container.get(0).scrollTop
-    var containerBottom = containerTop + containerHeight
-    var resultHeight = result.height()
-    var resultTop = result.get(0).offsetTop
-    var resultBottom = resultTop + resultHeight
-
-    if (containerBottom < resultBottom){
-      container.scrollTop(resultBottom - containerHeight)
-    } else if (containerTop > resultTop){
-      container.scrollTop(resultTop)
-    }
+    return search.getResults().length
   }
 
 

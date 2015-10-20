@@ -1,13 +1,12 @@
 function Search(queryInput, resultsContainer, options){
   var context = this
-  var model = this.model = new SearchModel(options.model)
-  var view = this.view = new SearchView(resultsContainer, options.view)
-  var eventNames  = EventHelpers.isOnInputSupported() ? 'input change' : 'keyup change'
+  var model = new SearchModel(options.model)
+  var list = new List(options.view)
 
   // HELPER FUNCTIONS
 
   this.renderResults = function(){
-    view.renderResults(model.getResults())
+    list.renderResults(model.getResults())
     $(this).trigger('renderedResults')
   }
 
@@ -16,30 +15,26 @@ function Search(queryInput, resultsContainer, options){
   }
 
   this.getResults = function(){
-    return view.getResults()
+    return list.getResults()
   }
 
   this.clear = function(){
-    if (queryInput.val() !== ''){
+    if (queryInput.val() === '') {
+      list.unhighlightResults()
+    } else {
       queryInput.val('').change()
     }
   }
 
+  this.highlightFirstResult = function() {
+    list.unhighlightResults()
+    list.stepHighlight(1)
+  }
+
   // BEHAVIOUR
 
-  $(queryInput).on(eventNames, function(){
+  $(queryInput).on('searchInput', function(){
     model.setQuery(this.value)
-  })
-
-  // If there's only one option and the user presses enter, click that option
-  $(queryInput).on('keydown', function(event){
-    if (event.which == 13){
-      var results = context.getResults()
-      if (results.length == 1){
-        results.first().click()
-      }
-      return false
-    }
   })
 
   $(model).on('resultsUpdated', function(){
@@ -54,7 +49,7 @@ function Search(queryInput, resultsContainer, options){
 
   // INITIALIZATION
 
-  this.renderResults()
+  resultsContainer.html(list.view)
 
 
   // PROTOTYPES
@@ -142,39 +137,5 @@ function Search(queryInput, resultsContainer, options){
     $.extend(this, options) // Allow overriding of functions
     delete this.data // Data isn't an attribute we want to expose
     this.setData(options.data)
-  }
-
-  function SearchView(resultsContainer, options){
-    var context = this
-
-    this.resultsContainer = resultsContainer
-    this.options = options = $.extend({
-      resultClass: 'result'
-    }, options)
-
-    this.getResults = function(){
-      return $(resultsContainer).find('.' + options.resultClass)
-    }
-
-    this.renderResults = function(data){
-      var list = $('<ul class="results"></ul>')
-      $.each(data, function(_, datum){
-        list.append(context.buildResult(datum))
-      })
-
-      if (data.length == 0) {
-        list.addClass('empty')
-      }
-
-      $(resultsContainer).html(list)
-    }
-
-    // Can be overridden to format how results are built
-    this.buildResult = function(datum){
-      return $('<li></li>').html(datum).addClass(options.resultClass)
-    }
-
-    // INITIALIZATION
-    $.extend(this, options) // Allow overriding of functions
   }
 }
