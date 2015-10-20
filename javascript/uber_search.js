@@ -88,6 +88,7 @@ var UberSearch = function(data, options){
 
   // When a search result is chosen
   searchOutput.on('click', '.result', function(){
+    setValue(valueFromResult(this))
     pane.hide()
     var datum = $(this).data()
     options.onSelect(datum, this)
@@ -115,9 +116,19 @@ var UberSearch = function(data, options){
 
   // Selects the result corresponding to the given value
   function setValue(value){
+    if (selectedValue == value) { return }
     selectedValue = value
     setSelectedText(textFromResult(getSelectedResult()))
     markSelected()
+  }
+
+  // Updates the enhanced select with the text of the selected result
+  function setSelectedText(text){
+    if (text) {
+      selectedText.text(text).removeClass('empty')
+    } else {
+      selectedText.html(options.placeholder || "&nbsp;").addClass('empty')
+    }
   }
 
   // Inherit values for matchValue and value from text
@@ -189,15 +200,6 @@ var UberSearch = function(data, options){
     options.resultPostprocessor(result, datum)
 
     return result
-  }
-
-  // Updates the enhanced select with the text of the selected result
-  function setSelectedText(text){
-    if (text) {
-      selectedText.text(text).removeClass('empty')
-    } else {
-      selectedText.html(options.placeholder || "&nbsp;").addClass('empty')
-    }
   }
 
   function markSelected(){
