@@ -11,13 +11,13 @@ function List(options) {
     switch (event.which) {
       case 38: // Up Arrow
         stepHighlight(-1, true)
-        break
+        return false
       case 40: // Down Arrow
         stepHighlight(1)
-        break
+        return false
       case 13: // Enter
         highlightedResult().click()
-        break
+        return false
     }
   })
 
