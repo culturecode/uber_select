@@ -74,7 +74,7 @@ function List(options) {
   }
 
   function visibleResults(){
-    return results().filter(':visible')
+    return results().not('.hidden')
   }
 
   function results(){

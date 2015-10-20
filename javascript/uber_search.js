@@ -156,7 +156,7 @@ var UberSearch = function(data, options){
         .appendTo(sourceNode)
 
       if (options.hideBlankOption && !datum.text){
-        result.hide()
+        result.hide().addClass('hidden')
       }
     })
 
