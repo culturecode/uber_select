@@ -191,11 +191,6 @@ var UberSearch = function(data, options){
     return result
   }
 
-  // Returns the selected result based on the selectedValue
-  function getSelectedResult(){
-    return selectedResultFromValue(selectedValue, search.getResults())
-  }
-
   // Updates the enhanced select with the text of the selected result
   function setSelectedText(text){
     if (text) {
@@ -210,6 +205,11 @@ var UberSearch = function(data, options){
     var results = search.getResults()
     $(results).filter('.selected').removeClass('selected')
     $(selectedResult).addClass('selected')
+  }
+
+  // Returns the selected result based on the selectedValue
+  function getSelectedResult(){
+    return selectedResultFromValue(selectedValue, search.getResults())
   }
 
   // Returns the result with the given option value
