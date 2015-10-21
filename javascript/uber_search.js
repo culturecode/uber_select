@@ -105,7 +105,7 @@ var UberSearch = function(data, options){
   function setValue(value){
     if (selectedValue == value) { return }
     selectedValue = value
-    setSelectedText(textFromResult(getSelection().element))
+    setSelectedText(textFromResult(getSelection()))
     markSelected()
   }
 
@@ -190,23 +190,28 @@ var UberSearch = function(data, options){
   function markSelected(){
     var selected = getSelection()
     var results = search.getResults()
-    search.highlightResult(selected.index)
-    $(results).filter('.selected').not(selected.element).removeClass('selected')
-    $(selected.element).addClass('selected')
+
+    if (!selected || $(selected).hasClass('hidden')) {
+      search.highlightResult(results.not('.hidden').first())
+    } else {
+      search.highlightResult(selected)
+    }
+
+    $(results).filter('.selected').not(selected).removeClass('selected')
+    $(selected).addClass('selected')
   }
 
   // Returns the selected element and its index
   function getSelection(){
     var results = search.getResults()
-    var selected, index
+    var selected
     $.each(results, function(i, result){
       if (selectedValue == valueFromResult(result)){
         selected = result
-        index = i
         return false
       }
     })
-    return {element:selected, index:index}
+    return selected
   }
 
   function valueFromResult(result){
