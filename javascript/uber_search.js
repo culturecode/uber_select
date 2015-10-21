@@ -195,7 +195,7 @@ var UberSearch = function(data, options){
     $(selected.element).addClass('selected')
   }
 
-  // Returns the selected elemetn and its index
+  // Returns the selected element and its index
   function getSelection(){
     var results = search.getResults()
     var selected, index

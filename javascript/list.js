@@ -43,9 +43,14 @@ function List(options) {
     return $('<li></li>').html(datum).addClass('result')
   }
 
+  this.highlightIndex = highlightIndex
   this.stepHighlight = stepHighlight
-
   this.unhighlightResults = unhighlightResults
+
+  function highlightIndex(index){
+    unhighlightResults()
+    highlightResult(results().get(index))
+  }
 
   function stepHighlight(amount, allowUnhighlight){
     var index = visibleResults().index(highlightedResult())

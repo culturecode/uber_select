@@ -27,8 +27,7 @@ function Search(queryInput, resultsContainer, options){
   }
 
   this.highlightResult = function(index) {
-    list.unhighlightResults()
-    list.stepHighlight(index + 1)
+    list.highlightIndex(index)
   }
 
   // BEHAVIOUR
