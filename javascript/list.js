@@ -66,8 +66,11 @@ function List(options) {
     result = $(result)
     if (!result.length) { return }
 
-    result.addClass('highlighted')
-    scrollResultIntoView(result)
+    var visibleResult = visibleResults().filter(result)
+    if (visibleResult.length) {
+      visibleResult.addClass('highlighted')
+      scrollResultIntoView(visibleResult)
+    }
   }
 
   function unhighlightResults(){
