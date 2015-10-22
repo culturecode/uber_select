@@ -49,13 +49,13 @@
       // Given a select element
       // Returns an array of data to match against
       function dataFromSelect(select){
-        return $(select).find('option').map(function(){
-          var optgroup = $(this).closest('optgroup')
+        return $.map($(select).find('option'), function(option){
+          var optgroup = $(option).closest('optgroup')
           var group = optgroup.attr('label')
-          var visibility = $(this).data('visibility') || optgroup.data('visibility')
-          var text = $(this).text()
-          var matchValue = $(this).data('match-value')
-          var value = $(this).attr('value')
+          var visibility = $(option).data('visibility') || optgroup.data('visibility')
+          var text = $(option).text()
+          var matchValue = $(option).data('match-value')
+          var value = $(option).attr('value')
 
           return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group, element:this}
         })
