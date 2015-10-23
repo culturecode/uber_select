@@ -64,14 +64,14 @@ function Pane(options){
     if (isOpen) { return }
     isOpen = true
     view.show()
-    $(this).trigger('shown')
+    $(context).trigger('shown')
     return true
   }
   this.hide = function(){
     if (!isOpen) { return }
     isOpen = false
     view.hide()
-    $(this).trigger('hidden')
+    $(context).trigger('hidden')
     return true
   }
 
