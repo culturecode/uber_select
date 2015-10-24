@@ -89,7 +89,7 @@ function List(options) {
     var containerHeight = container.height()
     var containerTop = container.get(0).scrollTop
     var containerBottom = containerTop + containerHeight
-    var resultHeight = result.height()
+    var resultHeight = result.outerHeight()
     var resultTop = result.get(0).offsetTop
     var resultBottom = resultTop + resultHeight
 
