@@ -25,9 +25,7 @@ function Pane(options){
   if (options.trigger){
     // Show the pane when the select element is clicked
     $(options.trigger).on('click', function(event){
-      if (!isEventOutsidePane(event)) {
-        context.show()
-      }
+      context.show()
     })
 
     // Show the pane if the user was tabbed onto the trigger and pressed enter or space
@@ -37,18 +35,19 @@ function Pane(options){
         return false
       }
     })
+  }
 
     // Hide the pane when clicked out
-    $(document).on('click', function(event){
-      if ($(event.target).closest(options.trigger).length || $(event.target).closest(view).length ) { return }
+  $(document).on('click', function(event){
+    if (isEventOutsidePane(event) && isEventOutsideTrigger(event)){
       context.hide()
-    })
+    }
+  })
 
-    // Make it possible to have elements in the pane that close it
-    view.on('click', '[data-behaviour~=close-pane]', function(event){
-      context.hide()
-    })
-  }
+  // Make it possible to have elements in the pane that close it
+  view.on('click', '[data-behaviour~=close-pane]', function(event){
+    context.hide()
+  })
 
   // Close the pane when the user presses escape
   $(document).on('keyup', function(event){
@@ -77,7 +76,11 @@ function Pane(options){
 
   // returns true if the event originated outside the pane
   function isEventOutsidePane(event){
-    return $(event.target).closest(view).length
+    return !$(event.target).closest(view).length
+  }
+
+  function isEventOutsideTrigger(event){
+    return !$(event.target).closest(options.trigger).length
   }
 
   // INITIALIZATION
