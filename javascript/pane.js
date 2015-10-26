@@ -38,7 +38,7 @@ function Pane(options){
   }
 
     // Hide the pane when clicked out
-  $(document).on('click', function(event){
+  $(document).on('mousedown', function(event){
     if (isEventOutsidePane(event) && isEventOutsideTrigger(event)){
       context.hide()
     }
