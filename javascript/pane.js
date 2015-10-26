@@ -51,8 +51,9 @@ function Pane(options){
 
   // Close the pane when the user presses escape
   $(document).on('keyup', function(event){
-    if (event.which == 27){
-      context.hide() && options.trigger.focus()
+    if (event.which == 27 && isOpen){
+      context.hide()
+      options.trigger.focus()
     }
   })
 
@@ -64,14 +65,12 @@ function Pane(options){
     isOpen = true
     view.show()
     $(context).trigger('shown')
-    return true
   }
   this.hide = function(){
     if (!isOpen) { return }
     isOpen = false
     view.hide()
     $(context).trigger('hidden')
-    return true
   }
 
   // returns true if the event originated outside the pane
