@@ -11,7 +11,6 @@ var UberSearch = function(data, options){
     searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
     noResultsText: 'No Matches Found',               // The message shown when there are no results
     resultPostprocessor: function(result, datum){},  // A function that is run after a result is built and can be used to decorate it
-    onSelect: function(value, result){}              // A function to run after a result is selected
   }, options)
 
   var context           = this
@@ -77,7 +76,6 @@ var UberSearch = function(data, options){
     setValue(valueFromResult(this))
     pane.hide()
     var datum = $(this).data()
-    options.onSelect(datum, this)
     $(context).trigger('select', [datum, this])
   })
 
