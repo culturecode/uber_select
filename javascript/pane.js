@@ -1,6 +1,5 @@
 function Pane(options){
   options = $.extend({
-    anchor: null,
     trigger: null
   }, options)
 
@@ -10,15 +9,11 @@ function Pane(options){
   var view = this.view = $('<div class="pane"></div>').toggle(isOpen)
   var innerPane = $('<div class="pane_inner"></div>').appendTo(view)
 
-  this.addContent = function(name, content){
-    model[name] = content
-    innerPane.append(content)
-  }
 
-  this.removeContent = function(name){
-    $(model[name]).remove()
-    delete model['name']
-  }
+  // PUBLIC INTERFACE
+
+  $.extend(this, {view: view, addContent: addContent, removeContent: removeContent, show: show, hide: hide})
+
 
   // BEHAVIOUR
 
@@ -60,13 +55,23 @@ function Pane(options){
 
   // HELPER FUNCTIONS
 
-  this.show = function(){
+  function addContent(name, content){
+    model[name] = content
+    innerPane.append(content)
+  }
+
+  function removeContent(name){
+    $(model[name]).remove()
+    delete model['name']
+  }
+
+  function show(){
     if (isOpen) { return }
     isOpen = true
     view.show()
     $(context).trigger('shown')
   }
-  this.hide = function(){
+  function hide(){
     if (!isOpen) { return }
     isOpen = false
     view.hide()
@@ -82,7 +87,4 @@ function Pane(options){
     return !$(event.target).closest(options.trigger).length
   }
 
-  // INITIALIZATION
-
-  $(options.anchor).append(view)
 }

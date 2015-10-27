@@ -11,22 +11,18 @@ var UberSearch = function(data, options){
     searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
     noResultsText: 'No Matches Found',               // The message shown when there are no results
     resultPostprocessor: function(result, datum){},  // A function that is run after a result is built and can be used to decorate it
+    outputContainer: null                            // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
   }, options)
 
-  var context           = this
-  var view              = $('<span class="uber_select"></span>')
-  var selectedValue     // Internally selected value
-
-  var selectedContainer = $('<span class="selected_text_container" tabindex=0 role="button"></span>').appendTo(view)
-  var selectedText      = $('<span class="selected_text"></span>').appendTo(selectedContainer)
-  var selectCaret       = $('<span class="select_caret"></span>').appendTo(selectedContainer).html(options.selectCaret)
-
-  var searchField       = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
-  var searchOutput      = $('<div class="results_container"></div>')
-  var messages          = $('<div class="messages"></div>')
-
-  var pane   = new Pane({anchor: view, trigger: selectedContainer})
-  var search = new Search(searchField.input, searchOutput, {
+  var context          = this
+  var view             = $('<span class="uber_select"></span>')
+  var selectedValue    // Internally selected value
+  var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
+  var searchField      = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
+  var resultsContainer = $('<div class="results_container"></div>')
+  var messages         = $('<div class="messages"></div>')
+  var pane             = new Pane({trigger: outputContainer.view})
+  var search           = new Search(searchField.input, resultsContainer, {
     model: {
       data: setDataDefaults(data),
       dataForMatching: dataForMatching,
@@ -72,7 +68,7 @@ var UberSearch = function(data, options){
   })
 
   // When a search result is chosen
-  searchOutput.on('click', '.result', function(){
+  resultsContainer.on('click', '.result', function(){
     setValue(valueFromResult(this))
     pane.hide()
     var datum = $(this).data()
@@ -86,12 +82,20 @@ var UberSearch = function(data, options){
 
 
   // INITIALIZATION
-
   if (options.search){
     pane.addContent('search', searchField.view)
     pane.addContent('messages', messages)
   }
-  pane.addContent('results', searchOutput)
+
+  pane.addContent('results', resultsContainer)
+
+  // If the output container isn't in the DOM yet, add it
+  if (!$(outputContainer.view).closest('body').length){
+    $(outputContainer.view).appendTo(view)
+  }
+
+  $(view).append(pane.view)
+
   updateMessages()
   setSelectedText()
   search.renderResults()
@@ -110,9 +114,9 @@ var UberSearch = function(data, options){
   // Updates the enhanced select with the text of the selected result
   function setSelectedText(text){
     if (text) {
-      selectedText.text(text).removeClass('empty')
+      outputContainer.setValue(text)
     } else {
-      selectedText.html(options.placeholder || "&nbsp;").addClass('empty')
+      outputContainer.setValue(options.placeholder)
     }
   }
 
