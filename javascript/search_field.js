@@ -12,20 +12,26 @@ function SearchField(options){
   var eventNames  = isOnInputSupported() ? 'input change' : 'keyup change'
 
 
+  // PUBLIC INTERFACE
+
+  $.extend(this, {refresh: refresh})
+
+
   // BEHAVIOUR
 
   input.on(eventNames, function() {
+    refresh() // Always refresh on input in case something has altered the state without informing us
+
     if (input.val() == value) { return }
 
     triggerEvent('searchInput')
     value = input.val()
-    updateClearButtonVisiblity()
   })
 
   // When the clear button is pressed
   clearButton.on('click', function(){
     input.val('')
-    updateClearButtonVisiblity()
+    refresh()
     input.focus()
     triggerEvent('searchInput')
     triggerEvent('clear')
@@ -39,16 +45,16 @@ function SearchField(options){
   })
 
 
-  // INITIALIZATION
-  updateClearButtonVisiblity()
+  // HELPER FUNCTIONS
 
-  // PUBLIC INTERFACE
-
-  this.refresh = function(){
+  function refresh(){
     updateClearButtonVisiblity()
+    updateSearchInputClass()
   }
 
-  // HELPER FUNCTIONS
+  function updateSearchInputClass(){
+    input.toggleClass('empty', !input.val())
+  }
 
   function isOnInputSupported(){
     // IE 8 and 9 are the only common browsers that don't completely support oninput
@@ -64,4 +70,9 @@ function SearchField(options){
     input.trigger(eventType, callbackArgs)
     $(context).trigger(eventType, callbackArgs)
   }
+
+
+  // INITIALIZATION
+
+  refresh()
 }
