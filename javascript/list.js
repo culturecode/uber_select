@@ -92,7 +92,7 @@ function List(options) {
   function scrollResultIntoView(result){
     result = $(result)
     var container = result.closest('.results').css('position', 'relative') // Ensure the results container is positioned so offset is calculated correctly
-    var containerHeight = container.height()
+    var containerHeight = container.outerHeight()
     var containerTop = container.get(0).scrollTop
     var containerBottom = containerTop + containerHeight
     var resultHeight = result.outerHeight()
