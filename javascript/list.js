@@ -24,7 +24,7 @@ function List(options) {
   // When a list item is hovered
   $(view).on('mouseenter', '.result', function(){
     unhighlightResults()
-    highlightResult(this)
+    highlightResult(this, {scroll: false})
   })
 
 
@@ -62,14 +62,19 @@ function List(options) {
     }
   }
 
-  function highlightResult(result){
+  function highlightResult(result, options){
     result = $(result)
+    options = $.extend({scroll: true}, options)
+
     if (!result.length) { return }
 
     var visibleResult = visibleResults().filter(result)
     if (visibleResult.length) {
       visibleResult.addClass('highlighted')
-      scrollResultIntoView(visibleResult)
+
+      if (options.scroll){
+        scrollResultIntoView(visibleResult)
+      }
     }
   }
 
