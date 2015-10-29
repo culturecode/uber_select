@@ -21,6 +21,12 @@ function List(options) {
     }
   })
 
+  // When a list item is hovered
+  $(view).on('mouseenter', '.result', function(){
+    unhighlightResults()
+    highlightResult(this)
+  })
+
 
   // HELPER FUNCTIONS
 

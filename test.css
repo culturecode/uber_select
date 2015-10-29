@@ -106,7 +106,7 @@ label {
 .uber_select .result.selected{
   font-weight: bold;
 }
-.uber_select .result:hover, .uber_select .result.highlighted{
+.uber_select .result.highlighted{
   background-color: #C4E4FF;
   color: inherit;
 }
