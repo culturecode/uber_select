@@ -13,6 +13,7 @@ var UberSearch = function(data, options){
     resultPostprocessor: function(result, datum){},  // A function that is run after a result is built and can be used to decorate it
     buildResult: null,                               // A function that is used to build result elements
     outputContainer: null,                           // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
+    closePaneOnSelect: true
   }, options)
 
   var context          = this
@@ -71,7 +72,9 @@ var UberSearch = function(data, options){
   // When a search result is chosen
   resultsContainer.on('click', '.result', function(event){
     setValue(valueFromResult(this))
-    pane.hide()
+    if (options.closePaneOnSelect){
+      pane.hide()
+    }
     var datum = $(this).data()
     triggerEvent('select', [datum, this, event])
   })
