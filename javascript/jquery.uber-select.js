@@ -57,7 +57,7 @@
           var matchValue = $(option).data('match-value')
           var value = $(option).attr('value')
 
-          return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group, element:this}
+          return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group, element:option}
         })
       }
 
