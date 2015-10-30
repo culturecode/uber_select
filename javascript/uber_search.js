@@ -49,7 +49,7 @@ var UberSearch = function(data, options){
     $(searchField.input).focus()
     view.addClass('open')
 
-    $(context).trigger('shown')
+    triggerEvent('shown')
   })
 
   // When the query is changed
@@ -65,15 +65,15 @@ var UberSearch = function(data, options){
 
   // When the search field is cleared
   $(searchField).on('clear', function(){
-    $(context).trigger('clear')
+    triggerEvent('clear')
   })
 
   // When a search result is chosen
-  resultsContainer.on('click', '.result', function(){
+  resultsContainer.on('click', '.result', function(event){
     setValue(valueFromResult(this))
     pane.hide()
     var datum = $(this).data()
-    $(context).trigger('select', [datum, this])
+    triggerEvent('select', [datum, this, event])
   })
 
    // When the pane is hidden
@@ -244,6 +244,11 @@ var UberSearch = function(data, options){
     return search.getResults().length
   }
 
+  // Allow observer to be attached to the UberSearch itself
+  function triggerEvent(eventType, callbackArgs){
+    view.trigger(eventType, callbackArgs)
+    $(context).trigger(eventType, callbackArgs)
+  }
 
   // PUBLIC INTERFACE
 
