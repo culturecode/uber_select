@@ -11,7 +11,8 @@ var UberSearch = function(data, options){
     searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
     noResultsText: 'No Matches Found',               // The message shown when there are no results
     resultPostprocessor: function(result, datum){},  // A function that is run after a result is built and can be used to decorate it
-    outputContainer: null                            // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
+    buildResult: null,                               // A function that is used to build result elements
+    outputContainer: null,                           // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
   }, options)
 
   var context          = this
@@ -33,7 +34,7 @@ var UberSearch = function(data, options){
     },
     view: {
       renderResults: renderResults,
-      buildResult: buildResult,
+      buildResult: options.buildResult || buildResult,
       keypressInput: searchField.input
     }
   })
