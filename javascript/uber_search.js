@@ -1,19 +1,19 @@
 var UberSearch = function(data, options){
   options = $.extend({
-    search:true,                                     // Show the search input
-    clearSearchButton:'&#x2715;',                    // Text content of clear search button
-    selectCaret: '&#x2304;',                         // Text content of select caret
-    hideBlankOption: false,                          // Should blank options be hidden automatically?
-    treatBlankOptionAsPlaceholder: false,            // Should blank options use the placeholder as text?
-    minQueryLength: 0,                               // Number of characters to type before results are displayed
-    minQueryMessage: true,                           // Message to show when the query doesn't exceed the minimum length. True for default, false for none, or custom message.
-    placeholder: null,                               // Placeholder to show in the selected text area
-    searchPlaceholder: 'Type to search',             // Placeholder to show in the search input
-    noResultsText: 'No Matches Found',               // The message shown when there are no results
-    resultPostprocessor: function(result, datum){},  // A function that is run after a result is built and can be used to decorate it
-    buildResult: null,                               // A function that is used to build result elements
-    outputContainer: null,                           // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
-    closePaneOnSelect: true
+    search:true,                                      // Show the search input
+    clearSearchButton:'&#x2715;',                     // Text content of clear search button
+    selectCaret: '&#x2304;',                          // Text content of select caret
+    hideBlankOption: false,                           // Should blank options be hidden automatically?
+    treatBlankOptionAsPlaceholder: false,             // Should blank options use the placeholder as text?
+    minQueryLength: 0,                                // Number of characters to type before results are displayed
+    minQueryMessage: true,                            // Message to show when the query doesn't exceed the minimum length. True for default, false for none, or custom message.
+    placeholder: null,                                // Placeholder to show in the selected text area
+    searchPlaceholder: 'Type to search',              // Placeholder to show in the search input
+    noResultsText: 'No Matches Found',                // The message shown when there are no results
+    resultPostprocessor: function(result, datum){},   // A function that is run after a result is built and can be used to decorate it
+    buildResult: null,                                // A function that is used to build result elements
+    outputContainer: null,                            // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
+    onSelect: function(datum, result, clickEvent) {}  // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
   }, options)
 
   var context          = this
@@ -71,11 +71,15 @@ var UberSearch = function(data, options){
 
   // When a search result is chosen
   resultsContainer.on('click', '.result', function(event){
-    setValue(valueFromResult(this))
-    if (options.closePaneOnSelect){
-      pane.hide()
-    }
     var datum = $(this).data()
+
+    if (options.onSelect(datum, this, event) === false) {
+      event.stopPropagation()
+      return
+    }
+
+    setValue(valueFromResult(this))
+    pane.hide()
     triggerEvent('select', [datum, this, event])
   })
 
@@ -86,6 +90,7 @@ var UberSearch = function(data, options){
 
 
   // INITIALIZATION
+
   if (options.search){
     pane.addContent('search', searchField.view)
     pane.addContent('messages', messages)
@@ -197,14 +202,14 @@ var UberSearch = function(data, options){
     var selected = getSelection()
     var results = search.getResults()
 
+    $(results).filter('.selected').not(selected).removeClass('selected')
+    $(selected).addClass('selected').removeClass('hidden')
+
     if (!selected || $(selected).hasClass('hidden')) {
       search.highlightResult(results.not('.hidden').first())
     } else {
       search.highlightResult(selected)
     }
-
-    $(results).filter('.selected').not(selected).removeClass('selected')
-    $(selected).addClass('selected')
   }
 
   // Returns the selected element and its index
