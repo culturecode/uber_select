@@ -19,6 +19,7 @@ function SearchField(options){
 
   // BEHAVIOUR
 
+  // When a change is detected
   input.on(eventNames, function() {
     refresh() // Always refresh on input in case something has altered the state without informing us
 
@@ -58,7 +59,8 @@ function SearchField(options){
 
   function isOnInputSupported(){
     // IE 8 and 9 are the only common browsers that don't completely support oninput
-    return !document.all || window.atob // Source: http://tanalin.com/en/articles/ie-version-js/;
+    // IE 10 and 11 fire the input event when the element is focussed, treat them as unsupported as well
+    return !(navigator.userAgent.indexOf('MSIE')!==-1 || navigator.appVersion.indexOf('Trident/') > 0) // SOURCE: http://stackoverflow.com/questions/21825157/internet-explorer-11-detection
   }
 
   function updateClearButtonVisiblity(){
