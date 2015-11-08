@@ -106,7 +106,7 @@ var UberSearch = function(data, options){
   $(view).append(pane.view)
 
   updateMessages()
-  setSelectedText()
+  setValue(selectedValue, true)
   search.renderResults()
 
 
@@ -116,7 +116,7 @@ var UberSearch = function(data, options){
   function setValue(value){
     if (selectedValue == value) { return }
     selectedValue = value
-    setSelectedText(textFromResult(getSelection()))
+    setSelectedText(textFromValue(value))
     markSelected()
   }
 
@@ -229,8 +229,8 @@ var UberSearch = function(data, options){
     return $(result).data('value')
   }
 
-  function textFromResult(result){
-    return $(result).data('text')
+  function textFromValue(value){
+    return $.map(data, function(datum){ if (datum.value == value) return datum.text })[0]
   }
 
   function updateMessages(){
