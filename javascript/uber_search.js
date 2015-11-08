@@ -1,5 +1,6 @@
 var UberSearch = function(data, options){
   options = $.extend({
+    value: null,                                      // Initialize with this selectedValue
     search:true,                                      // Show the search input
     clearSearchButton:'&#x2715;',                     // Text content of clear search button
     selectCaret: '&#x2304;',                          // Text content of select caret
@@ -18,7 +19,7 @@ var UberSearch = function(data, options){
 
   var context          = this
   var view             = $('<span class="uber_select"></span>')
-  var selectedValue    // Internally selected value
+  var selectedValue    = options.value // Internally selected value
   var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
   var searchField      = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
   var resultsContainer = $('<div class="results_container"></div>')
@@ -106,7 +107,8 @@ var UberSearch = function(data, options){
   $(view).append(pane.view)
 
   updateMessages()
-  setValue(selectedValue, true)
+  updateSelectedText()
+  markSelected()
   search.renderResults()
 
 
@@ -116,7 +118,7 @@ var UberSearch = function(data, options){
   function setValue(value){
     if (selectedValue == value) { return }
     selectedValue = value
-    setSelectedText(textFromValue(value))
+    updateSelectedText()
     markSelected()
   }
 
@@ -143,9 +145,9 @@ var UberSearch = function(data, options){
     // If a query is present, include only select options that should be used when searching
     // Else, include only options that should be visible when not searching
     if (processedQuery) {
-      return $.map(data, function(datum){ if (datum.visibility != 'no-query') return datum })
+      return $.map(data, function(datum){ if (datum.visibility != 'no-query' || datum.value == selectedValue) return datum })
     } else {
-      return $.map(data, function(datum){ if (datum.visibility != 'query') return datum })
+      return $.map(data, function(datum){ if (datum.visibility != 'query' || datum.value == selectedValue) return datum })
     }
   }
 
@@ -203,6 +205,8 @@ var UberSearch = function(data, options){
     var results = search.getResults()
 
     $(results).filter('.selected').not(selected).removeClass('selected')
+
+    // Ensure the selected result is unhidden
     $(selected).addClass('selected').removeClass('hidden')
 
     if (!selected || $(selected).hasClass('hidden')) {
@@ -227,6 +231,10 @@ var UberSearch = function(data, options){
 
   function valueFromResult(result){
     return $(result).data('value')
+  }
+
+  function updateSelectedText(){
+    setSelectedText(textFromValue(selectedValue))
   }
 
   function textFromValue(value){

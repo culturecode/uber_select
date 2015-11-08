@@ -9,6 +9,8 @@
         placeholder: $(select).attr('placeholder') || $(select).attr('data-placeholder')  // Placeholder to show in the selected text area
       }, opts, $(select).data('uber-options'))
 
+      options.value = $(select).val()                                                       // Initialize the UberSearch with this selected value
+
       var uberSearch = new UberSearch(dataFromSelect(select), options)
 
 
@@ -41,7 +43,6 @@
 
       uberSearch.view.insertBefore(select).append(select)
       $(select).hide()
-      updateSelectedValue()
 
 
       // HELPER FUNCTIONS
