@@ -116,7 +116,6 @@ var UberSearch = function(data, options){
   updateMessages()
   updateSelectedText()
   markSelected()
-  search.renderResults()
 
 
   // HELPER FUNCTIONS

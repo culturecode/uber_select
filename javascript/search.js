@@ -2,12 +2,14 @@ function Search(queryInput, resultsContainer, options){
   var context = this
   var model = new SearchModel(options.model)
   var list = new List(options.view)
+  var resultsRendered = false
 
   // HELPER FUNCTIONS
 
   this.renderResults = function(){
     list.renderResults(model.getResults())
     $(this).trigger('renderedResults')
+    resultsRendered = true
   }
 
   this.getQuery = function(){
@@ -19,6 +21,10 @@ function Search(queryInput, resultsContainer, options){
   }
 
   this.clear = function(){
+    if (!resultsRendered){
+      this.renderResults()
+    }
+
     if (queryInput.val() === '') {
       list.unhighlightResults()
     } else {
