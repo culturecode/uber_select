@@ -165,35 +165,51 @@ var UberSearch = function(data, options){
   // Adds group support and blank option hiding
   function renderResults(data){
     var context = this
-    var sourceNode = $('<div></div>')
-    var destNode = $('<div></div>')
+    var sourceArray = []
 
     $.each(data, function(_, datum){
-      var result = context.buildResult(datum)
-        .attr('data-group', datum.group) // Add the group name so we can group items
-        .appendTo(sourceNode)
+      // Add the group name so we can group items
+      var result = context.buildResult(datum).attr('data-group', datum.group)
 
       if (options.hideBlankOption && !datum.text){
         result.hide().addClass('hidden')
       }
+
+      sourceArray.push(result)
     })
 
     // Arrange ungrouped list items
-    sourceNode.find('li:not([data-group])').appendTo(destNode)
+    var destArray = reject(sourceArray, 'li:not([data-group])')
 
     // Arrange list items into sub lists
-    while (sourceNode.find('li').length) {
-      var group = sourceNode.find('li[data-group]').attr('data-group')
-      var sublist = $('<ul class="sublist"></ul>').attr('data-group', group)
-      sourceNode.find('li[data-group="' + group + '"]').appendTo(sublist)
-      $('<li></li>')
-        .append('<span class="sublist_name">' + group + '</span>')
-        .append(sublist).appendTo(destNode)
+    while (sourceArray.length) {
+      var group       = $(sourceArray[0]).attr('data-group')
+      var groupNodes  = reject(sourceArray, 'li[data-group="' + group + '"]')
+      var sublist     = $('<ul class="sublist"></ul>').attr('data-group', group)
+      var sublistNode = $('<li></li>').append('<span class="sublist_name">' + group + '</span>')
+
+      sublist.append(groupNodes)
+      sublistNode.append(sublist)
+
+      destArray.push(sublistNode)
     }
 
     this.view.toggleClass('empty', !data.length)
+    this.view.html(destArray)
+  }
 
-    this.view.html(destNode.children())
+  // Removes elements from the sourcArray that match the selector
+  // Returns an array of removed elements
+  function reject(sourceArray, selector){
+    var dest = filter(sourceArray, selector)
+    var source = filter(sourceArray, selector, true)
+    sourceArray.splice(0, sourceArray.length)
+    sourceArray.push.apply(sourceArray, source)
+    return dest
+  }
+
+  function filter(sourceArray, selector, invert){
+    return $.grep(sourceArray, function(node){ return node.is(selector) }, invert)
   }
 
   function buildResult(datum){
