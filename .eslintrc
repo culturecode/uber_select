@@ -1,0 +1,16 @@
+{
+  "extends": "airbnb/legacy",
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "jquery": true,
+  },
+  "rules": {
+    "strict": 0,
+    "quotes": 0,
+    "no-unused-vars": 0,
+    "camelcase": 0,
+    "no-underscore-dangel": 0,
+    "comma-dangle": [2, "never"]
+  }
+}
