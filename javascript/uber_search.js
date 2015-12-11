@@ -1,4 +1,4 @@
-var UberSearch = function(data, options){
+var UberSearch = function (data, options) {
   options = $.extend({
     value: null,                                      // Initialize with this selectedValue
     search:true,                                      // Show the search input
@@ -11,22 +11,22 @@ var UberSearch = function(data, options){
     placeholder: null,                                // Placeholder to show in the selected text area
     searchPlaceholder: 'Type to search',              // Placeholder to show in the search input
     noResultsText: 'No Matches Found',                // The message shown when there are no results
-    resultPostprocessor: function(result, datum){},   // A function that is run after a result is built and can be used to decorate it
+    resultPostprocessor: function (result, datum) {},   // A function that is run after a result is built and can be used to decorate it
     buildResult: null,                                // A function that is used to build result elements
     outputContainer: null,                            // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
-    onRender: function(resultsContainer, result) {},  // A function to run when the results container is rendered. If the result returns false, the default select handler is not run and the event is cancelled
-    onSelect: function(datum, result, clickEvent) {}  // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
-  }, options)
+    onRender: function (resultsContainer, result) {},  // A function to run when the results container is rendered. If the result returns false, the default select handler is not run and the event is cancelled
+    onSelect: function (datum, result, clickEvent) {}  // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
+  }, options);
 
-  var context          = this
-  var view             = $('<span class="uber_select"></span>')
-  var selectedValue    = options.value // Internally selected value
-  var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
-  var searchField      = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
-  var resultsContainer = $('<div class="results_container"></div>')
-  var messages         = $('<div class="messages"></div>')
-  var pane             = new Pane({trigger: outputContainer.view})
-  var search           = new Search(searchField.input, resultsContainer, {
+  var context = this;
+  var view = $('<span class="uber_select"></span>');
+  var selectedValue = options.value; // Internally selected value
+  var outputContainer = options.outputContainer || new OutputContainer({ selectCaret: options.selectCaret });
+  var searchField = new SearchField({ placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton });
+  var resultsContainer = $('<div class="results_container"></div>');
+  var messages = $('<div class="messages"></div>');
+  var pane = new Pane({ trigger: outputContainer.view });
+  var search = new Search(searchField.input, resultsContainer, {
     model: {
       data: setDataDefaults(data),
       dataForMatching: dataForMatching,
@@ -40,255 +40,255 @@ var UberSearch = function(data, options){
       buildResult: options.buildResult || buildResult,
       keypressInput: searchField.input
     }
-  })
+  });
 
 
   // BEHAVIOUR
 
   // When the pane is opened
-  $(pane).on('shown', function(){
-    search.clear()
-    markSelected()
-    $(searchField.input).focus()
-    view.addClass('open')
+  $(pane).on('shown', function () {
+    search.clear();
+    markSelected();
+    $(searchField.input).focus();
+    view.addClass('open');
 
-    triggerEvent('shown')
-  })
+    triggerEvent('shown');
+  });
 
   // When the query is changed
-  $(search).on('queryChanged', function(){
-    updateMessages()
-  })
+  $(search).on('queryChanged', function () {
+    updateMessages();
+  });
 
   // When the search results are rendered
-  $(search).on('renderedResults', function(event){
+  $(search).on('renderedResults', function (event) {
     if (options.onRender(resultsContainer, getSelection()) === false) {
-      event.stopPropagation()
-      return
+      event.stopPropagation();
+      return;
     }
 
-    markSelected()
-    updateMessages()
-    triggerEvent('renderedResults')
-  })
+    markSelected();
+    updateMessages();
+    triggerEvent('renderedResults');
+  });
 
   // When the search field is cleared
-  $(searchField).on('clear', function(){
-    triggerEvent('clear')
-  })
+  $(searchField).on('clear', function () {
+    triggerEvent('clear');
+  });
 
   // When a search result is chosen
-  resultsContainer.on('click', '.result', function(event){
-    var datum = $(this).data()
+  resultsContainer.on('click', '.result', function (event) {
+    var datum = $(this).data();
 
     if (options.onSelect(datum, this, event) === false) {
-      event.stopPropagation()
-      return
+      event.stopPropagation();
+      return;
     }
 
-    setValue(valueFromResult(this))
-    pane.hide()
-    triggerEvent('select', [datum, this, event])
-  })
+    setValue(valueFromResult(this));
+    pane.hide();
+    triggerEvent('select', [datum, this, event]);
+  });
 
    // When the pane is hidden
-  $(pane).on('hidden', function(){
-    view.removeClass('open')
-  })
+  $(pane).on('hidden', function () {
+    view.removeClass('open');
+  });
 
 
   // INITIALIZATION
 
-  if (options.search){
-    pane.addContent('search', searchField.view)
-    pane.addContent('messages', messages)
+  if (options.search) {
+    pane.addContent('search', searchField.view);
+    pane.addContent('messages', messages);
   }
 
-  pane.addContent('results', resultsContainer)
+  pane.addContent('results', resultsContainer);
 
   // If the output container isn't in the DOM yet, add it
-  if (!$(outputContainer.view).closest('body').length){
-    $(outputContainer.view).appendTo(view)
+  if (!$(outputContainer.view).closest('body').length) {
+    $(outputContainer.view).appendTo(view);
   }
 
-  $(view).append(pane.view)
+  $(view).append(pane.view);
 
-  updateMessages()
-  updateSelectedText()
-  markSelected()
+  updateMessages();
+  updateSelectedText();
+  markSelected();
 
 
   // HELPER FUNCTIONS
 
   // Selects the result corresponding to the given value
-  function setValue(value){
-    if (selectedValue == value) { return }
-    selectedValue = value
-    updateSelectedText()
-    markSelected()
+  function setValue(value) {
+    if (selectedValue === value) { return; }
+    selectedValue = value;
+    updateSelectedText();
+    markSelected();
   }
 
   // Updates the enhanced select with the text of the selected result
-  function setSelectedText(text){
+  function setSelectedText(text) {
     if (text) {
-      outputContainer.setValue(text)
+      outputContainer.setValue(text);
     } else {
-      outputContainer.setValue(options.placeholder)
+      outputContainer.setValue(options.placeholder);
     }
   }
 
   // Inherit values for matchValue and value from text
-  function setDataDefaults(data){
-    $.each(data, function(){
-      this.matchValue = this.matchValue || this.text
-      this.value = this.value || this.text
-    })
-    return data
+  function setDataDefaults(data) {
+    $.each(data, function () {
+      this.matchValue = this.matchValue || this.text;
+      this.value = this.value || this.text;
+    });
+    return data;
   }
 
   // Converts the dataFromSelect into a datum list for matching
-  function dataForMatching(processedQuery, data){
+  function dataForMatching(processedQuery, data) {
     // If a query is present, include only select options that should be used when searching
     // Else, include only options that should be visible when not searching
     if (processedQuery) {
-      return $.map(data, function(datum){ if (datum.visibility != 'no-query' || datum.value == selectedValue) return datum })
+      return $.map(data, function (datum) { if (datum.visibility !== 'no-query' || datum.value === selectedValue) return datum; });
     } else {
-      return $.map(data, function(datum){ if (datum.visibility != 'query' || datum.value == selectedValue) return datum })
+      return $.map(data, function (datum) { if (datum.visibility !== 'query' || datum.value === selectedValue) return datum; });
     }
   }
 
   // Match against the datum.matchValue
-  function datumPreprocessor(datum){
-    return datum.matchValue
+  function datumPreprocessor(datum) {
+    return datum.matchValue;
   }
 
   // Adds group support and blank option hiding
-  function renderResults(data){
-    var context = this
-    var sourceArray = []
+  function renderResults(data) {
+    var context = this;
+    var sourceArray = [];
 
-    $.each(data, function(_, datum){
+    $.each(data, function (_, datum) {
       // Add the group name so we can group items
-      var result = context.buildResult(datum).attr('data-group', datum.group)
+      var result = context.buildResult(datum).attr('data-group', datum.group);
 
-      if (options.hideBlankOption && !datum.text){
-        result.hide().addClass('hidden')
+      if (options.hideBlankOption && !datum.text) {
+        result.hide().addClass('hidden');
       }
 
-      sourceArray.push(result)
-    })
+      sourceArray.push(result);
+    });
 
     // Arrange ungrouped list items
-    var destArray = reject(sourceArray, 'li:not([data-group])')
+    var destArray = reject(sourceArray, 'li:not([data-group])');
 
     // Arrange list items into sub lists
     while (sourceArray.length) {
-      var group       = $(sourceArray[0]).attr('data-group')
-      var groupNodes  = reject(sourceArray, 'li[data-group="' + group + '"]')
-      var sublist     = $('<ul class="sublist"></ul>').attr('data-group', group)
-      var sublistNode = $('<li></li>').append('<span class="sublist_name">' + group + '</span>')
+      var group = $(sourceArray[0]).attr('data-group');
+      var groupNodes = reject(sourceArray, 'li[data-group="' + group + '"]');
+      var sublist = $('<ul class="sublist"></ul>').attr('data-group', group);
+      var sublistNode = $('<li></li>').append('<span class="sublist_name">' + group + '</span>');
 
-      sublist.append(groupNodes)
-      sublistNode.append(sublist)
+      sublist.append(groupNodes);
+      sublistNode.append(sublist);
 
-      destArray.push(sublistNode)
+      destArray.push(sublistNode);
     }
 
-    this.view.toggleClass('empty', !data.length)
-    this.view.html(destArray)
+    this.view.toggleClass('empty', !data.length);
+    this.view.html(destArray);
   }
 
   // Removes elements from the sourcArray that match the selector
   // Returns an array of removed elements
-  function reject(sourceArray, selector){
-    var dest = filter(sourceArray, selector)
-    var source = filter(sourceArray, selector, true)
-    sourceArray.splice(0, sourceArray.length)
-    sourceArray.push.apply(sourceArray, source)
-    return dest
+  function reject(sourceArray, selector) {
+    var dest = filter(sourceArray, selector);
+    var source = filter(sourceArray, selector, true);
+    sourceArray.splice(0, sourceArray.length);
+    sourceArray.push.apply(sourceArray, source);
+    return dest;
   }
 
-  function filter(sourceArray, selector, invert){
-    return $.grep(sourceArray, function(node){ return node.is(selector) }, invert)
+  function filter(sourceArray, selector, invert) {
+    return $.grep(sourceArray, function (node) { return node.is(selector); }, invert);
   }
 
-  function buildResult(datum){
+  function buildResult(datum) {
     var result = $('<li class="result"></li>')
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
-      .data(datum) // Store the datum so we can get know what the value of the selected item is
+      .data(datum); // Store the datum so we can get know what the value of the selected item is
 
-    options.resultPostprocessor(result, datum)
+    options.resultPostprocessor(result, datum);
 
-    return result
+    return result;
   }
 
-  function markSelected(){
-    var selected = getSelection()
-    var results = search.getResults()
+  function markSelected() {
+    var selected = getSelection();
+    var results = search.getResults();
 
-    $(results).filter('.selected').not(selected).removeClass('selected')
+    $(results).filter('.selected').not(selected).removeClass('selected');
 
     // Ensure the selected result is unhidden
-    $(selected).addClass('selected').removeClass('hidden')
+    $(selected).addClass('selected').removeClass('hidden');
 
     if (!selected || $(selected).hasClass('hidden')) {
-      search.highlightResult(results.not('.hidden').first())
+      search.highlightResult(results.not('.hidden').first());
     } else {
-      search.highlightResult(selected)
+      search.highlightResult(selected);
     }
   }
 
   // Returns the selected element and its index
-  function getSelection(){
-    var results = search.getResults()
-    var selected
-    $.each(results, function(i, result){
-      if (selectedValue == valueFromResult(result)){
-        selected = result
-        return false
+  function getSelection() {
+    var results = search.getResults();
+    var selected;
+    $.each(results, function (i, result) {
+      if (selectedValue === valueFromResult(result)) {
+        selected = result;
+        return false;
       }
-    })
-    return selected
+    });
+    return selected;
   }
 
-  function valueFromResult(result){
-    return $(result).data('value')
+  function valueFromResult(result) {
+    return $(result).data('value');
   }
 
-  function updateSelectedText(){
-    setSelectedText(textFromValue(selectedValue))
+  function updateSelectedText() {
+    setSelectedText(textFromValue(selectedValue));
   }
 
-  function textFromValue(value){
-    return $.map(data, function(datum){ if (datum.value == value) return datum.text })[0]
+  function textFromValue(value) {
+    return $.map(data, function (datum) { if (datum.value === value) return datum.text; })[0];
   }
 
-  function updateMessages(){
-    messages.show()
-    if (options.minQueryLength && options.minQueryMessage && queryLength() < options.minQueryLength){
-      messages.html(options.minQueryMessage === true ? 'Type at least ' + options.minQueryLength + (options.minQueryLength == 1 ? ' character' : ' characters') + ' to search' : options.minQueryMessage)
-    } else if (options.noResultsText && !resultsCount()){
-      messages.html(options.noResultsText)
+  function updateMessages() {
+    messages.show();
+    if (options.minQueryLength && options.minQueryMessage && queryLength() < options.minQueryLength) {
+      messages.html(options.minQueryMessage === true ? 'Type at least ' + options.minQueryLength + (options.minQueryLength === 1 ? ' character' : ' characters') + ' to search' : options.minQueryMessage);
+    } else if (options.noResultsText && !resultsCount()) {
+      messages.html(options.noResultsText);
     } else {
-      messages.empty().hide()
+      messages.empty().hide();
     }
   }
 
-  function queryLength(){
-    return search.getQuery().length
+  function queryLength() {
+    return search.getQuery().length;
   }
 
-  function resultsCount(){
-    return search.getResults().length
+  function resultsCount() {
+    return search.getResults().length;
   }
 
   // Allow observer to be attached to the UberSearch itself
-  function triggerEvent(eventType, callbackArgs){
-    view.trigger(eventType, callbackArgs)
-    $(context).trigger(eventType, callbackArgs)
+  function triggerEvent(eventType, callbackArgs) {
+    view.trigger(eventType, callbackArgs);
+    $(context).trigger(eventType, callbackArgs);
   }
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view:view,  searchField:searchField, setValue:setValue})
-}
+  $.extend(this, { view:view, searchField:searchField, setValue:setValue });
+};
