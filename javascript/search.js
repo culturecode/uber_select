@@ -1,147 +1,147 @@
-function Search(queryInput, resultsContainer, options){
-  var context = this
-  var model = new SearchModel(options.model)
-  var list = new List(options.view)
-  var resultsRendered = false
+function Search(queryInput, resultsContainer, options) {
+  var context = this;
+  var model = new SearchModel(options.model);
+  var list = new List(options.view);
+  var resultsRendered = false;
 
   // HELPER FUNCTIONS
 
-  this.renderResults = function(){
-    list.renderResults(model.getResults())
-    $(this).trigger('renderedResults')
-    resultsRendered = true
-  }
+  this.renderResults = function () {
+    list.renderResults(model.getResults());
+    $(this).trigger('renderedResults');
+    resultsRendered = true;
+  };
 
-  this.getQuery = function(){
-    return model.getQuery()
-  }
+  this.getQuery = function () {
+    return model.getQuery();
+  };
 
-  this.getResults = function(){
-    return list.getResults()
-  }
+  this.getResults = function () {
+    return list.getResults();
+  };
 
-  this.clear = function(){
-    if (!resultsRendered){
-      this.renderResults()
+  this.clear = function () {
+    if (!resultsRendered) {
+      this.renderResults();
     }
 
     if (queryInput.val() === '') {
-      list.unhighlightResults()
+      list.unhighlightResults();
     } else {
-      queryInput.val('').change()
+      queryInput.val('').change();
     }
-  }
+  };
 
-  this.highlightResult = function(element) {
-    list.unhighlightResults()
-    list.highlightResult(element)
-  }
+  this.highlightResult = function (element) {
+    list.unhighlightResults();
+    list.highlightResult(element);
+  };
 
   // BEHAVIOUR
 
-  $(queryInput).on('searchInput', function(){
-    model.setQuery(this.value)
-  })
+  $(queryInput).on('searchInput', function () {
+    model.setQuery(this.value);
+  });
 
-  $(model).on('resultsUpdated', function(){
-    context.renderResults()
-  })
+  $(model).on('resultsUpdated', function () {
+    context.renderResults();
+  });
 
   // Forward query change
-  $(model).on('queryChanged', function(){
-    $(context).trigger('queryChanged')
-  })
+  $(model).on('queryChanged', function () {
+    $(context).trigger('queryChanged');
+  });
 
 
   // INITIALIZATION
 
-  resultsContainer.html(list.view)
+  resultsContainer.html(list.view);
 
 
   // PROTOTYPES
 
-  function SearchModel(options){
-    var data, results
-    var processedQuery = ''
-    var context = this
-    options = $.extend({minQueryLength: 0}, options)
+  function SearchModel(options) {
+    var data, results;
+    var processedQuery = '';
+    var context = this;
+    options = $.extend({ minQueryLength: 0 }, options);
 
-    this.setQuery = function(value){
-      value = context.queryPreprocessor(value)
+    this.setQuery = function (value) {
+      value = context.queryPreprocessor(value);
 
-      if (processedQuery == value) { return }
-      processedQuery = value || ''
-      this.updateResults()
-      $(this).trigger('queryChanged')
-    }
+      if (processedQuery === value) { return; }
+      processedQuery = value || '';
+      this.updateResults();
+      $(this).trigger('queryChanged');
+    };
 
-    this.getQuery = function(){
-      return processedQuery || ''
-    }
+    this.getQuery = function () {
+      return processedQuery || '';
+    };
 
-    this.setData = function(value){
-      data = value || []
-      this.updateResults()
-    }
+    this.setData = function (value) {
+      data = value || [];
+      this.updateResults();
+    };
 
-    this.getResults = function(){
-      return results
-    }
+    this.getResults = function () {
+      return results;
+    };
 
-    this.updateResults = function(){
+    this.updateResults = function () {
       if (options.minQueryLength > processedQuery.length) {
-        results = []
-      } else if (this.isBlankQuery()){
-        results = $.each(this.dataForMatching(processedQuery, data), function(){ return this })
+        results = [];
+      } else if (this.isBlankQuery()) {
+        results = $.each(this.dataForMatching(processedQuery, data), function () { return this; });
       } else {
-        results = []
-        var pattern = this.patternForMatching(processedQuery)
-        $.each(this.dataForMatching(processedQuery, data), function(index, datum){
-          if (context.match(pattern, context.datumPreprocessor(datum), processedQuery)){
-            results.push(datum)
+        results = [];
+        var pattern = this.patternForMatching(processedQuery);
+        $.each(this.dataForMatching(processedQuery, data), function (index, datum) {
+          if (context.match(pattern, context.datumPreprocessor(datum), processedQuery)) {
+            results.push(datum);
           }
-        })
+        });
       }
-      $(this).trigger('resultsUpdated')
-    }
+      $(this).trigger('resultsUpdated');
+    };
 
-    this.isBlankQuery = function(){
-      return processedQuery === ''
-    }
+    this.isBlankQuery = function () {
+      return processedQuery === '';
+    };
 
     // Can be overridden to select a subset of data for matching
     // Defaults to the identity function
-    this.dataForMatching = function(processedQuery, data){
-      return data
-    }
+    this.dataForMatching = function (processedQuery, data) {
+      return data;
+    };
 
     // Provides a regexp for matching the processedDatum from the processedQuery
     // Can be overridden to provide more sophisticated matching behaviour
-    this.patternForMatching = function(processedQuery){
-      return new RegExp(processedQuery.escapeForRegExp(), 'i')
-    }
+    this.patternForMatching = function (processedQuery) {
+      return new RegExp(processedQuery.escapeForRegExp(), 'i');
+    };
 
     // Can be overridden to provide more sophisticated matching behaviour
-    this.match = function(pattern, processedDatum, processedQuery){
-      return pattern.test(processedDatum)
-    }
+    this.match = function (pattern, processedDatum, processedQuery) {
+      return pattern.test(processedDatum);
+    };
 
     // Can be overridden to mutate the query being used to match before matching
     // Defaults to whitespace trim
-    this.queryPreprocessor = function(query){
-      return $.trim(query)
-    }
+    this.queryPreprocessor = function (query) {
+      return $.trim(query);
+    };
 
     // Can be overridden to mutate the data the moment before it is matched
     // Useful extract string from JSON datum
     // Defaults to the identity function
-    this.datumPreprocessor = function(datum){
-      return datum
-    }
+    this.datumPreprocessor = function (datum) {
+      return datum;
+    };
 
     // INITIALIZATION
-    $.extend(this, options) // Allow overriding of functions
-    delete this.data // Data isn't an attribute we want to expose
-    this.setData(options.data)
+    $.extend(this, options); // Allow overriding of functions
+    delete this.data; // Data isn't an attribute we want to expose
+    this.setData(options.data);
   }
 }
