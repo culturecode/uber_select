@@ -13,7 +13,7 @@ var UberSearch = function(data, options){
     noResultsText: 'No Matches Found',                // The message shown when there are no results
     resultPostprocessor: function(result, datum){},   // A function that is run after a result is built and can be used to decorate it
     buildResult: null,                                // A function that is used to build result elements
-    outputContainer: null,                            // An object that receives the output once a results is selected. Must respond to setValue(value), and view()
+    outputContainer: null,                            // An object that receives the output once a result is selected. Must respond to setValue(value), and view()
     onRender: function(resultsContainer, result) {},  // A function to run when the results container is rendered. If the result returns false, the default select handler is not run and the event is cancelled
     onSelect: function(datum, result, clickEvent) {}  // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
   }, options)
