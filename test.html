@@ -155,6 +155,17 @@
     This this can be set using the <code>noResultsText</code> option.</p>
 </span>
 
+<span class="example">
+  <label for="select">
+  Remote JSON Dataset
+  </label>
+  <select data-uber-options='{"dataUrl":"data:text/plain;charset=utf-8;base64,W3sidGV4dCI6Ik1hbGUifSx7InRleHQiOiJGZW1hbGUifV0="}'></select>
+  <p>This example fetches select options from the server upon initialization using the <code>dataUrl</code> option.
+    The dataset should be of the form
+    <code>[{text:'option with explicit value', value: 'some value'}, {text:'option with implicit value'}]</code>
+  </p>
+</span>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="javascript/string_extensions.js"></script>
 <script src="javascript/search_field.js"></script>

@@ -6,6 +6,10 @@ function Search(queryInput, resultsContainer, options){
 
   // HELPER FUNCTIONS
 
+  this.setData = function(data){
+    model.setData(data)
+  }
+
   this.renderResults = function(){
     list.renderResults(model.getResults())
     $(this).trigger('renderedResults')

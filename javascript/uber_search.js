@@ -28,7 +28,6 @@ var UberSearch = function(data, options){
   var pane             = new Pane({trigger: outputContainer.view})
   var search           = new Search(searchField.input, resultsContainer, {
     model: {
-      data: setDataDefaults(data),
       dataForMatching: dataForMatching,
       minQueryLength: options.minQueryLength,
       queryPreprocessor: options.queryPreprocessor || Search.prototype.queryPreprocessor,
@@ -99,6 +98,8 @@ var UberSearch = function(data, options){
 
   // INITIALIZATION
 
+  setData(data)
+
   if (options.search){
     pane.addContent('search', searchField.view)
     pane.addContent('messages', messages)
@@ -119,6 +120,11 @@ var UberSearch = function(data, options){
 
 
   // HELPER FUNCTIONS
+
+  function setData(newData){
+    data = newData
+    search.setData(setDataDefaults(data))
+  }
 
   // Selects the result corresponding to the given value
   function setValue(value){
@@ -290,5 +296,5 @@ var UberSearch = function(data, options){
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view:view,  searchField:searchField, setValue:setValue})
+  $.extend(this, {view:view,  searchField:searchField, setValue:setValue, setData:setData})
 }

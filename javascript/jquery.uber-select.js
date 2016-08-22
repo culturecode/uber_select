@@ -43,6 +43,12 @@
 
       uberSearch.view.insertBefore(select).append(select)
       $(select).hide()
+      if (options.dataUrl) {
+        $.getJSON(options.dataUrl).success(function(data){
+          $(select).append(optionsFromData(data))
+          uberSearch.setData(dataFromSelect(select))
+        })
+      }
 
 
       // HELPER FUNCTIONS
@@ -59,6 +65,13 @@
           var value = $(option).attr('value')
 
           return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group, element:option}
+        })
+      }
+
+      // Generates select options from data
+      function optionsFromData(data){
+        return $.map(data, function(datum){
+          return $('<option>').attr('value', datum.text || datum.value).text(datum.text)
         })
       }
 
