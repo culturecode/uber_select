@@ -43,7 +43,7 @@
       // INITIALIZATION
 
       uberSearch.view.insertBefore(select).append(select)
-      $(select).hide()
+      hideSelect()
       if (options.dataUrl) {
         $.getJSON(options.dataUrl).success(function(data){
           $(select).append(optionsFromData(data))
@@ -111,6 +111,11 @@
 
         // Select the first option
         $(select).val(fistOptionValue).change()
+      }
+
+      // Hide the select, but keep its width to allow it to set the min width of the uber select
+      function hideSelect(){
+        $(select).wrap($('<div>').css({visibility: 'hidden', height: 0}).addClass('select_width_spacer'))
       }
     })
 
