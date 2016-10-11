@@ -31,6 +31,9 @@
         }
       })
 
+      // When the list values change
+      $(select).on('uber-select:refreshOptions', refreshOptionsList)
+
       // When the select value changes
       $(select).on('uber-select:refresh change', updateSelectedValue)
 
@@ -89,6 +92,11 @@
 
       function updateSelectValue(value){
         $(select).val(value).change()
+      }
+
+      function refreshOptionsList(){
+        clearSelect();
+        uberSearch.setData(dataFromSelect(select));
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
