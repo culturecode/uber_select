@@ -85,6 +85,11 @@
         uberSearch.searchField.refresh()
       }
 
+      function refreshOptionsList(){
+        uberSearch.setData(dataFromSelect(select))
+        updateSelectedValue()
+      }
+
       // Updates the UberSearch's selected value from the select element's value
       function updateSelectedValue(){
         uberSearch.setValue($(select).val())
@@ -92,11 +97,6 @@
 
       function updateSelectValue(value){
         $(select).val(value).change()
-      }
-
-      function refreshOptionsList(){
-        clearSelect();
-        uberSearch.setData(dataFromSelect(select));
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option

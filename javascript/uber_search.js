@@ -124,6 +124,8 @@ var UberSearch = function(data, options){
   function setData(newData){
     data = newData
     search.setData(setDataDefaults(data))
+    updateSelectedText()
+    markSelected()
   }
 
   // Selects the result corresponding to the given value
