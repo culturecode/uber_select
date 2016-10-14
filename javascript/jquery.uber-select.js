@@ -31,6 +31,9 @@
         }
       })
 
+      // When the list values change
+      $(select).on('uber-select:refreshOptions', refreshOptionsList)
+
       // When the select value changes
       $(select).on('uber-select:refresh change', updateSelectedValue)
 
@@ -80,6 +83,11 @@
       function updateSearchValueFromSelect(){
         uberSearch.searchField.input.val($(select).find('option:selected').text())
         uberSearch.searchField.refresh()
+      }
+
+      function refreshOptionsList(){
+        uberSearch.setData(dataFromSelect(select))
+        updateSelectedValue()
       }
 
       // Updates the UberSearch's selected value from the select element's value
