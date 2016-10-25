@@ -38,7 +38,7 @@
       $(select).on('uber-select:refresh change', updateSelectedValue)
 
       // When a result is selected
-      $(uberSearch).on('select', function(event, datum){
+      $(uberSearch).on('select', function(_, datum){
         updateSelectValue(datum.value)
       })
 
