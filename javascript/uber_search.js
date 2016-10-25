@@ -122,8 +122,8 @@ var UberSearch = function(data, options){
   // HELPER FUNCTIONS
 
   function setData(newData){
-    data = newData
-    search.setData(setDataDefaults(data))
+    data = setDataDefaults(newData)
+    search.setData(data)
     updateSelectedText()
     markSelected()
   }
@@ -147,11 +147,9 @@ var UberSearch = function(data, options){
 
   // Inherit values for matchValue and value from text
   function setDataDefaults(data){
-    $.each(data, function(){
-      this.matchValue = this.matchValue || this.text
-      this.value = this.value || this.text
+    return $.map(data, function(datum) {
+      return $.extend({ value: datum.text, matchValue: datum.text }, datum)
     })
-    return data
   }
 
   // Converts the dataFromSelect into a datum list for matching
