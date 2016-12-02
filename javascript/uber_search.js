@@ -296,5 +296,5 @@ var UberSearch = function(data, options){
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view:view,  searchField:searchField, setValue:setValue, setData:setData})
+  $.extend(this, {view:view,  searchField:searchField, setValue:setValue, setData:setData, options:options})
 }
