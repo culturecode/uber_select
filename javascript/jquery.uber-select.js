@@ -50,7 +50,10 @@
         $.getJSON(options.dataUrl).success(function(data){
           $(select).append(optionsFromData(data))
           uberSearch.setData(dataFromSelect(select))
+          $(select).trigger('uber-select:ready')
         })
+      } else {
+        $(select).trigger('uber-select:ready')
       }
 
 
