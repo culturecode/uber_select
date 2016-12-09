@@ -75,7 +75,7 @@
       // Generates select options from data
       function optionsFromData(data){
         return $.map(data, function(datum){
-          return $('<option>').attr('value', datum.text || datum.value).text(datum.text)
+          return $('<option>').attr('value', datum.value || datum.text).text(datum.text || datum.value)
         })
       }
 
