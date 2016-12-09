@@ -7,10 +7,9 @@
         prepopulateSearchOnOpen: false,                                                   // Should the search input start with the selected value in it when the pane is opened?
         clearSearchClearsSelect: false,                                                   // Should the select value be cleared When the search is cleared?
         placeholder: $(select).attr('placeholder') || $(select).attr('data-placeholder'), // Placeholder to show in the selected text area
-        dataUrl: null                                                                     // A url to pre-fetch select options from, see optionsFromData for data format
+        dataUrl: null,                                                                    // A url to pre-fetch select options from, see optionsFromData for data format
+        value: $(select).val()                                                            // Initialize the UberSearch with this selected value
       }, opts, $(select).data('uber-options'))
-
-      options.value = $(select).val()                                                       // Initialize the UberSearch with this selected value
 
       var uberSearch = new UberSearch(dataFromSelect(select), options)
 
