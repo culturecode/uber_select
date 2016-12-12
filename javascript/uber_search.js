@@ -1,4 +1,11 @@
 var UberSearch = function(data, options){
+  var eventsTriggered = {
+    shown: 'shown',
+    renderedResults: 'renderedResults',
+    clear: 'clear',
+    select: 'select'
+  }
+
   options = $.extend({
     value: null,                                      // Initialize with this selectedValue
     search:true,                                      // Show the search input
@@ -51,7 +58,7 @@ var UberSearch = function(data, options){
     $(searchField.input).focus()
     view.addClass('open')
 
-    triggerEvent('shown')
+    triggerEvent(eventsTriggered.shown)
   })
 
   // When the query is changed
@@ -68,12 +75,12 @@ var UberSearch = function(data, options){
 
     markSelected()
     updateMessages()
-    triggerEvent('renderedResults')
+    triggerEvent(eventsTriggered.renderedResults)
   })
 
   // When the search field is cleared
   $(searchField).on('clear', function(){
-    triggerEvent('clear')
+    triggerEvent(eventsTriggered.clear)
   })
 
   // When a search result is chosen
@@ -87,7 +94,7 @@ var UberSearch = function(data, options){
 
     setValue(valueFromResult(this))
     pane.hide()
-    triggerEvent('select', [datum, this, event])
+    triggerEvent(eventsTriggered.select, [datum, this, event])
   })
 
    // When the pane is hidden

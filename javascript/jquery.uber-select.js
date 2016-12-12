@@ -1,8 +1,15 @@
 (function( $ ) {
+  var eventsTriggered = {
+    ready: 'uber-select:ready'
+  }
+  var eventsObserved = {
+    refreshOptions: 'uber-select:refreshOptions',
+    refresh: 'uber-select:refresh change',
+  }
+
   $.fn.uberSelect = function(opts) {
     this.each(function(){
       var select = this
-
       var options = $.extend({
         prepopulateSearchOnOpen: false,                                                   // Should the search input start with the selected value in it when the pane is opened?
         clearSearchClearsSelect: false,                                                   // Should the select value be cleared When the search is cleared?
@@ -11,7 +18,7 @@
         value: $(select).val()                                                            // Initialize the UberSearch with this selected value
       }, opts, $(select).data('uber-options'))
 
-      var uberSearch = new UberSearch(dataFromSelect(select), options)
+      var uberSearch = this.uberSearch = new UberSearch(dataFromSelect(select), options)
 
 
       // BEHAVIOUR
@@ -31,10 +38,10 @@
       })
 
       // When the list values change
-      $(select).on('uber-select:refreshOptions', refreshOptionsList)
+      $(select).on(eventsObserved.refreshOptions, refreshOptionsList)
 
       // When the select value changes
-      $(select).on('uber-select:refresh change', updateSelectedValue)
+      $(select).on(eventsObserved.refresh, updateSelectedValue)
 
       // When a result is selected
       $(uberSearch).on('select', function(_, datum){
@@ -50,10 +57,10 @@
         $.getJSON(options.dataUrl).success(function(data){
           $(select).append(optionsFromData(data))
           uberSearch.setData(dataFromSelect(select))
-          $(select).trigger('uber-select:ready')
+          $(select).trigger(eventsTriggered.ready)
         })
       } else {
-        $(select).trigger('uber-select:ready')
+        $(select).trigger(eventsTriggered.ready)
       }
 
 
