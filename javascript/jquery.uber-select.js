@@ -83,9 +83,26 @@
 
       // Generates select options from data
       function optionsFromData(data){
-        return $.map(data, function(datum){
-          return $('<option>').attr('value', datum.value || datum.text).text(datum.text || datum.value)
+        var elements = []
+        var groups = {}
+         $.each(data, function(_, datum){
+          if (datum.group) {
+            groups[datum.group] || elements.push(groups[datum.group] = groupFromDatum(datum))
+            groups[datum.group].append(optionFromDatum(datum))
+          } else {
+            elements.push(optionFromDatum(datum))
+          }
         })
+
+        return elements
+      }
+
+      function groupFromDatum(datum){
+        return $('<optgroup>').attr('label', datum.group)
+      }
+
+      function optionFromDatum(datum){
+        return $('<option>').attr('value', datum.value || datum.text).text(datum.text || datum.value)
       }
 
       // Copies the value of the select into the search input
