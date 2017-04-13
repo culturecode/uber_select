@@ -15,6 +15,30 @@ to control the state of the UberSearch, and vice-versa. This means you can progr
 select, and UberSearch will update. Users can interact with the UberSearch, and the select will update. This also means
 you can use UberSelect to gussy up forms, without changing any of the underlying inputs.
 
+#### Usage
+
+```JS
+$('.my_selects').uberSelect(options);
+```
+
+#### Data
+Data is an array of objects. Each object may have the following properties:
+
+- ##### text
+  String shown to the user in the list of results. This value is required if *value* is not provided.
+
+- ##### value
+  This is matched against the *value* option passed UberSearch and will appear selected if it matches. It is also used to match against search input text when the user searches. This value is required if *text* is not provided.
+
+- ##### matchValue
+  This overrides the value used to match against search input text when the user searches. *optional*
+
+- ##### visibility
+  This is used to determine whether the option appears only when searching or only when not searching. Values accepted: `query`, `no-query`. *optional*
+
+- ##### group
+  This is used to visually group options. All options with the same group will appear together. *optional*
+
 #### Options
 Options can be specified by setting the `data-uber-options` attribute on the `<select>` element. Values should be passed
 as a JSON string. All options on the are passed to the underlying UberSearch, see [UberSearch options](#UberSearchOptions).
@@ -63,6 +87,12 @@ The `<select>` element observes the following events:
 The UberSearch performs all of the heavy lifting. It creates the UI views, maintains state, and performs the searching.
 It can be instantiated without the use of an UberSelect, which can be useful for situations where the selected value is
 being used in purely in JS, and not being linked to a `<select>` element in a form.
+
+#### Usage
+
+```JS
+new UberSearch(data, options);
+```
 
 #### Options <a name="UberSearch options"></a>
 Options can be specified by setting the `data-uber-options` attribute on the `<select>` element. Values should be passed
