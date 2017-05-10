@@ -42,9 +42,21 @@ as a JSON string. All options on the are passed to the underlying UberSearch, se
 
 - ##### dataUrl
   A url to pre-fetch select options from. JSON response should be of the form
-  `[{text:'option with explicit value', value: 'some value'}, {text:'option with implicit value'}]`.
+  `[{text:'option with explicit value', value: 'some value'}, {text:'option with implicit value'}]`. For a custom JSON response, use in conjunction with optionsFromData.
 
   Default: `null`
+
+- ##### optionFromDatum
+  A function that is used to customize the options value and text built from a JSON response
+
+  The function signature is as follows:
+  ```js
+    function(datum) {
+      $('<option>').attr('value', datum.attribute_to_represent_value).text(datum.attribute_to_represent_text)
+    }
+  ```
+
+   Default: `$('<option>').attr('value', datum.value).text(datum.text)`
 
 - ##### value
   Initialize the UberSearch with this selected value
