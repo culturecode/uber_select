@@ -15,6 +15,7 @@
         clearSearchClearsSelect: false,                                                   // Should the select value be cleared When the search is cleared?
         placeholder: $(select).attr('placeholder') || $(select).attr('data-placeholder'), // Placeholder to show in the selected text area
         dataUrl: null,                                                                    // A url to pre-fetch select options from, see optionsFromData for data format
+        optionFromDatum: optionFromDatum,                                                 // A function to create select options
         value: $(select).val()                                                            // Initialize the UberSearch with this selected value
       }, opts, $(select).data('uber-options'))
 
@@ -88,9 +89,9 @@
          $.each(data, function(_, datum){
           if (datum.group) {
             groups[datum.group] || elements.push(groups[datum.group] = groupFromDatum(datum))
-            groups[datum.group].append(optionFromDatum(datum))
+            groups[datum.group].append(options.optionFromDatum(datum))
           } else {
-            elements.push(optionFromDatum(datum))
+            elements.push(options.optionFromDatum(datum))
           }
         })
 
