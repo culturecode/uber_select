@@ -13,6 +13,7 @@ var UberSearch = function(data, options){
     selectCaret: '&#x2304;',                          // Text content of select caret
     hideBlankOption: false,                           // Should blank options be hidden automatically?
     treatBlankOptionAsPlaceholder: false,             // Should blank options use the placeholder as text?
+    highlightByDefault: true,                         // Should the first result be auto-highlighted?
     minQueryLength: 0,                                // Number of characters to type before results are displayed
     minQueryMessage: true,                            // Message to show when the query doesn't exceed the minimum length. True for default, false for none, or custom message.
     placeholder: null,                                // Placeholder to show in the selected text area
@@ -22,7 +23,8 @@ var UberSearch = function(data, options){
     buildResult: null,                                // A function that is used to build result elements
     outputContainer: null,                            // An object that receives the output once a result is selected. Must respond to setValue(value), and view()
     onRender: function(resultsContainer, result) {},  // A function to run when the results container is rendered. If the result returns false, the default select handler is not run and the event is cancelled
-    onSelect: function(datum, result, clickEvent) {}  // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
+    onSelect: function(datum, result, clickEvent) {}, // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
+    onNoHighlightSubmit: function(value) {}           // A function to run when a user presses enter without selecting a result.
   }, options)
 
   var context          = this
@@ -95,6 +97,11 @@ var UberSearch = function(data, options){
     setValue(valueFromResult(this))
     pane.hide()
     triggerEvent(eventsTriggered.select, [datum, this, event])
+  })
+
+  // When query is submitted
+  $(searchField.input).on('noHighlightSubmit', function(event) {
+    options.onNoHighlightSubmit($(this).val())
   })
 
    // When the pane is hidden
@@ -244,10 +251,10 @@ var UberSearch = function(data, options){
     // Ensure the selected result is unhidden
     $(selected).addClass('selected').removeClass('hidden')
 
-    if (!selected || $(selected).hasClass('hidden')) {
-      search.highlightResult(results.not('.hidden').first())
-    } else {
+    if (selected) {
       search.highlightResult(selected)
+    } else if (options.highlightByDefault) {
+      search.highlightResult(results.not('.hidden').first())
     }
   }
 

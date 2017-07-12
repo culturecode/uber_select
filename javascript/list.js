@@ -16,7 +16,11 @@ function List(options) {
         stepHighlight(1)
         return false
       case 13: // Enter
-        highlightedResult().click()
+        if (highlightedResult().length) {
+          highlightedResult().click()
+        } else {
+          $(this).trigger('noHighlightSubmit')
+        }
         return false
     }
   })

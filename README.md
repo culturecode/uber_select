@@ -143,6 +143,11 @@ as a JSON string.
 
   Default: `false`
 
+- ##### highlightByDefault
+  Determines whether the first search result be auto-highlighted.
+
+  Default: `true`
+
 - ##### minQueryLength
   Sets minimum number of characters the user must type before a search will be performed.
 
@@ -206,6 +211,15 @@ as a JSON string.
   The function signature is as follows:
   ```js
   function(listOptionData, resultsListElement, clickEvent) { }
+  ```
+
+- ##### onNoHighlightSubmit
+  A function to run when a user presses enter without selecting a result.
+  Should be used in combination with `highlightByDefault: false`.
+
+  The function signature is as follows:
+  ```js
+  function(value) { }
   ```
 
 - ##### outputContainer (Deprecated)
