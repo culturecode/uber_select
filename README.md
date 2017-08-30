@@ -174,6 +174,11 @@ as a JSON string.
 
   Default: `'No Matches Found'`
 
+- ##### noDataText
+  Sets the text to show when the results list is empty and no search is in progress
+
+  Default: `'No options'`
+
 - ##### buildResult
   A function that is used to build result elements.
 

@@ -24,7 +24,8 @@ var UberSearch = function(data, options){
     outputContainer: null,                            // An object that receives the output once a result is selected. Must respond to setValue(value), and view()
     onRender: function(resultsContainer, result) {},  // A function to run when the results container is rendered. If the result returns false, the default select handler is not run and the event is cancelled
     onSelect: function(datum, result, clickEvent) {}, // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
-    onNoHighlightSubmit: function(value) {}           // A function to run when a user presses enter without selecting a result.
+    onNoHighlightSubmit: function(value) {},          // A function to run when a user presses enter without selecting a result.
+    noDataText: 'No options'                          // Text to show in there is nothing in the set of data to pick from
   }, options)
 
   var context          = this
@@ -116,9 +117,8 @@ var UberSearch = function(data, options){
 
   if (options.search){
     pane.addContent('search', searchField.view)
-    pane.addContent('messages', messages)
   }
-
+  pane.addContent('messages', messages)
   pane.addContent('results', resultsContainer)
 
   // If the output container isn't in the DOM yet, add it
@@ -284,7 +284,9 @@ var UberSearch = function(data, options){
 
   function updateMessages(){
     messages.show()
-    if (options.minQueryLength && options.minQueryMessage && queryLength() < options.minQueryLength){
+    if (!queryLength() && !resultsCount()){
+      messages.html(options.noDataText)
+    } else if (options.minQueryLength && options.minQueryMessage && queryLength() < options.minQueryLength){
       messages.html(options.minQueryMessage === true ? 'Type at least ' + options.minQueryLength + (options.minQueryLength == 1 ? ' character' : ' characters') + ' to search' : options.minQueryMessage)
     } else if (options.noResultsText && !resultsCount()){
       messages.html(options.noResultsText)
