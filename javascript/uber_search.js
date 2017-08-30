@@ -191,11 +191,10 @@ var UberSearch = function(data, options){
       // Add the group name so we can group items
       var result = context.buildResult(datum).attr('data-group', datum.group)
 
-      if (options.hideBlankOption && !datum.text){
-        result.hide().addClass('hidden')
+      // Omit blank option from results
+      if (!options.hideBlankOption || datum.value){
+        sourceArray.push(result)
       }
-
-      sourceArray.push(result)
     })
 
     // Arrange ungrouped list items
@@ -214,7 +213,7 @@ var UberSearch = function(data, options){
       destArray.push(sublistNode)
     }
 
-    this.view.toggleClass('empty', !data.length)
+    this.view.toggleClass('empty', !destArray.length)
     this.view.html(destArray)
   }
 
