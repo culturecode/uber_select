@@ -9,6 +9,8 @@
 
   $.fn.uberSelect = function(opts) {
     this.each(function(){
+      if (this.uberSearch) { return } // Prevent multiple initializations on the same element
+
       var select = this
       var options = $.extend({
         prepopulateSearchOnOpen: false,                                                   // Should the search input start with the selected value in it when the pane is opened?
