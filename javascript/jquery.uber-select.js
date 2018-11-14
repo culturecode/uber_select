@@ -57,7 +57,7 @@
       uberSearch.view.insertBefore(select).append(select)
       hideSelect()
       if (options.dataUrl) {
-        $.getJSON(options.dataUrl).success(function(data){
+        $.getJSON(options.dataUrl).done(function(data){
           $(select).append(optionsFromData(data))
           uberSearch.setData(dataFromSelect(select))
           $(select).trigger(eventsTriggered.ready)
