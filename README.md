@@ -3,7 +3,7 @@
 UberSelect is a fancy UI on top of a regular `<select>` element.
 
 ## Requirements
-jQuery
+Tested on jQuery 1.11.x to 3.3.x
 
 ## Parts
 UberSelect is composed of two main parts, an UberSearch that does all the of searching and UI, and an UberSelect which
