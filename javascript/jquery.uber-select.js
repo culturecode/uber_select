@@ -10,7 +10,6 @@
   $.fn.uberSelect = function(opts) {
     this.each(function(){
       if (this.uberSearch) { return } // Prevent multiple initializations on the same element
-
       var select = this
       var options = $.extend({
         prepopulateSearchOnOpen: false,                                                   // Should the search input start with the selected value in it when the pane is opened?
@@ -51,7 +50,6 @@
         updateSelectValue(datum.value)
       })
 
-
       // INITIALIZATION
 
       uberSearch.view.insertBefore(select).append(select)
@@ -72,15 +70,26 @@
       // Given a select element
       // Returns an array of data to match against
       function dataFromSelect(select){
-        return $.map($(select).find('option'), function(option){
-          var optgroup = $(option).closest('optgroup')
-          var group = optgroup.attr('label')
-          var visibility = $(option).data('visibility') || optgroup.data('visibility')
-          var text = $(option).text()
-          var matchValue = $(option).data('match-value')
-          var value = $(option).attr('value')
+        var opts = $(select).find('option')
+        var group, visibility, text, matchValue, value, datum;
 
-          return {text:text, value:value, matchValue:matchValue, visibility:visibility, group:group, element:option}
+        return $.map(opts, function(option){
+          // This is optimized for performance and does not use jQuery convenience methods. Seems to be about 30% faster loading during non-scientific tests.
+          datum = {
+            text: option.textContent || undefined,
+            value: option.getAttribute('value') || undefined,
+            matchValue: option.getAttribute('data-match-value') || undefined,
+            visibility: option.getAttribute('data-visibility') || undefined,
+            element: option
+          }
+
+          parent = option.parentElement
+          if (parent.nodeName == 'OPTGROUP') {
+            datum.group = parent.getAttribute('label')
+            datum.visibility = datum.visibility || parent.getAttribute('data-visibility')
+          }
+
+          return datum
         })
       }
 
