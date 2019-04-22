@@ -134,7 +134,7 @@
       }
 
       function updateSelectValue(value){
-        $(select).val(value).change()
+        $(select).val(value).trigger('change')
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
@@ -145,18 +145,18 @@
         if (!selectValue) { return }
 
         // Clear the value
-        $(select).val('').change()
+        $(select).val('').trigger('change')
 
         // If that cleared it then we're done, otherwise, select the first option
         if ($(select).find('option:selected').length){ return }
 
-        var fistOptionValue = $(select).find('option').prop('value')
+        var firstOptionValue = $(select).find('option').prop('value')
 
         // If the first option is already set then we're done, otherwise, select the first option
-        if (fistOptionValue == selectValue) { return }
+        if (firstOptionValue == selectValue) { return }
 
         // Select the first option
-        $(select).val(fistOptionValue).change()
+        $(select).val(firstOptionValue).trigger('change')
       }
 
       // Hide the select, but keep its width to allow it to set the min width of the uber select
