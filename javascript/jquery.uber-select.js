@@ -76,10 +76,10 @@
         return $.map(opts, function(option){
           // This is optimized for performance and does not use jQuery convenience methods. Seems to be about 30% faster loading during non-scientific tests.
           datum = {
-            text: option.textContent || undefined,
-            value: option.getAttribute('value') || undefined,
-            matchValue: option.getAttribute('data-match-value') || undefined,
-            visibility: option.getAttribute('data-visibility') || undefined,
+            text: option.textContent,
+            value: option.getAttribute('value'),
+            matchValue: option.getAttribute('data-match-value'),
+            visibility: option.getAttribute('data-visibility'),
             element: option
           }
 
