@@ -71,22 +71,22 @@
       // Returns an array of data to match against
       function dataFromSelect(select){
         var opts = $(select).find('option')
-        var group, visibility, text, matchValue, value, datum;
+        var datum;
 
         return $.map(opts, function(option){
           // This is optimized for performance and does not use jQuery convenience methods. Seems to be about 30% faster loading during non-scientific tests.
           datum = {
             text: option.textContent,
-            value: option.getAttribute('value'),
-            matchValue: option.getAttribute('data-match-value'),
-            visibility: option.getAttribute('data-visibility'),
+            value: getAttribute(option, 'value'),
+            matchValue: getAttribute(option, 'data-match-value'),
+            visibility: getAttribute(option, 'data-visibility'),
             element: option
           }
 
           parent = option.parentElement
           if (parent.nodeName == 'OPTGROUP') {
-            datum.group = parent.getAttribute('label')
-            datum.visibility = datum.visibility || parent.getAttribute('data-visibility')
+            datum.group = getAttribute(parent, 'label')
+            datum.visibility = datum.visibility || getAttribute(parent, 'data-visibility')
           }
 
           return datum
@@ -107,6 +107,11 @@
         })
 
         return elements
+      }
+
+      function getAttribute(element, attribute) {
+        var value = element.getAttribute(attribute)
+        return value === null ? undefined : value // Allow $.extend to overwrite missing attributes by setting them to undefined
       }
 
       function groupFromDatum(datum){
