@@ -72,6 +72,7 @@
       function dataFromSelect(select){
         var opts = $(select).find('option')
         var datum;
+        var parent;
 
         return $.map(opts, function(option){
           // This is optimized for performance and does not use jQuery convenience methods. Seems to be about 30% faster loading during non-scientific tests.
