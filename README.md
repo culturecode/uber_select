@@ -106,6 +106,11 @@ Data is an array of objects. Each object may have the following properties:
 - ##### group
   This is used to visually group options. All options with the same group will appear together. *optional*
 
+#### Methods
+
+- ##### setData(data)
+  Sets the data. `data` should be an Array conforming to the specifications described in <a href="#data">Data</a>
+
 
 #### Options <a name="UberSearch options"></a>
 Options can be specified by setting the `data-uber-options` attribute on the `<select>` element. Values should be passed
