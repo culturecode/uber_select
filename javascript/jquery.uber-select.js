@@ -14,6 +14,7 @@
       var options = $.extend({
         prepopulateSearchOnOpen: false,                                                   // Should the search input start with the selected value in it when the pane is opened?
         clearSearchClearsSelect: false,                                                   // Should the select value be cleared When the search is cleared?
+        disabled: $(select).is(':disabled'),                                              // Whether the select is currently disabled
         placeholder: $(select).attr('placeholder') || $(select).attr('data-placeholder'), // Placeholder to show in the selected text area
         dataUrl: null,                                                                    // A url to pre-fetch select options from, see optionsFromData for data format
         optionFromDatum: optionFromDatum,                                                 // A function to create select options
@@ -131,6 +132,7 @@
       }
 
       function refreshOptionsList(){
+        uberSearch.setDisabled($(select).is(':disabled'))
         uberSearch.setData(dataFromSelect(select))
         updateSelectedValue()
       }

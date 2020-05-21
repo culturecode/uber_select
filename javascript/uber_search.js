@@ -8,7 +8,8 @@ var UberSearch = function(data, options){
 
   options = $.extend({
     value: null,                                      // Initialize with this selectedValue
-    search:true,                                      // Show the search input
+    disabled: false,                                  // Initialize with this disabled value
+    search: true,                                     // Show the search input
     clearSearchButton:'&#x2715;',                     // Text content of clear search button
     selectCaret: '&#x2304;',                          // Text content of select caret
     hideBlankOption: false,                           // Should blank options be hidden automatically?
@@ -113,6 +114,7 @@ var UberSearch = function(data, options){
 
   // INITIALIZATION
 
+  setDisabled(options.disabled)
   setData(data)
 
   if (options.search){
@@ -148,6 +150,11 @@ var UberSearch = function(data, options){
     selectedValue = value
     updateSelectedText()
     markSelected()
+  }
+
+  // Enables or disables UberSearch
+  function setDisabled(boolean){
+    outputContainer.setDisabled(boolean)
   }
 
   // Updates the enhanced select with the text of the selected result
@@ -313,5 +320,5 @@ var UberSearch = function(data, options){
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view:view,  searchField:searchField, setValue:setValue, setData:setData, options:options})
+  $.extend(this, {view:view,  searchField:searchField, setValue:setValue, setData:setData, setDisabled:setDisabled, options:options})
 }

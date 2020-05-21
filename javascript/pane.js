@@ -20,11 +20,15 @@ function Pane(options){
   if (options.trigger){
     // Show the pane when the select element is clicked
     $(options.trigger).on('click', function(event){
+      if ($(options.trigger).hasClass('disabled')) { return }
+
       context.show()
     })
 
     // Show the pane if the user was tabbed onto the trigger and pressed enter or space
     $(options.trigger).on('keyup', function(event){
+      if ($(options.trigger).hasClass('disabled')) { return }
+
       if (event.which == 13 || event.which == 32){
         context.show()
         return false

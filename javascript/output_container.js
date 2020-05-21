@@ -15,7 +15,11 @@ var OutputContainer = function(options){
     view.toggleClass('empty', !value)
   }
 
+  function setDisabled(boolean) {
+    view.toggleClass('disabled', boolean)
+  }
+
   // PUBLIC INTERFACE
 
-  $.extend(this, {view: view, setValue: setValue})
+  $.extend(this, {view: view, setValue: setValue, setDisabled: setDisabled})
 }
