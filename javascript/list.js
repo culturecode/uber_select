@@ -66,18 +66,18 @@ function List(options) {
     }
   }
 
-  function highlightResult(result, options){
+  function highlightResult(result, options) {
     result = $(result)
     options = $.extend({scroll: true}, options)
 
     if (!result.length) { return }
 
-    var visibleResult = visibleResults().filter(result)
-    if (visibleResult.length) {
-      visibleResult.addClass('highlighted')
+    var enabledResult = enabledResults().filter(result)
+    if (enabledResult.length) {
+      enabledResult.addClass('highlighted')
 
       if (options.scroll){
-        scrollResultIntoView(visibleResult)
+        scrollResultIntoView(enabledResult)
       }
     }
   }
@@ -88,6 +88,10 @@ function List(options) {
 
   function highlightedResult(){
     return results().filter('.highlighted')
+  }
+
+  function enabledResults(){
+    return visibleResults().not('.disabled')
   }
 
   function visibleResults(){

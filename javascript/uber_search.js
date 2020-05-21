@@ -87,7 +87,7 @@ var UberSearch = function(data, options){
   })
 
   // When a search result is chosen
-  resultsContainer.on('click', '.result', function(event){
+  resultsContainer.on('click', '.result:not(.disabled)', function(event){
     var datum = $(this).data()
 
     if (options.onSelect(datum, this, event) === false) {
@@ -235,6 +235,8 @@ var UberSearch = function(data, options){
     var result = $('<li class="result"></li>')
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
       .data(datum) // Store the datum so we can get know what the value of the selected item is
+
+    if (datum.disabled) { result.addClass('disabled') }
 
     options.resultPostprocessor(result, datum)
 

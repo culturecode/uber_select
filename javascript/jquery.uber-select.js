@@ -79,6 +79,7 @@
           datum = {
             text: option.textContent,
             value: getAttribute(option, 'value'),
+            disabled: getAttribute(option, 'disabled'),
             matchValue: getAttribute(option, 'data-match-value'),
             visibility: getAttribute(option, 'data-visibility'),
             element: option
