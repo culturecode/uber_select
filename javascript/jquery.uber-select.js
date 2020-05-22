@@ -79,6 +79,7 @@
           // This is optimized for performance and does not use jQuery convenience methods. Seems to be about 30% faster loading during non-scientific tests.
           datum = {
             text: option.textContent,
+            selectedText: getAttribute(option, 'data-selected-text'),
             value: getAttribute(option, 'value'),
             disabled: getAttribute(option, 'disabled'),
             matchValue: getAttribute(option, 'data-match-value'),

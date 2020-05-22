@@ -288,7 +288,11 @@ var UberSearch = function(data, options){
   }
 
   function textFromValue(value){
-    return $.map(data, function(datum){ if (datum.value == value) return datum.text })[0]
+    return $.map(data, function(datum) {
+      if (datum.value == value)  {
+        return datum.selectedText || datum.text
+      }
+    })[0]
   }
 
   function updateMessages(){
