@@ -26,7 +26,7 @@ function List(options) {
   })
 
   // When a list item is hovered
-  $(view).on('mouseenter', '.result', function(){
+  $(view).on('mouseenter', '.result:not(.disabled)', function(){
     unhighlightResults()
     highlightResult(this, {scroll: false})
   })
@@ -57,8 +57,8 @@ function List(options) {
   this.highlightResult = highlightResult
 
   function stepHighlight(amount, allowUnhighlight){
-    var index = visibleResults().index(highlightedResult())
-    var result = visibleResults()[index + amount]
+    var index = selectableResults().index(highlightedResult())
+    var result = selectableResults()[index + amount]
 
     if (result || allowUnhighlight){
       unhighlightResults()
@@ -72,13 +72,10 @@ function List(options) {
 
     if (!result.length) { return }
 
-    var enabledResult = enabledResults().filter(result)
-    if (enabledResult.length) {
-      enabledResult.addClass('highlighted')
+    result.addClass('highlighted')
 
-      if (options.scroll){
-        scrollResultIntoView(enabledResult)
-      }
+    if (options.scroll){
+      scrollResultIntoView(result)
     }
   }
 
@@ -90,7 +87,7 @@ function List(options) {
     return results().filter('.highlighted')
   }
 
-  function enabledResults(){
+  function selectableResults(){
     return visibleResults().not('.disabled')
   }
 

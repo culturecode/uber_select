@@ -262,7 +262,7 @@ var UberSearch = function(data, options){
     if (selected) {
       search.highlightResult(selected)
     } else if (options.highlightByDefault) {
-      search.highlightResult(results.not('.hidden').first())
+      search.highlightResult(results.not('.hidden').not('.disabled').first())
     }
   }
 
