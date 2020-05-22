@@ -39,6 +39,10 @@ label {
   text-overflow: ellipsis;
   position: relative; /* Contain caret */
 }
+.uber_select .selected_text_container.disabled{
+  cursor: default;
+  opacity: 0.5;
+}
 .uber_select .selected_text.empty{
   color: #aaa;
 }
@@ -102,6 +106,10 @@ label {
   padding: 1px 20px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.uber_select .result.disabled{
+  cursor: default;
+  opacity: 0.5;
 }
 .uber_select .result.selected{
   font-weight: bold;
