@@ -97,6 +97,9 @@ Data is an array of objects. Each object may have the following properties:
 - ##### selectedText
   String shown to the user in the output container when this option is selected. *optional*
 
+- ##### title
+  Title text shown to the user when hovering over the result. *optional*
+
 - ##### value
   This is matched against the *value* option passed UberSearch and will appear selected if it matches. It is also used to match against search input text when the user searches. This value is required if *text* is not provided.
 

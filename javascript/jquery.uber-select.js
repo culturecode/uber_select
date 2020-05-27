@@ -81,6 +81,7 @@
             text: option.textContent,
             selectedText: getAttribute(option, 'data-selected-text'),
             value: getAttribute(option, 'value'),
+            title: getAttribute(option, 'title'),
             disabled: getAttribute(option, 'disabled'),
             matchValue: getAttribute(option, 'data-match-value'),
             visibility: getAttribute(option, 'data-visibility'),

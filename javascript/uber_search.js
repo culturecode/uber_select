@@ -243,6 +243,7 @@ var UberSearch = function(data, options){
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
+    if (datum.title) { result.attr('title', datum.title) }
     if (datum.disabled) { result.addClass('disabled') }
 
     options.resultPostprocessor(result, datum)
