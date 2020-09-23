@@ -21,6 +21,10 @@ you can use UberSelect to gussy up forms, without changing any of the underlying
 $('.my_selects').uberSelect(options);
 ```
 
+#### Attributes <a name="UberSearch attributes"></a>
+Attribtes on the outermost element can be specified by setting the `data-uber-attributes` attribute on the `<select>` element. Values should be passed
+as a JSON string of key/value pairs where the key is the attribute name and the value is the attribute value.
+
 #### Options
 Options can be specified by setting the `data-uber-options` attribute on the `<select>` element. Values should be passed
 as a JSON string. All options on the are passed to the underlying UberSearch, see [UberSearch options](#UberSearchOptions).

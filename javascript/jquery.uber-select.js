@@ -20,7 +20,7 @@
         optionFromDatum: optionFromDatum,                                                 // A function to create select options
         value: $(select).val()                                                            // Initialize the UberSearch with this selected value
       }, opts, $(select).data('uber-options'))
-
+      var uberAttributes = $(select).data('uber-attributes');                             // Attributes defined as data-uber-attributes on the original select element. These will be added as attributes on the uberSelect element.
       var uberSearch = this.uberSearch = new UberSearch(dataFromSelect(select), options)
 
 
@@ -52,6 +52,10 @@
       })
 
       // INITIALIZATION
+
+      if (uberAttributes) {
+        uberSearch.view.attr(uberAttributes)
+      }
 
       uberSearch.view.insertBefore(select).append(select)
       hideSelect()
