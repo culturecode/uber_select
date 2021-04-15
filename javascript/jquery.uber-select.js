@@ -62,6 +62,7 @@
       if (options.dataUrl) {
         $.getJSON(options.dataUrl).done(function(data){
           $(select).append(optionsFromData(data))
+          updateSelectValue(options.value)
           uberSearch.setData(dataFromSelect(select))
           $(select).trigger(eventsTriggered.ready)
         })
