@@ -87,7 +87,7 @@
             selectedText: getAttribute(option, 'data-selected-text'),
             value: getAttribute(option, 'value'),
             title: getAttribute(option, 'title'),
-            disabled: getAttribute(option, 'disabled'),
+            disabled: getAttribute(option, 'disabled') === undefined ? false : true,
             matchValue: getAttribute(option, 'data-match-value'),
             visibility: getAttribute(option, 'data-visibility'),
             element: option
