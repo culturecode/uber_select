@@ -141,7 +141,7 @@
       function refreshOptionsList(){
         uberSearch.setDisabled($(select).is(':disabled'))
         uberSearch.setData(dataFromSelect(select))
-        updateSelectedValue()
+        updateSelectValue($(select).find('option[selected]').attr('value')) // Read the value of the option that is selected because the <select> element's value is defunct now that we've updated the <option> elements
       }
 
       // Updates the UberSearch's selected value from the select element's value
