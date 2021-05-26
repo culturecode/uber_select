@@ -152,7 +152,8 @@
       function updateSelectValue(value){
         var before = $(select).val()
         $(select).val(value)
-        if (before != value) { $(select).trigger('change') } // Only trigger a change if the value has actually changed
+        var after = $(select).val() // Read value the same way instead of comparing to `value` so the same coercion is applied
+        if (before != after) { $(select).trigger('change') } // Only trigger a change if the value has actually changed
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
