@@ -44,7 +44,7 @@
       $(select).on(eventsObserved.refreshOptions, refreshOptionsList)
 
       // When the select value changes
-      $(select).on(eventsObserved.refresh, updateSelectedValue)
+      $(select).on(eventsObserved.refresh, refresh)
 
       // When a result is selected
       $(uberSearch).on('select', function(_, datum){
@@ -139,13 +139,12 @@
       }
 
       function refreshOptionsList(){
-        uberSearch.setDisabled($(select).is(':disabled'))
         uberSearch.setData(dataFromSelect(select))
         updateSelectValue($(select).find('option[selected]').attr('value')) // Read the value of the option that is selected because the <select> element's value is defunct now that we've updated the <option> elements
       }
 
-      // Updates the UberSearch's selected value from the select element's value
-      function updateSelectedValue(){
+      function refresh(){
+        uberSearch.setDisabled($(select).is(':disabled'))
         uberSearch.setValue($(select).val())
       }
 
