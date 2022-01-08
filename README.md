@@ -196,6 +196,9 @@ as a JSON string.
   Sets the text to show when the results list is empty and no search is in progress
 
   Default: `'No options'`
+  
+- ##### searchInputAttributes
+  An Object containing attributes to add to the search input element.
 
 - ##### buildResult
   A function that is used to build result elements.

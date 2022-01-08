@@ -1,11 +1,15 @@
 function SearchField(options){
   options = $.extend({
     placeholder: 'Type to Search',
+    searchInputAttributes: { 'aria-label': "Type to Search" },
     clearButton:'&#x2715;' // Text content of clear search button
   }, options)
 
+  var inputAttrs = {}
+  $.extend(inputAttrs, { placeholder: options.placeholder }, options.searchInputAttributes)
+    
   var context     = this
-  var input       = this.input       = $('<input type="search" class="search_input">').attr('placeholder', options.placeholder)
+  var input       = this.input       = $('<input type="search" class="search_input">').attr(inputAttrs)
   var value       = input.val()
   var clearButton = this.clearButton = $('<span class="clear_search_button"></span>').html(options.clearButton)
   var view        = this.view        = $('<span class="search_field_container"></span>').append(input).append(clearButton)
