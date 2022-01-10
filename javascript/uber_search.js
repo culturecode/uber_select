@@ -33,10 +33,14 @@ var UberSearch = function(data, options){
   var view             = $('<span class="uber_select"></span>')
   var selectedValue    = options.value // Internally selected value
   var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
-  var searchField      = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
   var resultsContainer = $('<div class="results_container"></div>')
   var messages         = $('<div class="messages"></div>')
   var pane             = new Pane({trigger: outputContainer.view})
+  var searchField      = new SearchField({
+      placeholder: options.searchPlaceholder,
+      clearButton: options.clearSearchButton,
+      searchInputAttributes: options.searchInputAttributes
+  })
   var search           = new Search(searchField.input, resultsContainer, {
     model: {
       dataForMatching: dataForMatching,
