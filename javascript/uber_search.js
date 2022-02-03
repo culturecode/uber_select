@@ -52,7 +52,7 @@ var UberSearch = function(data, options){
     view: {
       renderResults: renderResults,
       buildResult: options.buildResult || buildResult,
-      keypressInput: searchField.input
+      keypressInput: options.search ? searchField.input : outputContainer.view
     }
   })
 
@@ -62,9 +62,14 @@ var UberSearch = function(data, options){
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    markSelected()
-    $(searchField.input).focus()
+    markSelected()    
     view.addClass('open')
+   
+    if (options.search) {
+      $(searchField.input).focus()
+    } else {
+      pane.view.find("ul.results li:first").focus()
+    }
 
     triggerEvent(eventsTriggered.shown)
   })
