@@ -33,10 +33,14 @@ var UberSearch = function(data, options){
   var view             = $('<span class="uber_select"></span>')
   var selectedValue    = options.value // Internally selected value
   var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
-  var searchField      = new SearchField({placeholder: options.searchPlaceholder, clearButton: options.clearSearchButton})
   var resultsContainer = $('<div class="results_container"></div>')
   var messages         = $('<div class="messages"></div>')
   var pane             = new Pane({trigger: outputContainer.view})
+  var searchField      = new SearchField({
+      placeholder: options.searchPlaceholder,
+      clearButton: options.clearSearchButton,
+      searchInputAttributes: options.searchInputAttributes
+  })
   var search           = new Search(searchField.input, resultsContainer, {
     model: {
       dataForMatching: dataForMatching,
@@ -48,7 +52,7 @@ var UberSearch = function(data, options){
     view: {
       renderResults: renderResults,
       buildResult: options.buildResult || buildResult,
-      keypressInput: searchField.input
+      keypressInput: options.search ? searchField.input : outputContainer.view
     }
   })
 
@@ -58,9 +62,14 @@ var UberSearch = function(data, options){
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    markSelected()
-    $(searchField.input).focus()
+    markSelected()    
     view.addClass('open')
+   
+    if (options.search) {
+      $(searchField.input).focus()
+    } else {
+      pane.view.find("ul.results li:first").focus()
+    }
 
     triggerEvent(eventsTriggered.shown)
   })
