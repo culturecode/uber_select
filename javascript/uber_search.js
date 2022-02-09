@@ -36,12 +36,14 @@ var UberSearch = function(data, options){
   var resultsContainer = $('<div class="results_container"></div>')
   var messages         = $('<div class="messages"></div>')
   var pane             = new Pane({trigger: outputContainer.view})
-  var searchField      = new SearchField({
+  
+  var searchField = new SearchField({
       placeholder: options.searchPlaceholder,
       clearButton: options.clearSearchButton,
       searchInputAttributes: options.searchInputAttributes
   })
-  var search           = new Search(searchField.input, resultsContainer, {
+  
+  var search = new Search(searchField.input, resultsContainer, {
     model: {
       dataForMatching: dataForMatching,
       minQueryLength: options.minQueryLength,
@@ -106,7 +108,7 @@ var UberSearch = function(data, options){
     }
 
     setValue(valueFromResult(this))
-    pane.hide()
+    // pane.hide() FIXME: Not sure why this is causing the pane to show
     triggerEvent(eventsTriggered.select, [datum, this, event])
   })
 

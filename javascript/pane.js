@@ -25,12 +25,16 @@ function Pane(options){
       context.show()
     })
 
-    // Show the pane if the user was tabbed onto the trigger and pressed enter or space
+    // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
     $(options.trigger).on('keyup', function(event){
       if ($(options.trigger).hasClass('disabled')) { return }
 
-      if (event.which == 13 || event.which == 32){
+      if (event.which === 32 || event.which === 40){
         context.show()
+        return false
+      } else if (event.which === 13) { // toggle pane when enter is pressed
+        if (isOpen) context.hide()
+        else        context.show()
         return false
       }
     })
@@ -53,6 +57,7 @@ function Pane(options){
     if (event.which == 27 && isOpen){
       context.hide()
       options.trigger.focus()
+      return false
     }
   })
 
