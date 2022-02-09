@@ -12,7 +12,7 @@ function Pane(options){
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view: view, addContent: addContent, removeContent: removeContent, show: show, hide: hide})
+  $.extend(this, {view: view, addContent: addContent, removeContent: removeContent, show: show, hide: hide, toggle: toggle})
 
 
   // BEHAVIOUR
@@ -32,9 +32,8 @@ function Pane(options){
       if (event.which === 32 || event.which === 40){
         context.show()
         return false
-      } else if (event.which === 13) { // toggle pane when enter is pressed
-        if (isOpen) context.hide()
-        else        context.show()
+      } else if (event.which === 13){ // toggle pane when enter is pressed
+        context.toggle()
         return false
       }
     })
@@ -85,6 +84,10 @@ function Pane(options){
     isOpen = false
     view.hide()
     $(context).trigger('hidden')
+  }
+  function toggle(){
+    if (isOpen) context.hide()
+    else        context.show()
   }
 
   // returns true if the event originated outside the pane
