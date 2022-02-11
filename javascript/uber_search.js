@@ -7,6 +7,7 @@ var UberSearch = function(data, options){
   }
 
   options = $.extend({
+    ariaLabel: null,
     value: null,                                      // Initialize with this selectedValue
     disabled: false,                                  // Initialize with this disabled value
     search: true,                                     // Show the search input
@@ -30,19 +31,21 @@ var UberSearch = function(data, options){
   }, options)
 
   var context          = this
-  var view             = $('<span class="uber_select"></span>')
+  var view             = $('<span class="uber_select" role="listbox"></span>')
   var selectedValue    = options.value // Internally selected value
   var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
   var resultsContainer = $('<div class="results_container"></div>')
   var messages         = $('<div class="messages"></div>')
-  var pane             = new Pane({trigger: outputContainer.view})
+  var pane             = new Pane()
+
+  if (options.ariaLabel) { view.attr("aria-label", options.ariaLabel) }
   
   var searchField = new SearchField({
       placeholder: options.searchPlaceholder,
       clearButton: options.clearSearchButton,
       searchInputAttributes: options.searchInputAttributes
   })
-  
+
   var search = new Search(searchField.input, resultsContainer, {
     model: {
       dataForMatching: dataForMatching,
@@ -54,7 +57,7 @@ var UberSearch = function(data, options){
     view: {
       renderResults: renderResults,
       buildResult: options.buildResult || buildResult,
-      keypressInput: options.search ? searchField.input : outputContainer.view
+      keypressInput: options.search ? searchField.input : null
     }
   })
 
@@ -63,20 +66,16 @@ var UberSearch = function(data, options){
 
   // Show the pane when the select element is clicked
   $(outputContainer.view).on('click', function(event){
-    console.log("click", options.search, pane.isOpen())
     if (outputContainer.view.hasClass('disabled')) { return }
-    if (!options.search && pane.isOpen()) { return }
 
     pane.show()
   })
 
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
   $(outputContainer.view).on('keyup', function(event){
-    console.log("keyup", options.search, pane.isOpen())
     if (outputContainer.view.hasClass('disabled')) { return }
-    if (!options.search && event.isDefaultPrevented()) { return }
 
-    if (event.which === 32 || event.which === 40){
+    if (event.which === 32 || event.which === 40 && pane.isClosed()){
       pane.show()
       return false
     }
@@ -89,16 +88,23 @@ var UberSearch = function(data, options){
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    markSelected()    
+    markSelected() 
     view.addClass('open')
    
     if (options.search) {
       $(searchField.input).focus()
     } else {
-      pane.view.find("ul.results li:first").focus()
+      pane.view.find("ul.results li:first > a").focus()
     }
 
     triggerEvent(eventsTriggered.shown)
+  })
+
+
+  // When the pane is hidden
+  $(pane).on('hidden', function(){
+    view.removeClass('open')
+    view.focus()
   })
 
   // When the query is changed
@@ -123,7 +129,6 @@ var UberSearch = function(data, options){
     triggerEvent(eventsTriggered.clear)
   })
 
-  debugger;
   // When a search result is chosen
   resultsContainer.on('click', '.result:not(.disabled)', function(event){
     var datum = $(this).data()
@@ -137,22 +142,13 @@ var UberSearch = function(data, options){
     event.stopPropagation();
 
     setValue(valueFromResult(this))
-    console.log("pane", pane, "isOpen", pane.isOpen())
-    debugger;
-    pane.hide() // FIXME: Not sure why this is causing the pane to show
-    debugger;
+    pane.hide()
     triggerEvent(eventsTriggered.select, [datum, this, event])
-    debugger;
   })
 
   // When query is submitted
   $(searchField.input).on('noHighlightSubmit', function(event) {
     options.onNoHighlightSubmit($(this).val())
-  })
-
-   // When the pane is hidden
-  $(pane).on('hidden', function(){
-    view.removeClass('open')
   })
 
 
@@ -161,9 +157,7 @@ var UberSearch = function(data, options){
   setDisabled(options.disabled)
   setData(data)
 
-  if (options.search){
-    pane.addContent('search', searchField.view)
-  }
+  if (options.search) { pane.addContent('search', searchField.view) }
   pane.addContent('messages', messages)
   pane.addContent('results', resultsContainer)
 
@@ -283,16 +277,19 @@ var UberSearch = function(data, options){
   }
 
   function buildResult(datum){
-    var result = $('<li class="result"></li>')
-      .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
-      .data(datum) // Store the datum so we can get know what the value of the selected item is
+    // var result = $('<li class="result"></li>')
+    //   .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
+    //   .data(datum) // Store the datum so we can get know what the value of the selected item is
 
-    if (datum.title) { result.attr('title', datum.title) }
-    if (datum.disabled) { result.addClass('disabled') }
+    var $link   = $('<a href="#"></a>').html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
+    var $result = $('<li role="option" class="result" tabindex="0"></li>').html($link).data(datum)
 
-    options.resultPostprocessor(result, datum)
+    if (datum.title) { $result.attr('title', datum.title) }
+    if (datum.disabled) { $result.addClass('disabled') }
 
-    return result
+    options.resultPostprocessor($result, datum)
+
+    return $result
   }
 
   function markSelected(){
@@ -363,7 +360,6 @@ var UberSearch = function(data, options){
 
   // Allow observer to be attached to the UberSearch itself
   function triggerEvent(eventType, callbackArgs){
-    console.log("triggerEvent", eventType, callbackArgs, "on", view, "and", context)
     view.trigger(eventType, callbackArgs)
     $(context).trigger(eventType, callbackArgs)
   }

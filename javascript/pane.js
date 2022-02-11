@@ -3,21 +3,31 @@ function Pane(options){
     trigger: null
   }, options)
 
-  var context = this
-  var model = this.model = {}
-  var isOpen = false
-  var view = this.view = $('<div class="pane"></div>').toggle(isOpen)
+  var context   = this
+  var model     = {}
+  var isOpen    = false
+  var view      = $('<div class="pane"></div>').toggle(isOpen)
   var innerPane = $('<div class="pane_inner"></div>').appendTo(view)
 
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view: view, addContent: addContent, removeContent: removeContent, show: show, hide: hide, toggle: toggle, isOpen: paneIsOpen})
+  $.extend(this, {
+    model:         model,
+    view:          view,
+    addContent:    addContent,
+    removeContent: removeContent,
+    show:          show,
+    hide:          hide,
+    toggle:        toggle,
+    isOpen:        paneIsOpen,
+    isClosed:      paneIsClosed
+  })
 
 
   // BEHAVIOUR
 
-    // Hide the pane when clicked out
+  // Hide the pane when clicked out
   $(document).on('mousedown', function(event){
     if (isEventOutsidePane(event) && isEventOutsideTrigger(event)){
       context.hide()
@@ -33,7 +43,6 @@ function Pane(options){
   $(document).on('keyup', function(event){
     if (event.which == 27 && isOpen){
       context.hide()
-      options.trigger.focus()
       return false
     }
   })
@@ -42,7 +51,11 @@ function Pane(options){
   // HELPER FUNCTIONS
 
   function paneIsOpen(){
-    return isOpen;
+    return isOpen
+  }
+
+  function paneIsClosed(){
+    return !isOpen
   }
 
   function addContent(name, content){
@@ -56,22 +69,18 @@ function Pane(options){
   }
 
   function show(){
-    console.log("show pane", show.caller)
-    debugger;
     if (isOpen) { return }
     isOpen = true
     view.show()
     $(context).trigger('shown')
   }
   function hide(){
-    console.log("hide pane")
     if (!isOpen) { return }
     isOpen = false
     view.hide()
     $(context).trigger('hidden')
   }
   function toggle(){
-    console.log("toogle pane")
     if (isOpen) context.hide()
     else        context.show()
   }
