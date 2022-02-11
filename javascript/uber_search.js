@@ -61,6 +61,31 @@ var UberSearch = function(data, options){
 
   // BEHAVIOUR
 
+  // Show the pane when the select element is clicked
+  $(outputContainer.view).on('click', function(event){
+    console.log("click", options.search, pane.isOpen())
+    if (outputContainer.view.hasClass('disabled')) { return }
+    if (!options.search && pane.isOpen()) { return }
+
+    pane.show()
+  })
+
+  // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
+  $(outputContainer.view).on('keyup', function(event){
+    console.log("keyup", options.search, pane.isOpen())
+    if (outputContainer.view.hasClass('disabled')) { return }
+    if (!options.search && event.isDefaultPrevented()) { return }
+
+    if (event.which === 32 || event.which === 40){
+      pane.show()
+      return false
+    }
+    else if (event.which === 13){ // toggle pane when enter is pressed
+      pane.toggle()
+      return false
+    }
+  })
+
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
@@ -98,18 +123,26 @@ var UberSearch = function(data, options){
     triggerEvent(eventsTriggered.clear)
   })
 
+  debugger;
   // When a search result is chosen
   resultsContainer.on('click', '.result:not(.disabled)', function(event){
     var datum = $(this).data()
+    console.log("result chosen", datum)
 
     if (options.onSelect(datum, this, event) === false) {
       event.stopPropagation()
       return
     }
 
+    event.stopPropagation();
+
     setValue(valueFromResult(this))
-    // pane.hide() FIXME: Not sure why this is causing the pane to show
+    console.log("pane", pane, "isOpen", pane.isOpen())
+    debugger;
+    pane.hide() // FIXME: Not sure why this is causing the pane to show
+    debugger;
     triggerEvent(eventsTriggered.select, [datum, this, event])
+    debugger;
   })
 
   // When query is submitted
@@ -330,6 +363,7 @@ var UberSearch = function(data, options){
 
   // Allow observer to be attached to the UberSearch itself
   function triggerEvent(eventType, callbackArgs){
+    console.log("triggerEvent", eventType, callbackArgs, "on", view, "and", context)
     view.trigger(eventType, callbackArgs)
     $(context).trigger(eventType, callbackArgs)
   }

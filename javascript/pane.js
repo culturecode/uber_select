@@ -12,32 +12,10 @@ function Pane(options){
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view: view, addContent: addContent, removeContent: removeContent, show: show, hide: hide, toggle: toggle})
+  $.extend(this, {view: view, addContent: addContent, removeContent: removeContent, show: show, hide: hide, toggle: toggle, isOpen: paneIsOpen})
 
 
   // BEHAVIOUR
-
-  if (options.trigger){
-    // Show the pane when the select element is clicked
-    $(options.trigger).on('click', function(event){
-      if ($(options.trigger).hasClass('disabled')) { return }
-
-      context.show()
-    })
-
-    // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
-    $(options.trigger).on('keyup', function(event){
-      if ($(options.trigger).hasClass('disabled')) { return }
-
-      if (event.which === 32 || event.which === 40){
-        context.show()
-        return false
-      } else if (event.which === 13){ // toggle pane when enter is pressed
-        context.toggle()
-        return false
-      }
-    })
-  }
 
     // Hide the pane when clicked out
   $(document).on('mousedown', function(event){
@@ -63,6 +41,10 @@ function Pane(options){
 
   // HELPER FUNCTIONS
 
+  function paneIsOpen(){
+    return isOpen;
+  }
+
   function addContent(name, content){
     model[name] = content
     innerPane.append(content)
@@ -74,18 +56,22 @@ function Pane(options){
   }
 
   function show(){
+    console.log("show pane", show.caller)
+    debugger;
     if (isOpen) { return }
     isOpen = true
     view.show()
     $(context).trigger('shown')
   }
   function hide(){
+    console.log("hide pane")
     if (!isOpen) { return }
     isOpen = false
     view.hide()
     $(context).trigger('hidden')
   }
   function toggle(){
+    console.log("toogle pane")
     if (isOpen) context.hide()
     else        context.show()
   }

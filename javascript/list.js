@@ -18,6 +18,8 @@ function List(options) {
       case 13: // Enter
         if (highlightedResult().length) {
           highlightedResult().click()
+          event.preventDefault()
+          //highlightedResult().trigger('selected')
         } else {
           $(this).trigger('noHighlightSubmit')
         }
