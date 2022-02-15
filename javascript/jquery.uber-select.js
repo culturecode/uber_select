@@ -48,7 +48,6 @@
 
       // When a result is selected
       $(uberSearch).on('select', function(_, datum){
-        console.log("Result selected", datum)
         updateSelectValue(datum.value)
       })
 
