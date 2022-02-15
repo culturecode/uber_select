@@ -81,8 +81,11 @@ function Pane(options){
     $(context).trigger('hidden')
   }
   function toggle(){
-    if (isOpen) context.hide()
-    else        context.show()
+    if (isOpen) {
+      context.hide()
+    } else {
+      context.show()
+    }
   }
 
   // returns true if the event originated outside the pane
