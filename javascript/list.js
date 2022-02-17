@@ -7,7 +7,7 @@ function List(options) {
   // BEHAVIOUR
 
   // Handle up and down arrow key presses
-  $(options.keypressInput).on('keydown', function(event){
+  $(options.keypressInput || view).on('keydown', function(event){
     switch (event.which) {
       case 38: // Up Arrow
         stepHighlight(-1, true)
@@ -50,7 +50,7 @@ function List(options) {
 
   // Can be overridden to format how results are built
   this.buildResult = function(datum){
-    return $('<li></li>').html(datum).addClass('result')
+    return $('<li role="option" class="result" tabindex="0"></li>').html(datum)
   }
 
   this.unhighlightResults = unhighlightResults
@@ -73,6 +73,7 @@ function List(options) {
     if (!result.length) { return }
 
     result.addClass('highlighted')
+    result.attr("aria-selected", true)
 
     if (options.scroll){
       scrollResultIntoView(result)
@@ -80,7 +81,7 @@ function List(options) {
   }
 
   function unhighlightResults(){
-    highlightedResult().removeClass('highlighted')
+    highlightedResult().removeClass('highlighted').attr("aria-selected", false)
   }
 
   function highlightedResult(){

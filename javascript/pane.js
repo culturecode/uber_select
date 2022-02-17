@@ -3,40 +3,31 @@ function Pane(options){
     trigger: null
   }, options)
 
-  var context = this
-  var model = this.model = {}
-  var isOpen = false
-  var view = this.view = $('<div class="pane"></div>').toggle(isOpen)
+  var context   = this
+  var model     = {}
+  var isOpen    = false
+  var view      = $('<div class="pane"></div>').toggle(isOpen)
   var innerPane = $('<div class="pane_inner"></div>').appendTo(view)
 
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view: view, addContent: addContent, removeContent: removeContent, show: show, hide: hide})
+  $.extend(this, {
+    model:         model,
+    view:          view,
+    addContent:    addContent,
+    removeContent: removeContent,
+    show:          show,
+    hide:          hide,
+    toggle:        toggle,
+    isOpen:        paneIsOpen,
+    isClosed:      paneIsClosed
+  })
 
 
   // BEHAVIOUR
 
-  if (options.trigger){
-    // Show the pane when the select element is clicked
-    $(options.trigger).on('click', function(event){
-      if ($(options.trigger).hasClass('disabled')) { return }
-
-      context.show()
-    })
-
-    // Show the pane if the user was tabbed onto the trigger and pressed enter or space
-    $(options.trigger).on('keyup', function(event){
-      if ($(options.trigger).hasClass('disabled')) { return }
-
-      if (event.which == 13 || event.which == 32){
-        context.show()
-        return false
-      }
-    })
-  }
-
-    // Hide the pane when clicked out
+  // Hide the pane when clicked out
   $(document).on('mousedown', function(event){
     if (isEventOutsidePane(event) && isEventOutsideTrigger(event)){
       context.hide()
@@ -52,12 +43,20 @@ function Pane(options){
   $(document).on('keyup', function(event){
     if (event.which == 27 && isOpen){
       context.hide()
-      options.trigger.focus()
+      return false
     }
   })
 
 
   // HELPER FUNCTIONS
+
+  function paneIsOpen(){
+    return isOpen
+  }
+
+  function paneIsClosed(){
+    return !isOpen
+  }
 
   function addContent(name, content){
     model[name] = content
@@ -80,6 +79,13 @@ function Pane(options){
     isOpen = false
     view.hide()
     $(context).trigger('hidden')
+  }
+  function toggle(){
+    if (isOpen) {
+      context.hide()
+    } else {
+      context.show()
+    }
   }
 
   // returns true if the event originated outside the pane
