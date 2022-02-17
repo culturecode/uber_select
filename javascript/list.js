@@ -39,12 +39,9 @@ function List(options) {
   }
 
   this.renderResults = function(data){
-    console.log("List.prototype.renderResults", data)
     var results = $.map(data, function(datum){
       return context.buildResult(datum)
     })
-
-    console.log("renderResults results", results)
 
     view.toggleClass('empty', !data.length)
 
@@ -53,8 +50,7 @@ function List(options) {
 
   // Can be overridden to format how results are built
   this.buildResult = function(datum){
-    var $link = $('<a href="#"></a>').html(datum)
-    return $('<li role="option" class="result" tabindex="0"></li>').html($link)
+    return $('<li role="option" class="result" tabindex="0"></li>').html(datum)
   }
 
   this.unhighlightResults = unhighlightResults

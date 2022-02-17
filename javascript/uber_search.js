@@ -94,7 +94,7 @@ var UberSearch = function(data, options){
     if (options.search) {
       $(searchField.input).focus()
     } else {
-      pane.view.find("ul.results li:first > a").focus()
+      pane.view.find("ul.results li:first").focus()
     }
 
     triggerEvent(eventsTriggered.shown)
@@ -132,7 +132,6 @@ var UberSearch = function(data, options){
   // When a search result is chosen
   resultsContainer.on('click', '.result:not(.disabled)', function(event){
     var datum = $(this).data()
-    console.log("result chosen", datum)
 
     if (options.onSelect(datum, this, event) === false) {
       event.stopPropagation()
@@ -277,19 +276,16 @@ var UberSearch = function(data, options){
   }
 
   function buildResult(datum){
-    // var result = $('<li class="result"></li>')
-    //   .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
-    //   .data(datum) // Store the datum so we can get know what the value of the selected item is
+    var result = $('<li class="result" tabindex="0"></li>')
+      .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
+      .data(datum) // Store the datum so we can get know what the value of the selected item is
 
-    var $link   = $('<a href="#"></a>').html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
-    var $result = $('<li role="option" class="result" tabindex="0"></li>').html($link).data(datum)
+    if (datum.title) { result.attr('title', datum.title) }
+    if (datum.disabled) { result.addClass('disabled') }
 
-    if (datum.title) { $result.attr('title', datum.title) }
-    if (datum.disabled) { $result.addClass('disabled') }
+    options.resultPostprocessor(result, datum)
 
-    options.resultPostprocessor($result, datum)
-
-    return $result
+    return result
   }
 
   function markSelected(){
