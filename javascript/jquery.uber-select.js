@@ -17,6 +17,7 @@
         disabled: $(select).is(':disabled'),                                              // Whether the select is currently disabled
         placeholder: $(select).attr('placeholder') || $(select).attr('data-placeholder'), // Placeholder to show in the selected text area
         dataUrl: null,                                                                    // A url to pre-fetch select options from, see optionsFromData for data format
+        dataFormatter: function(data) { return data },                                    // A function to manipulate data received from the dataUrl before it is used. The function should return an array of data with desired modifications.
         optionFromDatum: optionFromDatum,                                                 // A function to create select options
         value: $(select).val()                                                            // Initialize the UberSearch with this selected value
       }, opts, $(select).data('uber-options'))
@@ -61,6 +62,7 @@
       hideSelect()
       if (options.dataUrl) {
         $.getJSON(options.dataUrl).done(function(data){
+          data = options.dataFormatter(data)
           $(select).append(optionsFromData(data))
           updateSelectValue(options.value)
           uberSearch.setData(dataFromSelect(select))

@@ -52,12 +52,27 @@ as a JSON string. All options on the are passed to the underlying UberSearch, se
 
   Default: `<select>` element attributes `<select placeholder="my placeholder" data-placeholder="my placeholder">`
 
-- ##### dataUrl
+- ##### dataUrl <a name="dataUrl"></a>
 
   A url to pre-fetch select options from. JSON response should be of the form
   `[{text:'option with explicit value', value: 'some value'}, {text:'option with implicit value'}]`. For a custom JSON response, use in conjunction with optionFromDatum.
 
   Default: `null`
+
+- ##### dataFormatter
+
+  A function that can modify the data from the dataUrl before it is used.
+
+  The function signature is as follows:
+
+  ```js
+    function(data) {
+      // Modify the data
+
+      return modifiedData
+    }
+  ```
+  See <a href="#dataUrl">dataUrl</a> for details about the expected format of `data`.
 
 - ##### optionFromDatum
 
