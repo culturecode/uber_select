@@ -71,6 +71,14 @@ var UberSearch = function(data, options){
     pane.show()
   })
 
+  // Hide the pane when clicked out or another pane is opened
+  $(document).on('click shown.UberSelect', function(event){
+    if (isEventOutsidePane(event) && isEventOutsideOutputContainer(event)){
+      pane.hide()
+    }
+  })
+
+
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
   $(outputContainer.view).on('keyup', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
@@ -357,6 +365,15 @@ var UberSearch = function(data, options){
 
   function resultsCount(){
     return search.getResults().length
+  }
+
+  // returns true if the event originated outside the pane
+  function isEventOutsidePane(event){
+    return !$(event.target).closest(pane.view).length
+  }
+
+  function isEventOutsideOutputContainer(event){
+    return !$(event.target).closest(outputContainer.view).length
   }
 
   // Allow observer to be attached to the UberSearch itself

@@ -1,7 +1,8 @@
-function Pane(options){
-  options = $.extend({
-    trigger: null
-  }, options)
+function Pane(){
+  var eventsTriggered = {
+    shown: 'shown.UberSelect',
+    hidden: 'hidden.UberSelect'
+  }
 
   var context   = this
   var model     = {}
@@ -26,13 +27,6 @@ function Pane(options){
 
 
   // BEHAVIOUR
-
-  // Hide the pane when clicked out
-  $(document).on('mousedown', function(event){
-    if (isEventOutsidePane(event) && isEventOutsideTrigger(event)){
-      context.hide()
-    }
-  })
 
   // Make it possible to have elements in the pane that close it
   view.on('click', '[data-behaviour~=close-pane]', function(event){
@@ -72,13 +66,13 @@ function Pane(options){
     if (isOpen) { return }
     isOpen = true
     view.show()
-    $(context).trigger('shown')
+    triggerEvent(eventsTriggered.shown)
   }
   function hide(){
     if (!isOpen) { return }
     isOpen = false
     view.hide()
-    $(context).trigger('hidden')
+    triggerEvent(eventsTriggered.hidden)
   }
   function toggle(){
     if (isOpen) {
@@ -88,13 +82,8 @@ function Pane(options){
     }
   }
 
-  // returns true if the event originated outside the pane
-  function isEventOutsidePane(event){
-    return !$(event.target).closest(view).length
+  function triggerEvent(eventType, callbackArgs){
+    view.trigger(eventType, callbackArgs)
+    $(context).trigger(eventType, callbackArgs)
   }
-
-  function isEventOutsideTrigger(event){
-    return !$(event.target).closest(options.trigger).length
-  }
-
 }
