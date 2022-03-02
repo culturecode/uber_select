@@ -134,7 +134,11 @@
 
       // Copies the value of the select into the search input
       function updateSearchValueFromSelect(){
-        uberSearch.searchField.input.val($(select).find('option:selected').text())
+        var index = select.selectedIndex
+
+        if (index == undefined) { return }
+
+        uberSearch.searchField.input.val($(select).find('option').eq(index).text())
         uberSearch.searchField.refresh()
       }
 
