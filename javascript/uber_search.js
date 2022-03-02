@@ -39,7 +39,7 @@ var UberSearch = function(data, options){
   var pane             = new Pane()
 
   if (options.ariaLabel) { view.attr("aria-label", options.ariaLabel) }
-  
+
   var searchField = new SearchField({
       placeholder: options.searchPlaceholder,
       clearButton: options.clearSearchButton,
@@ -88,9 +88,9 @@ var UberSearch = function(data, options){
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    markSelected() 
+    markSelected()
     view.addClass('open')
-   
+
     if (options.search) {
       $(searchField.input).focus()
     } else {
@@ -187,6 +187,11 @@ var UberSearch = function(data, options){
     selectedValue = value
     updateSelectedText()
     markSelected()
+  }
+
+  // Returns the selected value
+  function getValue(){
+    return selectedValue
   }
 
   // Enables or disables UberSearch
@@ -362,5 +367,5 @@ var UberSearch = function(data, options){
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view:view,  searchField:searchField, setValue:setValue, setData:setData, setDisabled:setDisabled, options:options})
+  $.extend(this, {view:view,  searchField:searchField, setValue:setValue, getValue: getValue, setData:setData, setDisabled:setDisabled, getSelection:getSelection, options:options})
 }

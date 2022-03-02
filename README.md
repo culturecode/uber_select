@@ -171,6 +171,15 @@ Data is an array of objects. Each object may have the following properties:
 
   Sets the data. `data` should be an Array conforming to the specifications described in <a href="#data">Data</a>
 
+- ##### getValue()
+
+  Returns the currently selected value.
+
+- ##### getSelection()
+
+  Returns the currently selected element from the search results.
+
+
 #### Options <a name="UberSearch options"></a>
 
 Options can be specified by setting the `data-uber-options` attribute on the `<select>` element. Values should be passed
@@ -256,7 +265,7 @@ as a JSON string.
   Sets the text to show when the results list is empty and no search is in progress
 
   Default: `'No options'`
-  
+
 - ##### searchInputAttributes
 
   An Object containing attributes to add to the search input element.
