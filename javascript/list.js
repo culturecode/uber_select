@@ -26,7 +26,8 @@ function List(options) {
   })
 
   // When a list item is hovered
-  $(view).on('mouseenter', '.result:not(.disabled)', function(){
+  $(view).on('mouseenter focus', '.result:not(.disabled)', function(){
+    if ($(this).hasClass('highlighted')) { return }
     unhighlightResults()
     highlightResult(this, {scroll: false})
   })
@@ -55,6 +56,9 @@ function List(options) {
 
   this.unhighlightResults = unhighlightResults
   this.highlightResult = highlightResult
+  this.stepHighlight = stepHighlight
+  this.setHighlight = setHighlight
+
 
   function stepHighlight(amount, allowUnhighlight){
     var index = selectableResults().index(highlightedResult())
@@ -66,14 +70,27 @@ function List(options) {
     }
   }
 
+  function setHighlight(index){
+    var result = selectableResults()[index]
+
+    if (result){
+      unhighlightResults()
+      highlightResult(result)
+    }
+  }
+
   function highlightResult(result, options) {
     result = $(result)
     options = $.extend({scroll: true}, options)
 
-    if (!result.length) { return }
+    if (!result.length) {
+      result.blur()
+      return
+    }
 
     result.addClass('highlighted')
     result.attr("aria-selected", true)
+    result.focus()
 
     if (options.scroll){
       scrollResultIntoView(result)

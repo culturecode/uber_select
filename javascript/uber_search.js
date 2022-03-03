@@ -78,15 +78,21 @@ var UberSearch = function(data, options){
     }
   })
 
-
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
   $(outputContainer.view).on('keyup', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
-    if (event.which === 32 || event.which === 40 && pane.isClosed()){
-      pane.show()
+    if (event.which === 40 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
+      search.setHighlight(0)
       return false
     }
+
+    if (event.which === 32 || event.which === 40 && pane.isClosed()){ // Show the pane when the space or down key is pressed
+      pane.show()
+      search.setHighlight(0)
+      return false
+    }
+
     else if (event.which === 13){ // toggle pane when enter is pressed
       pane.toggle()
       return false
@@ -107,7 +113,6 @@ var UberSearch = function(data, options){
 
     triggerEvent(eventsTriggered.shown)
   })
-
 
   // When the pane is hidden
   $(pane).on('hidden', function(){

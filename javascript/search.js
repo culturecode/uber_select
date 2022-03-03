@@ -41,6 +41,10 @@ function Search(queryInput, resultsContainer, options){
     list.highlightResult(element)
   }
 
+  this.stepHighlight = list.stepHighlight
+  this.setHighlight = list.setHighlight
+
+
   // BEHAVIOUR
 
   $(queryInput).on('searchInput', function(){
