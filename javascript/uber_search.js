@@ -79,7 +79,7 @@ var UberSearch = function(data, options){
   })
 
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
-  $(outputContainer.view).on('keyup', function(event){
+  $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
     if (event.which === 40 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
