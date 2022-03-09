@@ -1,7 +1,7 @@
 function Pane(){
   var eventsTriggered = {
-    shown: 'shown.UberSelect',
-    hidden: 'hidden.UberSelect'
+    shown: 'shown',
+    hidden: 'hidden'
   }
 
   var context   = this

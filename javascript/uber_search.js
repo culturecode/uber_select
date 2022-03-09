@@ -81,11 +81,19 @@ var UberSearch = function(data, options){
     }
   })
 
+  $(view).on('setHighlight', function(event, result, index){
+    if (index < 0 && options.search) {
+      $(searchField.input).focus()
+    } else if (index < 0) {
+      $(outputContainer.view).focus()
+    }
+  })
+
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
   $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
-    if (event.which === 32 || event.which === 40 && pane.isClosed()){ // Show the pane when the space or down key is pressed
+    if (event.which === 32 || event.which === 40){ // Show the pane when the space or down key is pressed
       pane.show()
       search.setHighlight(0)
       return false

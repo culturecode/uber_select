@@ -76,6 +76,7 @@ function List(options) {
     } else if (options.allowUnhighlight) {
       unhighlightResults({ blur: !options.focus })
     }
+    triggerEvent('setHighlight', [result, index])
   }
 
   function highlightResult(result, options) {
@@ -145,6 +146,13 @@ function List(options) {
     } else if (containerTop > resultTop){
       container.scrollTop(resultTop)
     }
+  }
+
+
+  // Allow observer to be attached to the UberSearch itself
+  function triggerEvent(eventType, callbackArgs){
+    view.trigger(eventType, callbackArgs)
+    $(context).triggerHandler(eventType, callbackArgs)
   }
 
   // INITIALIZATION
