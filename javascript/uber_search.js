@@ -63,20 +63,9 @@ var UberSearch = function(data, options){
 
   // BEHAVIOUR
 
-  // Show the pane when the select element is clicked
-  $(outputContainer.view).on('click', function(event){
-    if (outputContainer.view.hasClass('disabled')) { return }
-
-    pane.show()
-
-    if (options.search) {
-      $(searchField.input).focus()
-    }
-  })
-
   // Hide the pane when clicked out or another pane is opened
-  $(document).on('click shown.UberSelect', function(event){
-    if (isEventOutsidePane(event) && isEventOutsideOutputContainer(event)){
+  $(document).on('click shown', function(event){
+    if (pane.isOpen() && isEventOutside(event)){
       pane.hide()
     }
   })
@@ -102,6 +91,17 @@ var UberSearch = function(data, options){
     if (event.which === 13){ // toggle pane when enter is pressed
       pane.toggle()
       return false
+    }
+  })
+
+  // Show the pane when the select element is clicked
+  $(outputContainer.view).on('click', function(event){
+    if (outputContainer.view.hasClass('disabled')) { return }
+
+    pane.show()
+
+    if (options.search) {
+      $(searchField.input).focus()
     }
   })
 
@@ -391,13 +391,9 @@ var UberSearch = function(data, options){
     return search.getResults().length
   }
 
-  // returns true if the event originated outside the pane
-  function isEventOutsidePane(event){
-    return !$(event.target).closest(pane.view).length
-  }
-
-  function isEventOutsideOutputContainer(event){
-    return !$(event.target).closest(outputContainer.view).length
+  // returns true if the event originated outside this component
+  function isEventOutside(event){
+    return !$(event.target).closest(view).length
   }
 
   // Allow observer to be attached to the UberSearch itself
