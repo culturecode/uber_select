@@ -297,7 +297,7 @@ as a JSON string.
 
 - ##### onRender
 
-  A function to run when the results container is rendered. If the result returns false, the default `select` event
+  A function to run when the results container is rendered. If the result returns false, the default `render` event
   handler is not run and the event is cancelled.
 
   The function signature is as follows:
