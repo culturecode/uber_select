@@ -57,7 +57,6 @@ var UberSearch = function(data, options){
     view: {
       renderResults: renderResults,
       buildResult: options.buildResult || buildResult,
-      keypressInput: options.search ? searchField.input : null
     }
   })
 
@@ -69,6 +68,10 @@ var UberSearch = function(data, options){
     if (outputContainer.view.hasClass('disabled')) { return }
 
     pane.show()
+
+    if (options.search) {
+      $(searchField.input).focus()
+    }
   })
 
   // Hide the pane when clicked out or another pane is opened
@@ -82,19 +85,27 @@ var UberSearch = function(data, options){
   $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
-    if (event.which === 40 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
-      search.setHighlight(0)
-      return false
-    }
-
     if (event.which === 32 || event.which === 40 && pane.isClosed()){ // Show the pane when the space or down key is pressed
       pane.show()
       search.setHighlight(0)
       return false
     }
 
-    else if (event.which === 13){ // toggle pane when enter is pressed
+    if (event.which === 13){ // toggle pane when enter is pressed
       pane.toggle()
+      return false
+    }
+  })
+
+  // Allow control of the list while focussed in the search instead of the list
+  $(pane.view).on('keydown', function(event){
+    if (event.which === 38 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
+      search.stepHighlight(-1)
+      return false
+    }
+
+    if (event.which === 40 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
+      search.stepHighlight(1)
       return false
     }
   })

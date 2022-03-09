@@ -7,7 +7,7 @@ function List(options) {
   // BEHAVIOUR
 
   // Handle up and down arrow key presses
-  $(options.keypressInput || view).on('keydown', function(event){
+  $(view).on('keydown', function(event){
     switch (event.which) {
       case 38: // Up Arrow
         stepHighlight(-1, true)
