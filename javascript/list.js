@@ -62,43 +62,56 @@ function List(options) {
 
   function stepHighlight(amount, allowUnhighlight){
     var index = selectableResults().index(highlightedResult())
-    var result = selectableResults()[index + amount]
-
-    if (result || allowUnhighlight){
-      unhighlightResults()
-      highlightResult(result)
-    }
+    setHighlight(index + amount, { allowUnhighlight: allowUnhighlight })
   }
 
-  function setHighlight(index){
+  function setHighlight(index, options) {
+    options = $.extend({}, options)
+
     var result = selectableResults()[index]
 
     if (result){
-      unhighlightResults()
-      highlightResult(result)
+      unhighlightResults({ blur: !options.focus })
+      highlightResult(result, { focus: options.focus })
+    } else if (options.allowUnhighlight) {
+      unhighlightResults({ blur: !options.focus })
     }
   }
 
   function highlightResult(result, options) {
     result = $(result)
-    options = $.extend({scroll: true}, options)
+    options = $.extend({
+      scroll: false,
+      focus: true
+    }, options)
 
     if (!result.length) {
-      result.blur()
       return
     }
 
     result.addClass('highlighted')
     result.attr("aria-selected", true)
-    result.focus()
+
+    if (options.focus) {
+      result.focus()
+    }
 
     if (options.scroll){
       scrollResultIntoView(result)
     }
   }
 
-  function unhighlightResults(){
-    highlightedResult().removeClass('highlighted').attr("aria-selected", false)
+  function unhighlightResults(options){
+    options = $.extend({
+      blur: true
+    }, options)
+
+    var result = highlightedResult()
+    result.removeClass('highlighted').attr("aria-selected", false)
+
+    if (options.blur) {
+      result.blur()
+    }
   }
 
   function highlightedResult(){

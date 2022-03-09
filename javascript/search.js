@@ -36,9 +36,9 @@ function Search(queryInput, resultsContainer, options){
     }
   }
 
-  this.highlightResult = function(element) {
+  this.highlightResult = function(element, options) {
     list.unhighlightResults()
-    list.highlightResult(element)
+    list.highlightResult(element, options)
   }
 
   this.stepHighlight = list.stepHighlight

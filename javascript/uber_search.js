@@ -316,9 +316,9 @@ var UberSearch = function(data, options){
     $(selected).addClass('selected').removeClass('hidden')
 
     if (selected) {
-      search.highlightResult(selected)
+      search.highlightResult(selected, { focus: false })
     } else if (options.highlightByDefault) {
-      search.highlightResult(results.not('.hidden').not('.disabled').first())
+      search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: false })
     }
   }
 
