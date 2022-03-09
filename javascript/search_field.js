@@ -7,7 +7,7 @@ function SearchField(options){
 
   var inputAttrs = {}
   $.extend(inputAttrs, { placeholder: options.placeholder }, options.searchInputAttributes)
-    
+
   var context     = this
   var input       = this.input       = $('<input type="search" class="search_input">').attr(inputAttrs)
   var value       = input.val()
@@ -74,7 +74,7 @@ function SearchField(options){
   // Allow observer to be attached to the SearchField itself
   function triggerEvent(eventType, callbackArgs){
     input.trigger(eventType, callbackArgs)
-    $(context).trigger(eventType, callbackArgs)
+    $(context).triggerHandler(eventType, callbackArgs)
   }
 
 

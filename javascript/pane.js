@@ -84,6 +84,6 @@ function Pane(){
 
   function triggerEvent(eventType, callbackArgs){
     view.trigger(eventType, callbackArgs)
-    $(context).trigger(eventType, callbackArgs)
+    $(context).triggerHandler(eventType, callbackArgs)
   }
 }

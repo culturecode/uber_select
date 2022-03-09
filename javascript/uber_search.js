@@ -384,7 +384,7 @@ var UberSearch = function(data, options){
   // Allow observer to be attached to the UberSearch itself
   function triggerEvent(eventType, callbackArgs){
     view.trigger(eventType, callbackArgs)
-    $(context).trigger(eventType, callbackArgs)
+    $(context).triggerHandler(eventType, callbackArgs)
   }
 
   // PUBLIC INTERFACE
