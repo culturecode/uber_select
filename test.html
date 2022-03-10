@@ -68,6 +68,24 @@
   <p>This prepopulated example hides blank options, but still allows the search to be cleared</p>
 </span>
 
+<span class="example">
+  <label for="select">
+  Grouped search with group matching
+  </label>
+  <select data-uber-options='{"matchGroupNames": true}'>
+    <optgroup label="Colours">
+      <option>Red</option>
+      <option>Green</option>
+    </optgroup>
+    <optgroup label="Names">
+      <option>Red</option>
+      <option>Greene</option>
+    </optgroup>
+  </select>
+  <p>This example uses optgroups to separate option types. It allows the search to match against the group names, which
+    causes all results in that group to show.
+  </p>
+</span>
 
 <span class="example">
   <label for="select">
@@ -110,7 +128,6 @@
     will inherit it from its optgroup.
   </p>
 </span>
-
 
 <span class="example">
   <label for="select">

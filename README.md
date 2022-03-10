@@ -26,7 +26,7 @@ $('.my_selects').uberSelect(options);
 
 #### Attributes <a name="UberSearch attributes"></a>
 
-Attribtes on the outermost element can be specified by setting the `data-uber-attributes` attribute on the `<select>` element. Values should be passed
+Attributes on the outermost element can be specified by setting the `data-uber-attributes` attribute on the `<select>` element. Values should be passed
 as a JSON string of key/value pairs where the key is the attribute name and the value is the attribute value.
 
 #### Options
@@ -76,7 +76,7 @@ as a JSON string. All options on the are passed to the underlying UberSearch, se
 
 - ##### optionFromDatum
 
-  A function that is used to customize the options value and text built from a JSON response. `datum` is a single result returned from the JSON response.
+  A function that is used to customize the option's value and text built from a JSON response. `datum` is a single result returned from the JSON response.
 
   The function signature is as follows:
 
@@ -97,6 +97,13 @@ as a JSON string. All options on the are passed to the underlying UberSearch, se
 - ##### ariaLabel
 
   Add an aria-label attribute with this value to the uber_select element.
+
+#### Option Data Attributes
+`<option>` elements can each use data-attributes to control datum properties. See [UberSearch data](#UberSearchData).
+
+  - `data-match-value`
+  - `data-visibility`
+  - `data-selected-text`
 
 #### Events Triggered
 
@@ -129,7 +136,7 @@ being used in purely in JS, and not being linked to a `<select>` element in a fo
 new UberSearch(data, options);
 ```
 
-#### Data
+#### Data <a name="UberSearch data"></a>
 
 Data is an array of objects. Each object may have the following properties:
 
@@ -328,10 +335,18 @@ as a JSON string.
   function(value) { }
   ```
 
+- ##### matchGroupNames
+
+  Toggles whether or not to match results using their `datum.group` in addition to their `datum.matchValue`. When `true`
+  the searches that match the group name will cause options within that group to appear.
+
+  Default: `false`
+
 - ##### outputContainer (Deprecated)
 
   An object that receives the output once a result is selected. Must respond to `setValue(value)` and `view()`. This object serves to
   attach the result list to the DOM at the desired location.
+
 
 #### Events Triggered
 

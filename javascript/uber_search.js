@@ -27,7 +27,8 @@ var UberSearch = function(data, options){
     onRender: function(resultsContainer, result) {},  // A function to run when the results container is rendered. If the result returns false, the default render handler is not run and the event is cancelled
     onSelect: function(datum, result, clickEvent) {}, // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
     onNoHighlightSubmit: function(value) {},          // A function to run when a user presses enter without selecting a result.
-    noDataText: 'No options'                          // Text to show in there is nothing in the set of data to pick from
+    noDataText: 'No options',                         // Text to show in there is nothing in the set of data to pick from
+    matchGroupNames: false                            // Show results for searches that match the result's group name
   }, options)
 
   var context          = this
@@ -258,9 +259,13 @@ var UberSearch = function(data, options){
     }
   }
 
-  // Match against the datum.matchValue
+  // Match against the datum.group and datum.matchValue
   function datumPreprocessor(datum){
-    return datum.matchValue
+    if (options.matchGroupNames && datum.group) {
+      return datum.group + " " + datum.matchValue
+    } else {
+      return datum.matchValue
+    }
   }
 
   // Adds group support and blank option hiding
