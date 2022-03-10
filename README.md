@@ -24,7 +24,7 @@ you can use UberSelect to gussy up forms, without changing any of the underlying
 $('.my_selects').uberSelect(options);
 ```
 
-#### Attributes <a name="UberSearch attributes"></a>
+#### Attributes <a name="uber-search-attributes"></a>
 
 Attributes on the outermost element can be specified by setting the `data-uber-attributes` attribute on the `<select>` element. Values should be passed
 as a JSON string of key/value pairs where the key is the attribute name and the value is the attribute value.
@@ -32,7 +32,7 @@ as a JSON string of key/value pairs where the key is the attribute name and the 
 #### Options
 
 Options can be specified by setting the `data-uber-options` attribute on the `<select>` element. Values should be passed
-as a JSON string. All options on the are passed to the underlying UberSearch, see [UberSearch options](#UberSearchOptions).
+as a JSON string. All options on the are passed to the underlying UberSearch, see [UberSearch options](#uber-search-options).
 
 - ##### prepopulateSearchOnOpen
 
@@ -99,7 +99,7 @@ as a JSON string. All options on the are passed to the underlying UberSearch, se
   Add an aria-label attribute with this value to the uber_select element.
 
 #### Option Data Attributes
-`<option>` elements can each use data-attributes to control datum properties. See [UberSearch data](#UberSearchData).
+`<option>` elements can each use data-attributes to control datum properties. See [UberSearch data](#uber-search-data).
 
   - `data-match-value`
   - `data-visibility`
@@ -136,7 +136,7 @@ being used in purely in JS, and not being linked to a `<select>` element in a fo
 new UberSearch(data, options);
 ```
 
-#### Data <a name="UberSearch data"></a>
+#### Data <a name="uber-search-data"></a>
 
 Data is an array of objects. Each object may have the following properties:
 
@@ -187,7 +187,7 @@ Data is an array of objects. Each object may have the following properties:
   Returns the currently selected element from the search results.
 
 
-#### Options <a name="UberSearch options"></a>
+#### Options <a name="uber-search-options"></a>
 
 Options can be specified by setting the `data-uber-options` attribute on the `<select>` element. Values should be passed
 as a JSON string.
