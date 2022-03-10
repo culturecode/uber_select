@@ -117,6 +117,7 @@ label {
 .uber_select .result.highlighted{
   background-color: #C4E4FF;
   color: inherit;
+  outline: none;
 }
 .uber_select .messages{
   padding: 1px 20px;
