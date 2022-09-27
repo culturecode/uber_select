@@ -83,7 +83,8 @@ var UberSearch = function(data, options){
   $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
-    if (event.which === 32 || event.which === 40){ // Show the pane when the space or down key is pressed
+    // When pane is closed, show the pane when the space or down key is pressed
+    if ((event.which === 32 || event.which === 40) && pane.isClosed()) {
       pane.show()
       search.setHighlight(0)
       return false
@@ -318,7 +319,7 @@ var UberSearch = function(data, options){
   }
 
   function buildResult(datum){
-    var result = $('<li class="result" tabindex="0"></li>')
+    var result = $('<li class="result" tabindex="-1"></li>')
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
@@ -330,7 +331,7 @@ var UberSearch = function(data, options){
     return result
   }
 
-  function markSelected(){
+  function markSelected() {
     var selected = getSelection()
     var results = search.getResults()
 
