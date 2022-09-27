@@ -47,6 +47,11 @@ function SearchField(options){
     if (event.which == 13){
       triggerEvent('querySubmit')
     }
+
+    if (event.which == 40){ // Down Arrow
+      triggerEvent('inputDownArrow')
+      return false
+    }
   })
 
 

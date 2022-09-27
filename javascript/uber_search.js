@@ -79,13 +79,20 @@ var UberSearch = function(data, options){
     }
   })
 
+  $(view).on('inputDownArrow', function(event) {
+    focusOnResults()
+  })
+
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
   $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
-    // When pane is closed, show the pane when the space or down key is pressed
-    if ((event.which === 32 || event.which === 40) && pane.isClosed()) {
-      pane.show()
+    if (event.which === 32 || event.which === 40) { // when the space or down key is pressed
+      if (pane.isClosed()) {
+        pane.show()
+      } else {
+        focusOnResults()
+      }
       return false
     }
 
@@ -100,19 +107,6 @@ var UberSearch = function(data, options){
     if (outputContainer.view.hasClass('disabled')) { return }
 
     pane.show()
-  })
-
-  // Allow control of the list while focussed in the search instead of the list
-  $(pane.view).on('keydown', function(event){
-    if (event.which === 38 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
-      search.stepHighlight(-1)
-      return false
-    }
-
-    if (event.which === 40 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
-      search.stepHighlight(1)
-      return false
-    }
   })
 
   // When the pane is opened
@@ -322,6 +316,11 @@ var UberSearch = function(data, options){
     options.resultPostprocessor(result, datum)
 
     return result
+  }
+
+  function focusOnResults() {
+    var results = search.getResults()
+    search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: false })
   }
 
   function markSelected() {
