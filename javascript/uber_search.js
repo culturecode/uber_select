@@ -86,7 +86,6 @@ var UberSearch = function(data, options){
     // When pane is closed, show the pane when the space or down key is pressed
     if ((event.which === 32 || event.which === 40) && pane.isClosed()) {
       pane.show()
-      search.setHighlight(0)
       return false
     }
 
@@ -101,10 +100,6 @@ var UberSearch = function(data, options){
     if (outputContainer.view.hasClass('disabled')) { return }
 
     pane.show()
-
-    if (options.search) {
-      $(searchField.input).focus()
-    }
   })
 
   // Allow control of the list while focussed in the search instead of the list
@@ -128,8 +123,6 @@ var UberSearch = function(data, options){
 
     if (options.search) {
       $(searchField.input).focus()
-    } else {
-      pane.view.find("ul.results li:first").focus()
     }
 
     triggerEvent(eventsTriggered.shown)
