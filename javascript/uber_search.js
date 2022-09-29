@@ -83,6 +83,10 @@ var UberSearch = function(data, options){
     focusOnResults()
   })
 
+  $(view).on('inputUpArrow', function(event) {
+    outputContainer.view.focus()
+  })
+
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
   $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
