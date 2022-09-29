@@ -87,7 +87,7 @@ var UberSearch = function(data, options){
   $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
-    if (event.which === 32 || event.which === 40) { // when the space or down key is pressed
+    if (event.which === 40) { // open and focus pane when down key is pressed
       if (pane.isClosed()) {
         pane.show()
       } else {
@@ -96,7 +96,7 @@ var UberSearch = function(data, options){
       return false
     }
 
-    if (event.which === 13){ // toggle pane when enter is pressed
+    if (event.which === 32 || event.which === 13){ // toggle pane when space or enter is pressed
       pane.toggle()
       return false
     }

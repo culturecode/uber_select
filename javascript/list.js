@@ -15,6 +15,11 @@ function List(options) {
       case 40: // Down Arrow
         stepHighlight(1)
         return false
+      case 32: // Space
+        if (highlightedResult().length) {
+          highlightedResult().click()
+        }
+        return false
       case 13: // Enter
         if (highlightedResult().length) {
           highlightedResult().click()
@@ -59,7 +64,6 @@ function List(options) {
   this.stepHighlight = stepHighlight
   this.setHighlight = setHighlight
 
-
   function stepHighlight(amount, allowUnhighlight){
     var index = selectableResults().index(highlightedResult())
     setHighlight(index + amount, { allowUnhighlight: allowUnhighlight })
@@ -82,7 +86,7 @@ function List(options) {
   function highlightResult(result, options) {
     result = $(result)
     options = $.extend({
-      scroll: false,
+      scroll: true,
       focus: true
     }, options)
 
