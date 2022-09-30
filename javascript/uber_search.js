@@ -71,6 +71,13 @@ var UberSearch = function(data, options){
     }
   })
 
+  // Hide the pane when tabbing away from view
+  $(view).on('keydown', function(event){
+    if (pane.isOpen() && event.which === 9) {
+      pane.hide()
+    }
+  })
+
   $(view).on('setHighlight', function(event, result, index){
     if (index < 0 && options.search) {
       $(searchField.input).focus()
