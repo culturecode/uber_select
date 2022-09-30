@@ -54,11 +54,6 @@ function List(options) {
     view.html(results)
   }
 
-  // Can be overridden to format how results are built
-  this.buildResult = function(datum){
-    return $('<li role="option" class="result" tabindex="0"></li>').html(datum)
-  }
-
   this.unhighlightResults = unhighlightResults
   this.highlightResult = highlightResult
   this.stepHighlight = stepHighlight
