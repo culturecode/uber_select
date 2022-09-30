@@ -87,7 +87,7 @@ var UberSearch = function(data, options){
   })
 
   $(view).on('inputDownArrow', function(event) {
-    focusOnResults()
+    search.stepHighlight(1)
   })
 
   $(view).on('inputUpArrow', function(event) {
@@ -101,12 +101,10 @@ var UberSearch = function(data, options){
     if (event.which === 40) { // open and focus pane when down key is pressed
       if (pane.isClosed()) {
         pane.show()
+      } else if (options.search) {
+        $(searchField.input).focus()
       } else {
-        if (options.search) {
-          $(searchField.input).focus()
-        } else {
-          focusOnResults()
-        }
+        search.stepHighlight(1)
       }
       return false
     }
@@ -321,7 +319,7 @@ var UberSearch = function(data, options){
   }
 
   function buildResult(datum){
-    var result = $('<li class="result" tabindex="-1"></li>')
+    var result = $('<li class="result" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
@@ -331,11 +329,6 @@ var UberSearch = function(data, options){
     options.resultPostprocessor(result, datum)
 
     return result
-  }
-
-  function focusOnResults() {
-    var results = search.getResults()
-    search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: true })
   }
 
   function markSelected(focus = false) {
