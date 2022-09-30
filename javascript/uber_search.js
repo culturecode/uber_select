@@ -95,7 +95,11 @@ var UberSearch = function(data, options){
       if (pane.isClosed()) {
         pane.show()
       } else {
-        focusOnResults()
+        if (options.search) {
+          $(searchField.input).focus()
+        } else {
+          focusOnResults()
+        }
       }
       return false
     }
@@ -116,7 +120,7 @@ var UberSearch = function(data, options){
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    markSelected()
+    markSelected(true)
     view.addClass('open')
 
     if (options.search) {
@@ -324,10 +328,10 @@ var UberSearch = function(data, options){
 
   function focusOnResults() {
     var results = search.getResults()
-    search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: false })
+    search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: true })
   }
 
-  function markSelected() {
+  function markSelected(focus = false) {
     var selected = getSelection()
     var results = search.getResults()
 
@@ -337,9 +341,9 @@ var UberSearch = function(data, options){
     $(selected).addClass('selected').removeClass('hidden')
 
     if (selected) {
-      search.highlightResult(selected, { focus: false })
+      search.highlightResult(selected, { focus: focus })
     } else if (options.highlightByDefault) {
-      search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: false })
+      search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: focus })
     }
   }
 
