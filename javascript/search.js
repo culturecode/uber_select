@@ -51,6 +51,11 @@ function Search(queryInput, resultsContainer, options){
     model.setQuery(this.value)
   })
 
+  // Forward navigating away from queryInput
+  $(queryInput).on('inputDownArrow', function() {
+    $(context).trigger('inputDownArrow')
+  })
+
   $(model).on('resultsUpdated', function(){
     context.renderResults()
   })

@@ -71,6 +71,13 @@ var UberSearch = function(data, options){
     }
   })
 
+  // Hide the pane when tabbing away from view
+  $(view).on('keydown', function(event){
+    if (pane.isOpen() && event.which === 9) {
+      pane.hide()
+    }
+  })
+
   $(view).on('setHighlight', function(event, result, index){
     if (index < 0 && options.search) {
       $(searchField.input).focus()
@@ -79,17 +86,30 @@ var UberSearch = function(data, options){
     }
   })
 
+  $(view).on('inputDownArrow', function(event) {
+    search.stepHighlight(1)
+  })
+
+  $(view).on('inputUpArrow', function(event) {
+    outputContainer.view.focus()
+  })
+
   // Show the pane if the user was tabbed onto the trigger and pressed enter, space, or down arrow
   $(outputContainer.view).on('keydown', function(event){
     if (outputContainer.view.hasClass('disabled')) { return }
 
-    if (event.which === 32 || event.which === 40){ // Show the pane when the space or down key is pressed
-      pane.show()
-      search.setHighlight(0)
+    if (event.which === 40) { // open and focus pane when down key is pressed
+      if (pane.isClosed()) {
+        pane.show()
+      } else if (options.search) {
+        $(searchField.input).focus()
+      } else {
+        search.stepHighlight(1)
+      }
       return false
     }
 
-    if (event.which === 13){ // toggle pane when enter is pressed
+    if (event.which === 32 || event.which === 13){ // toggle pane when space or enter is pressed
       pane.toggle()
       return false
     }
@@ -100,35 +120,16 @@ var UberSearch = function(data, options){
     if (outputContainer.view.hasClass('disabled')) { return }
 
     pane.show()
-
-    if (options.search) {
-      $(searchField.input).focus()
-    }
-  })
-
-  // Allow control of the list while focussed in the search instead of the list
-  $(pane.view).on('keydown', function(event){
-    if (event.which === 38 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
-      search.stepHighlight(-1)
-      return false
-    }
-
-    if (event.which === 40 && !pane.isClosed()){ // Select the first result when down arrow is pressed while open
-      search.stepHighlight(1)
-      return false
-    }
   })
 
   // When the pane is opened
   $(pane).on('shown', function(){
     search.clear()
-    markSelected()
+    markSelected(true)
     view.addClass('open')
 
     if (options.search) {
       $(searchField.input).focus()
-    } else {
-      pane.view.find("ul.results li:first").focus()
     }
 
     triggerEvent(eventsTriggered.shown)
@@ -318,7 +319,7 @@ var UberSearch = function(data, options){
   }
 
   function buildResult(datum){
-    var result = $('<li class="result" tabindex="0"></li>')
+    var result = $('<li class="result" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
       .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
@@ -330,7 +331,7 @@ var UberSearch = function(data, options){
     return result
   }
 
-  function markSelected(){
+  function markSelected(focus = false) {
     var selected = getSelection()
     var results = search.getResults()
 
@@ -340,9 +341,9 @@ var UberSearch = function(data, options){
     $(selected).addClass('selected').removeClass('hidden')
 
     if (selected) {
-      search.highlightResult(selected, { focus: false })
+      search.highlightResult(selected, { focus: focus })
     } else if (options.highlightByDefault) {
-      search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: false })
+      search.highlightResult(results.not('.hidden').not('.disabled').first(), { focus: focus })
     }
   }
 
