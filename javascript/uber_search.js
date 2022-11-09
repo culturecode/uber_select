@@ -331,7 +331,8 @@ var UberSearch = function(data, options){
     return result
   }
 
-  function markSelected(focus = false) {
+  function markSelected(focus) {
+    focus = focus || false
     var selected = getSelection()
     var results = search.getResults()
 
