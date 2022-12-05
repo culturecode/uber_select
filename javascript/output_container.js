@@ -11,7 +11,8 @@ var OutputContainer = function(options){
   // HELPER FUNCTIONS
 
   function setValue(value){
-    selectedText.html(value || '&nbsp;')
+    selectedText.text(value || String.fromCharCode(160)); // Insert value or &nbsp;
+
     view.toggleClass('empty', !value)
   }
 

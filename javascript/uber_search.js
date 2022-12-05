@@ -319,8 +319,10 @@ var UberSearch = function(data, options){
   }
 
   function buildResult(datum){
+    var text = (options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text);
+
     var result = $('<li class="result" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
-      .html((options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text) || "&nbsp;")
+      .text(text || String.fromCharCode(160)) // Insert text or &nbsp;
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
     if (datum.title) { result.attr('title', datum.title) }
