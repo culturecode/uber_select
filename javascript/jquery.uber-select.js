@@ -139,8 +139,8 @@
         var index = select.selectedIndex
 
         if (index == undefined) { return }
-
         uberSearch.searchField.input.val($(select).find('option').eq(index).text())
+        uberSearch.searchField.input.select() // Select the text so the user can start typing over it without having to clear
         uberSearch.searchField.refresh()
       }
 
