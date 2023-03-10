@@ -32,7 +32,7 @@ var UberSearch = function(data, options){
   }, options)
 
   var context          = this
-  var view             = $('<span class="uber_select" role="listbox"></span>')
+  var view             = $('<span class="uber_select"></span>')
   var selectedValue    = options.value // Internally selected value
   var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
   var resultsContainer = $('<div class="results_container"></div>')
@@ -321,7 +321,7 @@ var UberSearch = function(data, options){
   function buildResult(datum){
     var text = (options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text);
 
-    var result = $('<li class="result" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
+    var result = $('<li class="result" role="listitem" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
       .text(text || String.fromCharCode(160)) // Insert text or &nbsp;
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 

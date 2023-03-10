@@ -7,7 +7,7 @@ function Pane(){
   var context   = this
   var model     = {}
   var isOpen    = false
-  var view      = $('<div class="pane"></div>').toggle(isOpen)
+  var view      = $('<div class="pane" role="listbox"></div>').toggle(isOpen)
   var innerPane = $('<div class="pane_inner"></div>').appendTo(view)
 
 
