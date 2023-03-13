@@ -340,10 +340,11 @@ var UberSearch = function(data, options){
     var selected = getSelection()
     var results = search.getResults()
 
-    $(results).filter('.selected').not(selected).removeClass('selected')
+    $(results).filter('.selected').not(selected).removeClass('selected').attr('aria-selected', false)
 
     // Ensure the selected result is unhidden
     $(selected).addClass('selected').removeClass('hidden')
+    $(selected).attr('aria-selected', true)
 
     if (selected) {
       search.highlightResult(selected, { focus: focus })

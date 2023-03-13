@@ -90,7 +90,6 @@ function List(options) {
     }
 
     result.addClass('highlighted')
-    result.attr("aria-selected", true)
 
     if (options.focus) {
       result.focus()
@@ -107,7 +106,7 @@ function List(options) {
     }, options)
 
     var result = highlightedResult()
-    result.removeClass('highlighted').attr("aria-selected", false)
+    result.removeClass('highlighted')
 
     if (options.blur) {
       result.blur()
