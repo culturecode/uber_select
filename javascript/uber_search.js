@@ -124,6 +124,7 @@ var UberSearch = function(data, options){
 
   // When the pane is opened
   $(pane).on('shown', function(){
+    outputContainer.open()
     search.clear()
     markSelected(true)
     view.addClass('open')
@@ -137,6 +138,7 @@ var UberSearch = function(data, options){
 
   // When the pane is hidden
   $(pane).on('hidden', function(){
+    outputContainer.close()
     view.removeClass('open')
     view.focus()
   })
