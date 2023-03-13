@@ -186,7 +186,7 @@
       // Hide the select, but keep its width to allow it to set the min width of the uber select
       // NOTE: IE doesn't like 0 height, so give it 1px height and then offset
       function hideSelect(){
-        $(select).wrap($('<div>').css({visibility: 'hidden', height: '1px', marginTop: '-1px', pointerEvents: 'none'}).addClass('select_width_spacer'))
+        $(select).wrap($('<div>').css({visibility: 'hidden', height: '1px', marginTop: '-1px', pointerEvents: 'none'}).addClass('select_width_spacer').attr('aria-hidden', true))
       }
     })
 
