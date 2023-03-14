@@ -7,7 +7,8 @@ var UberSearch = function(data, options){
   }
 
   options = $.extend({
-    ariaLabel: null,
+    wrapperId: generateUUID(),                        // A unique identifier for select
+    ariaLabel: null,                                  // Label of the select for screen readers
     value: null,                                      // Initialize with this selectedValue
     disabled: false,                                  // Initialize with this disabled value
     search: true,                                     // Show the search input
@@ -78,12 +79,17 @@ var UberSearch = function(data, options){
     }
   })
 
-  $(view).on('setHighlight', function(event, result, index){
+  $(view).on('setHighlight', function(event, result, index) {
     if (index < 0 && options.search) {
+      outputContainer.view.attr("aria-activedescendant", "")
       $(searchField.input).focus()
     } else if (index < 0) {
+      outputContainer.view.attr("aria-activedescendant", "")
       $(outputContainer.view).focus()
+    } else {
+      outputContainer.view.attr("aria-activedescendant", result.id)
     }
+
   })
 
   $(view).on('inputDownArrow', function(event) {
@@ -124,7 +130,7 @@ var UberSearch = function(data, options){
 
   // When the pane is opened
   $(pane).on('shown', function(){
-    outputContainer.open()
+    outputContainer.view.attr('aria-expanded', true)
     search.clear()
     markSelected(true)
     view.addClass('open')
@@ -138,7 +144,7 @@ var UberSearch = function(data, options){
 
   // When the pane is hidden
   $(pane).on('hidden', function(){
-    outputContainer.close()
+    outputContainer.view.attr('aria-expanded', false)
     view.removeClass('open')
     view.focus()
   })
@@ -209,6 +215,16 @@ var UberSearch = function(data, options){
 
 
   // HELPER FUNCTIONS
+  function generateUUID() {
+    // https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
 
   function setData(newData){
     data = setDataDefaults(newData)
@@ -276,9 +292,9 @@ var UberSearch = function(data, options){
     var context = this
     var sourceArray = []
 
-    $.each(data, function(_, datum){
+    $.each(data, function(index, datum){
       // Add the group name so we can group items
-      var result = context.buildResult(datum).attr('data-group', datum.group)
+      var result = context.buildResult(index, datum).attr('data-group', datum.group)
 
       // Omit blank option from results
       if (!options.hideBlankOption || datum.value){
@@ -320,10 +336,11 @@ var UberSearch = function(data, options){
     return $.grep(sourceArray, function(node){ return node.is(selector) }, invert)
   }
 
-  function buildResult(datum){
+  function buildResult(index, datum){
     var text = (options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text);
 
     var result = $('<li class="result" role="listitem" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
+      .attr('id', (options.wrapperId + "-" + index))
       .text(text || String.fromCharCode(160)) // Insert text or &nbsp;
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
