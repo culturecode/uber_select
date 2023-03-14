@@ -35,12 +35,10 @@ var UberSearch = function(data, options){
   var context          = this
   var view             = $('<span class="uber_select"></span>')
   var selectedValue    = options.value // Internally selected value
-  var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
+  var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret, ariaLabel: options.ariaLabel})
   var resultsContainer = $('<div class="results_container"></div>')
   var messages         = $('<div class="messages"></div>')
   var pane             = new Pane()
-
-  if (options.ariaLabel) { view.attr("aria-label", options.ariaLabel) }
 
   var searchField = new SearchField({
       placeholder: options.searchPlaceholder,

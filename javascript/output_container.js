@@ -6,6 +6,7 @@ var OutputContainer = function(options){
 
   // INITIALIZATION
 
+  if (options.ariaLabel) { view.attr("aria-label", options.ariaLabel) }
   setValue()
 
   // HELPER FUNCTIONS
@@ -22,5 +23,5 @@ var OutputContainer = function(options){
 
   // PUBLIC INTERFACE
 
-  $.extend(this, {view: view, setValue: setValue, setDisabled: setDisabled })
+  $.extend(this, {view: view, setValue: setValue, setDisabled: setDisabled})
 }
