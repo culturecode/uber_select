@@ -79,15 +79,14 @@ var UberSearch = function(data, options){
 
   $(view).on('setHighlight', function(event, result, index) {
     if (index < 0 && options.search) {
-      outputContainer.view.attr("aria-activedescendant", "")
+      setOutputContainerAria("aria-activedescendant", "")
       $(searchField.input).focus()
     } else if (index < 0) {
-      outputContainer.view.attr("aria-activedescendant", "")
+      setOutputContainerAria("aria-activedescendant", "")
       $(outputContainer.view).focus()
     } else {
-      outputContainer.view.attr("aria-activedescendant", result.id)
+      setOutputContainerAria("aria-activedescendant", result.id)
     }
-
   })
 
   $(view).on('inputDownArrow', function(event) {
@@ -128,7 +127,7 @@ var UberSearch = function(data, options){
 
   // When the pane is opened
   $(pane).on('shown', function(){
-    outputContainer.view.attr('aria-expanded', true)
+    setOutputContainerAria('aria-expanded', true)
     search.clear()
     markSelected(true)
     view.addClass('open')
@@ -142,7 +141,7 @@ var UberSearch = function(data, options){
 
   // When the pane is hidden
   $(pane).on('hidden', function(){
-    outputContainer.view.attr('aria-expanded', false)
+    setOutputContainerAria('aria-expanded', false)
     view.removeClass('open')
     view.focus()
   })
@@ -416,6 +415,10 @@ var UberSearch = function(data, options){
 
   function resultsCount(){
     return search.getResults().length
+  }
+
+  function setOutputContainerAria() {
+    outputContainer.view.attr.apply(outputContainer.view, arguments)
   }
 
   // returns true if the event originated outside this component
