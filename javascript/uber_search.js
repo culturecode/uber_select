@@ -7,7 +7,8 @@ var UberSearch = function(data, options){
   }
 
   options = $.extend({
-    ariaLabel: null,
+    wrapperId: generateUUID(),                        // A unique identifier for select
+    ariaLabel: null,                                  // Label of the select for screen readers
     value: null,                                      // Initialize with this selectedValue
     disabled: false,                                  // Initialize with this disabled value
     search: true,                                     // Show the search input
@@ -34,12 +35,10 @@ var UberSearch = function(data, options){
   var context          = this
   var view             = $('<span class="uber_select"></span>')
   var selectedValue    = options.value // Internally selected value
-  var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret})
+  var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret, ariaLabel: options.ariaLabel})
   var resultsContainer = $('<div class="results_container"></div>')
   var messages         = $('<div class="messages"></div>')
   var pane             = new Pane()
-
-  if (options.ariaLabel) { view.attr("aria-label", options.ariaLabel) }
 
   var searchField = new SearchField({
       placeholder: options.searchPlaceholder,
@@ -78,11 +77,15 @@ var UberSearch = function(data, options){
     }
   })
 
-  $(view).on('setHighlight', function(event, result, index){
+  $(view).on('setHighlight', function(event, result, index) {
     if (index < 0 && options.search) {
+      setOutputContainerAria("aria-activedescendant", "")
       $(searchField.input).focus()
     } else if (index < 0) {
+      setOutputContainerAria("aria-activedescendant", "")
       $(outputContainer.view).focus()
+    } else {
+      setOutputContainerAria("aria-activedescendant", result.id)
     }
   })
 
@@ -124,6 +127,7 @@ var UberSearch = function(data, options){
 
   // When the pane is opened
   $(pane).on('shown', function(){
+    setOutputContainerAria('aria-expanded', true)
     search.clear()
     markSelected(true)
     view.addClass('open')
@@ -137,6 +141,7 @@ var UberSearch = function(data, options){
 
   // When the pane is hidden
   $(pane).on('hidden', function(){
+    setOutputContainerAria('aria-expanded', false)
     view.removeClass('open')
     view.focus()
   })
@@ -207,6 +212,16 @@ var UberSearch = function(data, options){
 
 
   // HELPER FUNCTIONS
+  function generateUUID() {
+    // https://www.w3resource.com/javascript-exercises/javascript-math-exercise-23.php
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
 
   function setData(newData){
     data = setDataDefaults(newData)
@@ -274,9 +289,9 @@ var UberSearch = function(data, options){
     var context = this
     var sourceArray = []
 
-    $.each(data, function(_, datum){
+    $.each(data, function(index, datum){
       // Add the group name so we can group items
-      var result = context.buildResult(datum).attr('data-group', datum.group)
+      var result = context.buildResult(index, datum).attr('data-group', datum.group)
 
       // Omit blank option from results
       if (!options.hideBlankOption || datum.value){
@@ -318,10 +333,11 @@ var UberSearch = function(data, options){
     return $.grep(sourceArray, function(node){ return node.is(selector) }, invert)
   }
 
-  function buildResult(datum){
+  function buildResult(index, datum){
     var text = (options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text);
 
     var result = $('<li class="result" role="listitem" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
+      .attr('id', (options.wrapperId + "-" + index))
       .text(text || String.fromCharCode(160)) // Insert text or &nbsp;
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
@@ -338,10 +354,11 @@ var UberSearch = function(data, options){
     var selected = getSelection()
     var results = search.getResults()
 
-    $(results).filter('.selected').not(selected).removeClass('selected')
+    $(results).filter('.selected').not(selected).removeClass('selected').attr('aria-selected', false)
 
     // Ensure the selected result is unhidden
     $(selected).addClass('selected').removeClass('hidden')
+    $(selected).attr('aria-selected', true)
 
     if (selected) {
       search.highlightResult(selected, { focus: focus })
@@ -398,6 +415,10 @@ var UberSearch = function(data, options){
 
   function resultsCount(){
     return search.getResults().length
+  }
+
+  function setOutputContainerAria() {
+    outputContainer.view.attr.apply(outputContainer.view, arguments)
   }
 
   // returns true if the event originated outside this component
