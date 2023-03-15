@@ -33,7 +33,7 @@ var UberSearch = function(data, options){
   }, options)
 
   var context          = this
-  var view             = $('<span class="uber_select"></span>')
+  var view             = $('<span>', { class: "uber_select", id: options.wrapperId })
   var selectedValue    = options.value // Internally selected value
   var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret, ariaLabel: options.ariaLabel})
   var resultsContainer = $('<div class="results_container"></div>')
