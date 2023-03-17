@@ -306,8 +306,8 @@ var UberSearch = function(data, options){
     while (sourceArray.length) {
       var group       = $(sourceArray[0]).attr('data-group')
       var groupNodes  = reject(sourceArray, 'li[data-group="' + group + '"]')
-      var sublist     = $('<ul class="sublist"></ul>').attr('data-group', group)
-      var sublistNode = $('<li></li>').append('<span class="sublist_name">' + group + '</span>')
+      var sublist     = $('<ul>', { class: "sublist", 'data-group': group })
+      var sublistNode = $('<li>', { role: "listitem", 'aria-label': group }).append($('<span>', { class: "sublist_name" }).html(group))
 
       sublist.append(groupNodes)
       sublistNode.append(sublist)
