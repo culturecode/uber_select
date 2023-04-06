@@ -7,7 +7,7 @@ var UberSearch = function(data, options){
   }
 
   options = $.extend({
-    wrapperId: generateUUID(),                        // A unique identifier for select
+    uberSelectId: generateUUID(),                     // A unique identifier for select
     ariaLabel: null,                                  // Label of the select for screen readers
     value: null,                                      // Initialize with this selectedValue
     disabled: false,                                  // Initialize with this disabled value
@@ -33,7 +33,7 @@ var UberSearch = function(data, options){
   }, options)
 
   var context          = this
-  var view             = $('<span>', { class: "uber_select", id: options.wrapperId })
+  var view             = $('<span>', { class: "uber_select", id: options.uberSelectId })
   var selectedValue    = options.value // Internally selected value
   var outputContainer  = options.outputContainer || new OutputContainer({selectCaret: options.selectCaret, ariaLabel: options.ariaLabel})
   var resultsContainer = $('<div class="results_container"></div>')
@@ -337,7 +337,7 @@ var UberSearch = function(data, options){
     var text = (options.treatBlankOptionAsPlaceholder ? datum.text || options.placeholder : datum.text);
 
     var result = $('<li class="result" role="listitem" tabindex="-1"></li>') // Use -1 tabindex so that the result can be focusable but not tabbable.
-      .attr('id', (options.wrapperId + "-" + index))
+      .attr('id', (options.uberSelectId + "-" + index))
       .text(text || String.fromCharCode(160)) // Insert text or &nbsp;
       .data(datum) // Store the datum so we can get know what the value of the selected item is
 
