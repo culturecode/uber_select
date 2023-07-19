@@ -29,7 +29,8 @@ var UberSearch = function(data, options){
     onSelect: function(datum, result, clickEvent) {}, // A function to run when a result is selected. If the result returns false, the default select handler is not run and the event is cancelled
     onNoHighlightSubmit: function(value) {},          // A function to run when a user presses enter without selecting a result.
     noDataText: 'No options',                         // Text to show in there is nothing in the set of data to pick from
-    matchGroupNames: false                            // Show results for searches that match the result's group name
+    matchGroupNames: false,                           // Show results for searches that match the result's group name
+    alwaysOpen: false                                 // Should the options list always appear open?
   }, options)
 
   var context          = this
@@ -65,14 +66,14 @@ var UberSearch = function(data, options){
 
   // Hide the pane when clicked out or another pane is opened
   $(document).on('click shown', function(event){
-    if (pane.isOpen() && isEventOutside(event)){
+    if (!options.alwaysOpen && pane.isOpen() && isEventOutside(event)){
       pane.hide()
     }
   })
 
   // Hide the pane when tabbing away from view
   $(view).on('keydown', function(event){
-    if (pane.isOpen() && event.which === 9) {
+    if (!options.alwaysOpen && pane.isOpen() && event.which === 9) {
       pane.hide()
     }
   })
@@ -180,7 +181,9 @@ var UberSearch = function(data, options){
     event.stopPropagation();
 
     setValue(valueFromResult(this))
-    pane.hide()
+    if (!options.alwaysOpen) {
+      pane.hide()
+    }
     triggerEvent(eventsTriggered.select, [datum, this, event])
   })
 
@@ -209,6 +212,10 @@ var UberSearch = function(data, options){
   updateMessages()
   updateSelectedText()
   markSelected()
+
+  if (options.alwaysOpen) {
+    pane.show()
+  }
 
 
   // HELPER FUNCTIONS

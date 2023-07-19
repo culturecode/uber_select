@@ -342,11 +342,17 @@ as a JSON string.
 
   Default: `false`
 
+- ##### alwaysOpen
+
+  Toggles whether options page is always shown open. When `true` the pane will start open and will not close when a option is selected
+  nor via any clicks on the select itself.
+
+  Default: `false`
+
 - ##### outputContainer (Deprecated)
 
   An object that receives the output once a result is selected. Must respond to `setValue(value)` and `view()`. This object serves to
   attach the result list to the DOM at the desired location.
-
 
 #### Events Triggered
 

@@ -66,12 +66,14 @@ function Pane(){
     if (isOpen) { return }
     isOpen = true
     view.show()
+    view.addClass('showing')
     triggerEvent(eventsTriggered.shown)
   }
   function hide(){
     if (!isOpen) { return }
     isOpen = false
     view.hide()
+    view.removeClass('showing')
     triggerEvent(eventsTriggered.hidden)
   }
   function toggle(){
