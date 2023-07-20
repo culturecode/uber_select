@@ -430,7 +430,11 @@ var UberSearch = function(data, options){
 
   // returns true if the event originated outside this component
   function isEventOutside(event){
-    return !$(event.target).closest(view).length
+    if (event.originalEvent.composed) { // Support UberSelect when used in the Shadow DOM
+      return !event.originalEvent.composedPath().includes(view[0])
+    } else {
+      return !$(event.target).closest(view).length
+    }
   }
 
   // Allow observer to be attached to the UberSearch itself
