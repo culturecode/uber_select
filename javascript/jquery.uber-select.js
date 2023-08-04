@@ -66,10 +66,10 @@
           $(select).append(optionsFromData(data))
           updateSelectValue(options.value)
           uberSearch.setData(dataFromSelect(select))
-          $(select).trigger(eventsTriggered.ready)
+          triggerEvent(eventsTriggered.ready)
         })
       } else {
-        $(select).trigger(eventsTriggered.ready)
+        triggerEvent(eventsTriggered.ready)
       }
 
 
@@ -158,7 +158,7 @@
         var before = $(select).val()
         $(select).val(value)
         var after = $(select).val() // Read value the same way instead of comparing to `value` so the same coercion is applied
-        if (before != after) { $(select).trigger('change') } // Only trigger a change if the value has actually changed
+        if (before != after) { triggerEvent('change') } // Only trigger a change if the value has actually changed
       }
 
       // Selects the option with an emptystring value, or the first option if there is no blank option
@@ -169,7 +169,8 @@
         if (!selectValue) { return }
 
         // Clear the value
-        $(select).val('').trigger('change')
+        $(select).val('')
+        triggerEvent('change')
 
         // If that cleared it then we're done, otherwise, select the first option
         if ($(select).find('option:selected').length){ return }
@@ -180,13 +181,18 @@
         if (firstOptionValue == selectValue) { return }
 
         // Select the first option
-        $(select).val(firstOptionValue).trigger('change')
+        $(select).val(firstOptionValue)
+        triggerEvent('change')
       }
 
       // Hide the select, but keep its width to allow it to set the min width of the uber select
       // NOTE: IE doesn't like 0 height, so give it 1px height and then offset
       function hideSelect(){
         $(select).wrap($('<div>').css({visibility: 'hidden', height: '1px', marginTop: '-1px', pointerEvents: 'none'}).addClass('select_width_spacer').attr('aria-hidden', true))
+      }
+
+      function triggerEvent(eventType) {
+        return select.dispatchEvent(new CustomEvent(eventType, { bubbles: true }));
       }
     })
 
