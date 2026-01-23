@@ -259,6 +259,20 @@
   <p>This example has an option with a <code>title</code> attribute that should show as a tooltip.</p>
 </span>
 
+<span class="example">
+  <label for="select">
+  Form ENTER handling (should not submit form)
+  </label>
+  <form onsubmit="alert('Form submitted! This should NOT happen when pressing ENTER in the search field.'); return false;">
+    <select placeholder="Choose a gender">
+      <option></option>
+      <option>male</option>
+      <option>female</option>
+    </select>
+    <button type="submit">Submit Form</button>
+  </form>
+</span>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="javascript/uber_search.js"></script>
 <script src="javascript/uber_search/search_field.js"></script>

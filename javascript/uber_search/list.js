@@ -124,6 +124,8 @@
       return results().filter('.highlighted')
     }
 
+    this.highlightedResult = highlightedResult
+
     function selectableResults(){
       return visibleResults().not('.disabled')
     }

@@ -43,10 +43,10 @@
       triggerEvent('clear')
     })
 
-    // When the enter button is pressed
     input.on('keydown', function(event){
-      if (event.which == 13){
+      if (event.which == 13){ // When the enter button is pressed
         triggerEvent('querySubmit')
+        return false;
       }
 
       if (event.which == 38) { // Up Arrow

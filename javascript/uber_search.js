@@ -89,8 +89,11 @@
       } else if (index < 0) {
         setOutputContainerAria("aria-activedescendant", "")
         $(outputContainer.view).focus()
-      } else {
+      } else if (result) {
+        // Check if result exists (e.g., when pressing down on the last item, result will be undefined)
         setOutputContainerAria("aria-activedescendant", result.id)
+      } else {
+        setOutputContainerAria("aria-activedescendant", "")
       }
     })
 
