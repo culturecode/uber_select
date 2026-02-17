@@ -34,13 +34,6 @@
       context.hide()
     })
 
-    // Close the pane when the user presses escape
-    $(document).on('keyup', function(event){
-      if (event.which == 27 && isOpen){
-        context.hide()
-        return false
-      }
-    })
 
 
     // HELPER FUNCTIONS

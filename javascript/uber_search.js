@@ -82,6 +82,14 @@
       }
     })
 
+    // Hide the pane when the user presses escape
+    $(view).on('keyup', function(event){
+      if (!options.alwaysOpen && pane.isOpen() && event.which == 27) {
+        pane.hide()
+        return false
+      }
+    })
+
     $(view).on('setHighlight', function(event, result, index) {
       if (index < 0 && options.search) {
         setOutputContainerAria("aria-activedescendant", "")
