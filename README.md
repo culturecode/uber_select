@@ -344,8 +344,8 @@ as a JSON string.
 
 - ##### alwaysOpen
 
-  Toggles whether options page is always shown open. When `true` the pane will start open and will not close when a option is selected
-  nor via any clicks on the select itself.
+  Toggles whether options page is always shown open. When `true` the pane will start open and will not close when an option is selected,
+  when the Escape key is pressed, or when either the select itself or outside the select is clicked.
 
   Default: `false`
 
