@@ -1,9 +1,13 @@
 (function($) {
-  UberSearch.Pane = function() {
+  UberSearch.Pane = function(options) {
     var eventsTriggered = {
       shown: 'shown',
       hidden: 'hidden'
     }
+
+    options = $.extend({
+      alwaysOpen: false
+    }, options)
 
     var context   = this
     var model     = {}
@@ -35,12 +39,14 @@
     })
 
     // Close the pane when the user presses escape
-    $(document).on('keyup', function(event){
-      if (event.which == 27 && isOpen){
-        context.hide()
-        return false
-      }
-    })
+    if (!options.alwaysOpen) {
+      $(document).on('keyup', function(event){
+        if (event.which == 27 && isOpen){
+          context.hide()
+          return false
+        }
+      })
+    }
 
 
     // HELPER FUNCTIONS

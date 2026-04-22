@@ -43,7 +43,7 @@
     var outputContainer  = options.outputContainer || new UberSearch.OutputContainer({selectCaret: options.selectCaret, ariaLabel: options.ariaLabel})
     var resultsContainer = $('<div class="results_container"></div>')
     var messages         = $('<div class="messages"></div>')
-    var pane             = new UberSearch.Pane()
+    var pane             = new UberSearch.Pane({alwaysOpen: options.alwaysOpen})
 
     var searchField = new UberSearch.SearchField({
         placeholder: options.searchPlaceholder,
